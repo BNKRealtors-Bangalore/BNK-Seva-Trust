@@ -1,0 +1,970 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Inspired by the boundless love of Baba Neem Karoli Maharaj, BNK Seva Trust serves with compassion, humility and devotion."
+    />
+    <title>BNK Seva Trust — Seva, Shraddha, Samarpan</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=DM+Sans:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script>document.documentElement.classList.add("has-reveal");</script>
+    <style>
+      :root {
+        color-scheme: light;
+        --ivory: #f8f5ee;
+        --paper: #fffdf8;
+        --ink: #302820;
+        --muted: #756b60;
+        --saffron: #a9613e;
+        --gold: #b59660;
+        --line: #e8e0d3;
+        --serif: "Cormorant Garamond", Georgia, serif;
+        --sans: "DM Sans", Arial, sans-serif;
+      }
+
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        margin: 0;
+        background: var(--ivory);
+        color: var(--ink);
+        font-family: var(--sans);
+        -webkit-font-smoothing: antialiased;
+      }
+
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      .announcement {
+        min-height: 34px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 7px 20px;
+        background: #6d4938;
+        color: #f8f2e7;
+        font-size: 10px;
+        letter-spacing: 0.14em;
+        text-align: center;
+        text-transform: uppercase;
+      }
+
+      .announcement span {
+        color: #dfc58f;
+        margin: 0 7px;
+      }
+
+      .site-header {
+        position: sticky;
+        top: 0;
+        z-index: 5;
+        border-bottom: 1px solid rgba(111, 89, 67, 0.13);
+        background: rgba(255, 253, 248, 0.97);
+      }
+
+      .nav-shell {
+        position: relative;
+        width: min(100% - 72px, 1540px);
+        min-height: 86px;
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 30px;
+      }
+
+      .brand {
+        flex: 0 0 auto;
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .brand-mark {
+        width: 44px;
+        height: 48px;
+        display: grid;
+        place-items: center;
+        color: var(--saffron);
+      }
+
+      .brand-mark svg {
+        width: 42px;
+        height: 46px;
+      }
+
+      .brand-copy {
+        display: flex;
+        flex-direction: column;
+        gap: 3px;
+      }
+
+      .brand-name {
+        font-family: var(--serif);
+        font-size: 21px;
+        font-weight: 600;
+        line-height: 1;
+        letter-spacing: 0.015em;
+      }
+
+      .brand-caption {
+        color: #83786a;
+        font-size: 8px;
+        font-weight: 600;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+      }
+
+      .main-nav {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: clamp(12px, 1.45vw, 25px);
+        margin-left: auto;
+      }
+
+      .main-nav a {
+        color: #51483f;
+        font-size: 11px;
+        font-weight: 500;
+        white-space: nowrap;
+        transition: color 180ms ease;
+      }
+
+      .main-nav a:hover,
+      .main-nav a:focus-visible {
+        color: var(--saffron);
+      }
+
+      .nav-donate {
+        flex: 0 0 auto;
+        min-height: 42px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        padding: 0 18px;
+        border: 1px solid #99563b;
+        background: linear-gradient(135deg, #a76849, #884b34);
+        box-shadow: 0 0 0 3px rgba(181, 150, 96, 0.12), 0 5px 18px rgba(128, 72, 48, 0.24);
+        color: #fffaf1;
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        transition: box-shadow 180ms ease, transform 180ms ease, background 180ms ease;
+      }
+
+      .nav-donate:hover,
+      .nav-donate:focus-visible {
+        background: linear-gradient(135deg, #b37554, #95563a);
+        box-shadow: 0 0 0 4px rgba(181, 150, 96, 0.19), 0 8px 24px rgba(128, 72, 48, 0.3);
+        transform: translateY(-1px);
+      }
+
+      .nav-donate svg,
+      .text-link svg,
+      .button svg {
+        width: 14px;
+        height: 14px;
+      }
+
+      .menu-toggle {
+        display: none;
+        min-height: 39px;
+        align-items: center;
+        gap: 8px;
+        padding: 0 12px;
+        border: 1px solid #d4c8b7;
+        background: transparent;
+        color: #51483f;
+        font: 600 10px var(--sans);
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+      }
+
+      .hero {
+        position: relative;
+        isolation: isolate;
+        min-height: 100svh;
+        background: var(--ivory);
+      }
+
+      .hero-stage {
+        position: sticky;
+        z-index: 0;
+        top: 0;
+        height: 100svh;
+        margin-bottom: -100svh;
+        overflow: hidden;
+        isolation: isolate;
+      }
+
+      .hero-stage::before {
+        position: absolute;
+        z-index: 1;
+        inset: 0;
+        background:
+          linear-gradient(90deg, rgba(248, 245, 238, 0.97) 0%, rgba(248, 245, 238, 0.91) 34%, rgba(248, 245, 238, 0.68) 49%, rgba(248, 245, 238, 0.1) 73%, transparent 100%),
+          linear-gradient(0deg, rgba(48, 40, 32, 0.16), transparent 42%);
+        content: "";
+      }
+
+      .hero-image {
+        position: absolute;
+        inset: 0;
+        z-index: 0;
+        display: block;
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        object-fit: cover;
+        object-position: center 48%;
+        animation: image-drift 24s ease-in-out infinite alternate;
+      }
+
+      .hero-shell {
+        position: relative;
+        z-index: 1;
+        width: min(100% - 120px, 1540px);
+        height: 100svh;
+        margin: auto;
+        display: flex;
+        align-items: center;
+        padding: 52px 0;
+      }
+
+      .hero-copy {
+        position: relative;
+        z-index: 2;
+        max-width: 720px;
+      }
+
+      .eyebrow {
+        display: flex;
+        align-items: center;
+        gap: 13px;
+        color: #936447;
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.24em;
+        text-transform: uppercase;
+      }
+
+      .eyebrow::before {
+        width: 33px;
+        height: 1px;
+        background: var(--gold);
+        content: "";
+      }
+
+      h1 {
+        max-width: 720px;
+        margin: 24px 0 17px;
+        font-family: var(--serif);
+        font-size: clamp(58px, 5.2vw, 78px);
+        font-weight: 400;
+        line-height: 0.91;
+        letter-spacing: -0.045em;
+      }
+
+      h1 em {
+        color: #965f44;
+        font-weight: 400;
+      }
+
+      .hero-description {
+        max-width: 410px;
+        margin: 25px 0 0;
+        color: #6f665d;
+        font-size: 14px;
+        line-height: 1.9;
+      }
+
+      .hero-actions {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 13px;
+        margin-top: 33px;
+      }
+
+      .button {
+        min-height: 52px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 16px;
+        padding: 0 21px;
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.13em;
+        transition: transform 180ms ease, background 180ms ease;
+      }
+
+      .button:hover {
+        transform: translateY(-2px);
+      }
+
+      .button-primary {
+        background: linear-gradient(135deg, #a76849, #884b34);
+        box-shadow: 0 0 0 3px rgba(181, 150, 96, 0.14), 0 7px 22px rgba(128, 72, 48, 0.26);
+        color: #fffaf1;
+      }
+
+      .button-primary:hover {
+        background: linear-gradient(135deg, #b37554, #95563a);
+        box-shadow: 0 0 0 4px rgba(181, 150, 96, 0.2), 0 10px 28px rgba(128, 72, 48, 0.32);
+      }
+
+      .button-secondary {
+        border: 1px solid #d4c8b7;
+        box-shadow: 0 0 0 2px rgba(181, 150, 96, 0.11), 0 0 13px rgba(181, 150, 96, 0.2);
+        color: #51483f;
+        transition: transform 180ms ease, background 180ms ease, box-shadow 180ms ease;
+      }
+
+      .button-secondary:hover {
+        background: rgba(255, 253, 248, 0.72);
+        box-shadow: 0 0 0 3px rgba(181, 150, 96, 0.2), 0 0 19px rgba(181, 150, 96, 0.3);
+      }
+
+      .hero-note {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-top: 52px;
+        color: #7a7065;
+        font-family: var(--serif);
+        font-size: 17px;
+        font-style: italic;
+      }
+
+      .hero-note::before {
+        width: 30px;
+        height: 1px;
+        background: #c6ac7d;
+        content: "";
+      }
+
+      .temple-section {
+        position: relative;
+        isolation: isolate;
+        min-height: 150svh;
+        background: #80715e;
+      }
+
+      .temple-stage {
+        position: sticky;
+        top: 0;
+        height: 100svh;
+        display: flex;
+        align-items: flex-end;
+        overflow: hidden;
+        padding: 64px clamp(28px, 5vw, 76px);
+      }
+
+      .temple-background,
+      .temple-background img {
+        position: absolute;
+        z-index: 0;
+        inset: 0;
+        width: 100%;
+        height: 100svh;
+      }
+
+      .temple-background img {
+        display: block;
+        object-fit: cover;
+        object-position: center;
+        filter: saturate(0.84) contrast(0.95) brightness(1.025);
+        animation: image-drift 26s ease-in-out infinite alternate;
+      }
+
+      .temple-stage::before {
+        position: absolute;
+        z-index: 1;
+        inset: 0;
+        background:
+          radial-gradient(ellipse 36% 17% at 21% 18%, rgba(255, 249, 237, 0.2), transparent 100%),
+          radial-gradient(ellipse 30% 14% at 62% 15%, rgba(255, 249, 237, 0.16), transparent 100%),
+          radial-gradient(ellipse 40% 18% at 91% 33%, rgba(246, 234, 216, 0.13), transparent 100%),
+          linear-gradient(180deg, rgba(66, 49, 37, 0.04) 0%, transparent 42%, rgba(58, 43, 32, 0.2) 100%),
+          linear-gradient(90deg, rgba(82, 60, 42, 0.1), transparent 66%);
+        content: "";
+      }
+
+      .temple-card {
+        position: relative;
+        z-index: 2;
+        width: min(520px, 46vw);
+        margin: 0;
+        padding: clamp(28px, 3.2vw, 42px);
+        border: 1px solid rgba(255, 255, 255, 0.7);
+        background: rgba(250, 247, 239, 0.96);
+        box-shadow: 0 16px 42px rgba(43, 32, 24, 0.18);
+        transition: box-shadow 350ms ease, background-color 350ms ease;
+      }
+
+      .temple-card:hover {
+        box-shadow: 0 22px 54px rgba(43, 32, 24, 0.23);
+      }
+
+      .temple-card .eyebrow {
+        gap: 10px;
+        color: #a56b4f;
+        font-size: 9px;
+        letter-spacing: 0.2em;
+      }
+
+      .temple-card .eyebrow::before {
+        display: none;
+      }
+
+      .temple-card .eyebrow::after {
+        width: 36px;
+        height: 1px;
+        background: #d5b994;
+        content: "";
+      }
+
+      .temple-card h2 {
+        margin: 14px 0 12px;
+        color: #723d31;
+        font-family: var(--serif);
+        font-size: clamp(34px, 3.2vw, 46px);
+        font-weight: 600;
+        line-height: 0.98;
+        letter-spacing: -0.035em;
+      }
+
+      .temple-card p {
+        margin: 0;
+        color: #5f574f;
+        font-size: 12px;
+        line-height: 1.75;
+      }
+
+      .temple-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 20px;
+      }
+
+      .temple-button {
+        min-height: 42px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 9px;
+        padding: 0 14px;
+        border: 1px solid #8f4939;
+        color: #854638;
+        font-size: 9px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        transition: background 180ms ease, color 180ms ease, transform 180ms ease, box-shadow 180ms ease;
+      }
+
+      .temple-button svg {
+        width: 13px;
+        height: 13px;
+        flex: 0 0 auto;
+        transition: transform 180ms ease;
+      }
+
+      .temple-button-primary {
+        background: #793d31;
+        color: #fff9ef;
+      }
+
+      .temple-button:hover,
+      .temple-button:focus-visible {
+        background: #955740;
+        box-shadow: 0 0 0 3px rgba(181, 150, 96, 0.2), 0 5px 16px rgba(103, 61, 44, 0.18);
+        color: white;
+        transform: translateY(-2px);
+      }
+
+      .temple-button:hover svg,
+      .temple-button:focus-visible svg {
+        transform: translateX(2px) scale(1.08);
+      }
+
+      .button:active,
+      .temple-button:active {
+        transform: translateY(0) scale(0.98);
+      }
+
+      .has-reveal .reveal {
+        opacity: 0;
+        transform: translate3d(0, 22px, 0);
+        transition:
+          opacity 760ms cubic-bezier(0.2, 0.65, 0.3, 1),
+          transform 760ms cubic-bezier(0.2, 0.65, 0.3, 1);
+        transition-delay: var(--reveal-delay, 0ms);
+        will-change: opacity, transform;
+      }
+
+      .has-reveal .hero .reveal {
+        transform: translate3d(0, 22px, 0);
+      }
+
+      .has-reveal .temple-card.reveal {
+        transform: translate3d(0, 28px, 0) scale(0.985);
+        transition:
+          opacity 850ms cubic-bezier(0.2, 0.65, 0.3, 1),
+          transform 850ms cubic-bezier(0.2, 0.65, 0.3, 1),
+          box-shadow 350ms ease;
+      }
+
+      .has-reveal .reveal.is-visible {
+        opacity: 1;
+        transform: translate3d(0, 0, 0) scale(1);
+      }
+
+      .hero-image,
+      .temple-background img {
+        transform-origin: center;
+      }
+
+      .hero:focus-within .hero-image,
+      .hero:hover .hero-image {
+        animation-play-state: paused;
+      }
+
+      @keyframes image-drift {
+        from {
+          transform: scale(1);
+        }
+
+        to {
+          transform: scale(1.035);
+        }
+      }
+
+      @media (max-width: 1250px) {
+        .nav-shell {
+          width: min(100% - 44px, 1540px);
+          gap: 20px;
+        }
+
+        .main-nav {
+          gap: 13px;
+        }
+
+        .main-nav a {
+          font-size: 10px;
+        }
+
+        .brand-name {
+          font-size: 19px;
+        }
+
+        .hero-shell {
+          width: min(100% - 80px, 1250px);
+        }
+      }
+
+      @media (max-width: 1000px) {
+        .nav-shell {
+          min-height: 76px;
+        }
+
+        .hero {
+          min-height: 100svh;
+        }
+
+        .menu-toggle {
+          display: inline-flex;
+        }
+
+        .main-nav {
+          display: none;
+        }
+
+        .main-nav.is-open {
+          position: absolute;
+          top: 100%;
+          right: 0;
+          left: 0;
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 0;
+          padding: 8px 16px;
+          border: 1px solid var(--line);
+          background: var(--paper);
+          box-shadow: 0 15px 24px rgba(48, 40, 32, 0.1);
+        }
+
+        .main-nav.is-open a {
+          padding: 13px 8px;
+          font-size: 11px;
+        }
+
+        .hero-shell {
+          width: min(100% - 80px, 1250px);
+        }
+
+        h1 {
+          font-size: clamp(58px, 7vw, 75px);
+        }
+
+        .hero::before {
+          background:
+            linear-gradient(90deg, rgba(248, 245, 238, 0.97) 0%, rgba(248, 245, 238, 0.89) 43%, rgba(248, 245, 238, 0.42) 72%, rgba(248, 245, 238, 0.1) 100%),
+            linear-gradient(0deg, rgba(48, 40, 32, 0.16), transparent 42%);
+        }
+
+        .temple-section {
+          min-height: 150svh;
+        }
+
+        .temple-card {
+          width: min(500px, 55vw);
+        }
+      }
+
+      @media (max-width: 720px) {
+        .announcement {
+          min-height: 31px;
+          font-size: 8px;
+          letter-spacing: 0.08em;
+        }
+
+        .nav-shell {
+          width: calc(100% - 32px);
+          min-height: 72px;
+          gap: 10px;
+        }
+
+        .hero {
+          min-height: 100svh;
+        }
+
+        .brand-mark {
+          width: 34px;
+          height: 38px;
+          flex: 0 0 34px;
+        }
+
+        .brand-mark svg {
+          width: 34px;
+          height: 37px;
+        }
+
+        .brand {
+          min-width: 0;
+          gap: 8px;
+        }
+
+        .brand-name {
+          font-size: clamp(16px, 4.5vw, 18px);
+          letter-spacing: 0;
+        }
+
+        .brand-caption {
+          display: none;
+        }
+
+        .menu-toggle {
+          gap: 0;
+          padding: 0 8px;
+          font-size: 8px;
+        }
+
+        .nav-donate {
+          min-height: 39px;
+          gap: 8px;
+          padding: 0 9px;
+          font-size: 8px;
+          letter-spacing: 0.08em;
+        }
+
+        .hero-stage::before {
+          background:
+            linear-gradient(90deg, rgba(248, 245, 238, 0.95) 0%, rgba(248, 245, 238, 0.85) 54%, rgba(248, 245, 238, 0.34) 100%),
+            linear-gradient(0deg, rgba(48, 40, 32, 0.18), transparent 46%);
+        }
+
+        .hero-image {
+          object-position: 82% center;
+        }
+
+        .hero-shell {
+          width: calc(100% - 42px);
+          padding: 36px 0;
+        }
+
+        .hero-copy {
+          max-width: 520px;
+          transform: none;
+        }
+
+        .eyebrow {
+          font-size: 9px;
+        }
+
+        h1 {
+          max-width: 480px;
+          margin-top: 19px;
+          font-size: clamp(57px, 13vw, 77px);
+        }
+
+        .hero-description {
+          max-width: 390px;
+          margin-top: 17px;
+          font-size: 13px;
+        }
+
+        .hero-actions {
+          margin-top: 24px;
+        }
+
+        .button {
+          min-height: 48px;
+          padding: 0 16px;
+          font-size: 9px;
+        }
+
+        .hero-note {
+          display: none;
+        }
+
+        .temple-section {
+          min-height: 150svh;
+        }
+
+        .temple-stage {
+          padding: 24px 20px 28px;
+        }
+
+        .temple-card {
+          width: 100%;
+          padding: 25px 23px;
+          border-color: rgba(255, 255, 255, 0.62);
+          background: rgba(250, 247, 239, 0.84);
+          -webkit-backdrop-filter: blur(8px);
+          backdrop-filter: blur(8px);
+        }
+
+        .temple-card h2 {
+          font-size: clamp(34px, 9vw, 42px);
+        }
+
+        .temple-card p {
+          font-size: 11px;
+        }
+
+        .temple-actions {
+          gap: 8px;
+        }
+
+        .temple-button {
+          min-height: 40px;
+          padding: 0 10px;
+          font-size: 8px;
+        }
+
+      }
+
+      @media (max-width: 360px) {
+        .nav-shell {
+          width: calc(100% - 28px);
+          gap: 8px;
+        }
+
+        .brand-mark {
+          width: 30px;
+          flex-basis: 30px;
+        }
+
+        .brand-mark svg {
+          width: 30px;
+        }
+
+        .brand {
+          gap: 7px;
+        }
+
+        .brand-name {
+          font-size: 15px;
+        }
+
+        .menu-toggle {
+          padding: 0 6px;
+        }
+
+        .nav-donate {
+          gap: 6px;
+          padding: 0 7px;
+          font-size: 7.5px;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+          scroll-behavior: auto !important;
+          transition-duration: 0.01ms !important;
+          animation-duration: 0.01ms !important;
+          animation-iteration-count: 1 !important;
+        }
+
+        .has-reveal .reveal {
+          opacity: 1;
+          transform: none;
+          transition: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="announcement">A life of love. A legacy of service. <span>·</span> Inspired by Neem Karoli Baba</div>
+    <header class="site-header">
+      <div class="nav-shell">
+        <a class="brand" href="#home" aria-label="BNK Seva Trust home">
+          <span class="brand-mark" aria-hidden="true">
+            <svg viewBox="0 0 48 54" fill="none">
+              <path d="M24 3C16 12 7 19 7 31c0 10 7.4 18 17 18s17-8 17-18C41 19 32 12 24 3Z" stroke="currentColor" stroke-width="1.2" />
+              <path d="M24 14c-4.5 5.6-10 10.5-10 17a10 10 0 0 0 20 0c0-6.5-5.5-11.4-10-17Z" stroke="currentColor" stroke-width="1" />
+              <path d="M24 25v16M19 32c1.5 2 3.2 3 5 3s3.5-1 5-3" stroke="currentColor" stroke-width="1" />
+              <circle cx="24" cy="45" r="1.2" fill="currentColor" />
+            </svg>
+          </span>
+          <span class="brand-copy">
+            <span class="brand-name">BNK Seva Trust</span>
+            <span class="brand-caption">In the spirit of Maharaj-ji</span>
+          </span>
+        </a>
+        <nav class="main-nav" id="site-navigation" aria-label="Main navigation">
+          <a href="#home">Home</a>
+          <a href="#about">About</a>
+          <a href="#temple">Temple Project</a>
+          <a href="#seva">Our Seva</a>
+          <a href="#impact">Impact</a>
+          <a href="#stories">Stories</a>
+          <a href="#gallery">Gallery</a>
+          <a href="#store">Store</a>
+          <a href="#involved">Get Involved</a>
+        </nav>
+        <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-navigation">Menu</button>
+        <a class="nav-donate" href="#donate">
+          Donate Now
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0l-1 1-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8Z" fill="currentColor" /></svg>
+        </a>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero" id="home">
+        <div class="hero-stage" aria-hidden="true">
+          <img
+            class="hero-image"
+            src="images/baba-neem-karoli-homebanner.png"
+            alt=""
+          />
+        </div>
+        <div class="hero-shell">
+          <div class="hero-copy">
+            <div class="eyebrow reveal" style="--reveal-delay: 80ms">Seva • Shraddha • Samarpan</div>
+            <h1 class="reveal" style="--reveal-delay: 190ms">Seva is the<br />purest expression<br />of <em>devotion.</em></h1>
+            <p class="hero-description reveal" style="--reveal-delay: 300ms">
+              Inspired by Baba Neem Karoli Maharaj, we carry compassion into action—serving every life with love, dignity and an open heart.
+            </p>
+            <div class="hero-actions reveal" style="--reveal-delay: 410ms">
+              <a class="button button-primary" href="#donate">
+                Donate Now
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0l-1 1-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8Z" fill="currentColor" /></svg>
+              </a>
+              <a class="button button-secondary" href="#involved">Join the Seva</a>
+            </div>
+            <div class="hero-note reveal" style="--reveal-delay: 520ms">Love everyone. Serve everyone. Remember God.</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="temple-section" id="temple" aria-labelledby="temple-heading">
+        <div class="temple-stage">
+          <picture class="temple-background" aria-hidden="true">
+            <source media="(max-width: 720px)" srcset="images/temple-for-baba-mobile%20view.png" />
+            <img src="images/temple-for-baba.png" alt="" />
+          </picture>
+          <div class="temple-card reveal">
+          <div class="eyebrow reveal" style="--reveal-delay: 100ms">Our flagship mission</div>
+          <h2 class="reveal" style="--reveal-delay: 210ms" id="temple-heading">A Temple for Baba.<br />A Home for Seva.</h2>
+          <p class="reveal" style="--reveal-delay: 320ms">
+            BNK Seva Trust is working towards building a Neem Karoli Baba Temple in Newtown, Kolkata — a sacred space dedicated to devotion, humanity, community and seva. A temple that is not only a place of worship, but a place where people can come together to pray, serve, learn and give.
+          </p>
+          <div class="temple-actions reveal" style="--reveal-delay: 430ms">
+            <a class="temple-button temple-button-primary" href="#temple">
+              Explore Temple Project
+              <svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M3 10h13m-5-5 5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" /></svg>
+            </a>
+            <a class="temple-button" href="#donate">
+              Contribute to the Temple
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0l-1 1-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8Z" fill="currentColor" /></svg>
+            </a>
+          </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <script>
+      const menuToggle = document.querySelector(".menu-toggle");
+      const mainNav = document.querySelector(".main-nav");
+      const revealItems = document.querySelectorAll(".reveal");
+
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        revealItems.forEach((item) => item.classList.add("is-visible"));
+      } else if ("IntersectionObserver" in window) {
+        const revealObserver = new IntersectionObserver((entries, observer) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("is-visible");
+              observer.unobserve(entry.target);
+            }
+          });
+        }, { threshold: 0.01, rootMargin: "0px" });
+
+        revealItems.forEach((item) => revealObserver.observe(item));
+      } else {
+        revealItems.forEach((item) => item.classList.add("is-visible"));
+      }
+
+      menuToggle.addEventListener("click", () => {
+        const isOpen = menuToggle.getAttribute("aria-expanded") === "true";
+        menuToggle.setAttribute("aria-expanded", String(!isOpen));
+        mainNav.classList.toggle("is-open", !isOpen);
+      });
+
+      mainNav.addEventListener("click", (event) => {
+        if (event.target.closest("a")) {
+          menuToggle.setAttribute("aria-expanded", "false");
+          mainNav.classList.remove("is-open");
+        }
+      });
+    </script>
+  </body>
+</html>
