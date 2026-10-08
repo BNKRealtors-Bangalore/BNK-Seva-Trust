@@ -561,6 +561,852 @@
         }
       }
 
+      @keyframes progress-shimmer {
+        0%,
+        100% {
+          background-position: 180% 0, 0 0;
+        }
+
+        50% {
+          background-position: 0% 0, 0 0;
+        }
+      }
+
+      @keyframes button-aura {
+        0%,
+        100% {
+          box-shadow:
+            0 10px 26px rgba(140, 83, 17, 0.28),
+            0 0 0 4px rgba(223, 164, 58, 0.22),
+            0 0 28px rgba(255, 196, 74, 0.24),
+            inset 0 1px 0 rgba(255, 248, 203, 0.78);
+        }
+
+        50% {
+          box-shadow:
+            0 12px 31px rgba(140, 83, 17, 0.31),
+            0 0 0 5px rgba(223, 164, 58, 0.28),
+            0 0 44px rgba(255, 207, 94, 0.4),
+            inset 0 1px 0 rgba(255, 248, 203, 0.84);
+        }
+      }
+
+      .temple-fund-section {
+        position: relative;
+        min-height: 100svh;
+        --tracker-sticky-top: 0px;
+        background: #49362d;
+      }
+
+      .temple-fund-stage {
+        position: sticky;
+        top: var(--tracker-sticky-top);
+        height: 100svh;
+        overflow: hidden;
+        isolation: isolate;
+        --paper-progress: 0;
+        background: #fffdfa url("images/fund-tracker-desktop-bg.png") center center / 100% 100% no-repeat;
+      }
+
+      .temple-fund-stage::before {
+        position: absolute;
+        z-index: 0;
+        inset: -12%;
+        background:
+          radial-gradient(circle at 50% 40%, rgba(255, 235, 154, 0.42), transparent 28%),
+          radial-gradient(circle at 24% 28%, rgba(178, 54, 43, 0.16), transparent 26%),
+          radial-gradient(circle at 78% 74%, rgba(238, 170, 44, 0.22), transparent 30%);
+        content: "";
+        opacity: calc(0.32 + (var(--paper-progress) * 0.42));
+        pointer-events: none;
+        transform: scale(calc(1 + (var(--paper-progress) * 0.025)));
+        transition: opacity 220ms ease;
+      }
+
+      .tracker-paper {
+        position: absolute;
+        z-index: 1;
+        inset: 0;
+        overflow: hidden;
+        clip-path: inset(0 50% 0 50%);
+        background:
+          linear-gradient(180deg, rgba(143, 98, 36, 0.09), transparent 10%, transparent 91%, rgba(143, 98, 36, 0.08)),
+          radial-gradient(ellipse 44% 34% at 18% 25%, rgba(181, 78, 55, 0.1), transparent 66%),
+          radial-gradient(ellipse 42% 36% at 84% 73%, rgba(224, 159, 44, 0.13), transparent 68%),
+          radial-gradient(ellipse 42% 32% at 52% 46%, rgba(255, 255, 255, 0.9), transparent 76%),
+          linear-gradient(135deg, rgba(255, 255, 252, 0.995), rgba(253, 249, 238, 0.99) 54%, rgba(255, 255, 250, 0.995));
+        color: #781d1b;
+        box-shadow:
+          inset 0 0 0 1px rgba(149, 91, 28, 0.3),
+          inset 0 0 0 clamp(7px, 0.7vw, 12px) rgba(255, 248, 225, 0.42),
+          inset 0 18px 42px rgba(108, 68, 30, 0.14),
+          0 0 calc(28px + (var(--paper-progress) * 42px)) rgba(255, 211, 104, 0.32),
+          0 0 calc(70px + (var(--paper-progress) * 62px)) rgba(139, 44, 35, 0.12);
+        transform: translateZ(0);
+        backface-visibility: hidden;
+        contain: paint;
+        transition: clip-path 2200ms cubic-bezier(0.16, 1, 0.3, 1), box-shadow 1100ms ease;
+        will-change: clip-path;
+      }
+
+      .temple-fund-stage.is-open {
+        --paper-progress: 1;
+      }
+
+      .temple-fund-stage.is-open .tracker-paper {
+        clip-path: inset(0 0 0 0);
+      }
+
+      .tracker-content {
+        position: relative;
+        z-index: 2;
+        width: min(880px, calc(100% - 56px));
+        height: 100%;
+        margin: 0 auto;
+        padding: clamp(82px, 11vh, 128px) 0 clamp(30px, 5vh, 62px);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+      }
+
+      .tracker-item {
+        opacity: 0;
+        transform: translateY(12px);
+        transition:
+          opacity 760ms ease,
+          transform 760ms cubic-bezier(0.2, 0.65, 0.3, 1),
+          filter 260ms ease;
+        transition-delay: var(--tracker-delay, 0ms);
+        will-change: opacity, transform;
+      }
+
+      .tracker-item.is-revealed {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      .tracker-item.is-revealed:hover {
+        filter: drop-shadow(0 5px 12px rgba(140, 73, 35, 0.12));
+      }
+
+      .tracker-kicker,
+      .tracker-location {
+        color: #8b2d22;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.27em;
+        text-transform: uppercase;
+      }
+
+      .tracker-kicker {
+        margin: 0;
+        font-size: clamp(16px, 1.8vw, 24px);
+        letter-spacing: 0.18em;
+      }
+
+      .tracker-location {
+        margin: 11px 0 0;
+        color: #8b2922;
+        font-size: 10px;
+        letter-spacing: 0.24em;
+      }
+
+      .tracker-title {
+        margin: clamp(18px, 3vh, 30px) 0 0;
+        color: #781d1b;
+        font-family: var(--serif);
+        font-size: clamp(24px, 2.5vw, 34px);
+        font-weight: 500;
+        line-height: 1;
+      }
+
+      .tracker-temple-image {
+        position: absolute;
+        z-index: 1;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        pointer-events: none;
+      }
+
+      .tracker-temple-image picture,
+      .tracker-temple-image img {
+        display: block;
+        width: 100%;
+        height: 100%;
+      }
+
+      .tracker-temple-image img {
+        object-fit: fill;
+        filter: drop-shadow(0 12px 20px rgba(98, 57, 27, 0.12));
+      }
+
+      .tracker-progress-wrap {
+        width: min(220px, 100%);
+        margin-top: clamp(20px, 3.4vh, 32px);
+        display: grid;
+        place-items: center;
+      }
+
+      .tracker-progress-label {
+        position: absolute;
+        z-index: 1;
+        inset: 0;
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 5px;
+        color: #781d1b;
+        font-size: clamp(28px, 3.2vw, 38px);
+        font-weight: 600;
+        line-height: 1;
+        text-align: center;
+        pointer-events: none;
+      }
+
+      .tracker-progress-label span:first-child,
+      .tracker-amount strong,
+      .tracker-remaining strong {
+        font-family: var(--sans);
+        font-variant-numeric: tabular-nums;
+        letter-spacing: 0.02em;
+      }
+
+      .tracker-progress-label span:last-child {
+        font-family: var(--serif);
+        font-size: 0.42em;
+        font-weight: 500;
+        letter-spacing: 0.18em;
+      }
+
+      .tracker-progress {
+        position: relative;
+        width: clamp(132px, 12vw, 172px);
+        aspect-ratio: 1;
+        border: 1px solid rgba(218, 166, 65, 0.82);
+        border-radius: 50%;
+        background:
+          radial-gradient(circle at 50% 50%, rgba(255, 253, 248, 0.98) 0 53%, transparent 54%),
+          conic-gradient(from -90deg, #fff1b6 0 1%, #a83d35 1% 42%, rgba(231, 197, 125, 0.28) 42% 100%);
+        box-shadow:
+          0 0 0 5px rgba(220, 156, 44, 0.12),
+          0 0 34px rgba(255, 198, 77, 0.3),
+          0 12px 28px rgba(151, 85, 24, 0.18),
+          inset 0 0 20px rgba(255, 236, 178, 0.52);
+      }
+
+      .tracker-progress::after {
+        position: absolute;
+        inset: 12px;
+        border: 1px solid rgba(198, 144, 54, 0.36);
+        border-radius: inherit;
+        background: radial-gradient(circle, rgba(255, 255, 252, 0.94), rgba(255, 250, 235, 0.86));
+        box-shadow:
+          inset 0 0 18px rgba(255, 224, 151, 0.3),
+          0 0 16px rgba(255, 218, 128, 0.2);
+        content: "";
+      }
+
+      .tracker-progress::before {
+        position: absolute;
+        inset: -9px;
+        border-radius: inherit;
+        background: radial-gradient(circle, rgba(255, 211, 102, 0.38), transparent 67%);
+        content: "";
+        filter: blur(8px);
+        opacity: 0.86;
+        pointer-events: none;
+      }
+
+      .tracker-amounts {
+        width: min(720px, 100%);
+        margin-top: clamp(20px, 3.4vh, 32px);
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: clamp(12px, 3vw, 36px);
+      }
+
+      .tracker-amount,
+      .tracker-remaining {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        color: #85281f;
+        font-size: 10px;
+        font-weight: 600;
+        letter-spacing: 0.13em;
+        text-transform: uppercase;
+      }
+
+      .tracker-amount strong,
+      .tracker-remaining strong {
+        color: #781d1b;
+        font-size: clamp(25px, 3vw, 34px);
+        font-weight: 700;
+      }
+
+      .tracker-crore {
+        font-size: 0.68em;
+        font-weight: 600;
+        letter-spacing: 0;
+      }
+
+      .tracker-remaining {
+        align-items: center;
+      }
+
+      .tracker-contribute {
+        min-height: 52px;
+        margin-top: clamp(20px, 3.2vh, 32px);
+        padding: 0 25px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        border: 1px solid #8d573e;
+        border-color: #bb7617;
+        border-radius: 11px;
+        background: linear-gradient(135deg, #ffca4f, #e58b18 62%, #d7780d);
+        box-shadow:
+          0 10px 26px rgba(140, 83, 17, 0.28),
+          0 0 0 4px rgba(223, 164, 58, 0.22),
+          0 0 30px rgba(255, 196, 74, 0.28),
+          inset 0 1px 0 rgba(255, 248, 203, 0.78);
+        color: #fffdf3;
+        font-family: var(--serif);
+        font-size: 17px;
+        font-weight: 600;
+        letter-spacing: 0.08em;
+        text-decoration: none;
+        text-transform: uppercase;
+        animation: button-aura 3.8s ease-in-out infinite;
+        transition: transform 180ms ease, box-shadow 180ms ease, background 180ms ease, letter-spacing 180ms ease;
+      }
+
+      .tracker-contribute:hover,
+      .tracker-contribute:focus-visible {
+        transform: translateY(-3px) scale(1.015);
+        background: linear-gradient(135deg, #ffd86e, #eea22b 62%, #df8416);
+        box-shadow:
+          0 14px 34px rgba(103, 62, 40, 0.28),
+          0 0 0 5px rgba(180, 143, 78, 0.26),
+          0 0 42px rgba(255, 200, 76, 0.38),
+          inset 0 1px 0 rgba(255, 248, 203, 0.88);
+        letter-spacing: 0.1em;
+      }
+
+      .tracker-message {
+        max-width: 540px;
+        margin: clamp(15px, 2.6vh, 24px) 0 0;
+        color: #81221e;
+        font-family: var(--serif);
+        font-size: clamp(17px, 2vw, 21px);
+        font-style: italic;
+        line-height: 1.45;
+      }
+
+      .tracker-temple-art {
+        position: absolute;
+        z-index: 0;
+        right: clamp(30px, 5vw, 72px);
+        bottom: 5%;
+        width: min(390px, 33vw);
+        height: 70%;
+        color: rgba(173, 104, 35, 0.23);
+        pointer-events: none;
+      }
+
+      .about-section {
+        position: relative;
+        min-height: 100svh;
+        overflow: hidden;
+        isolation: isolate;
+        background: #fffdf8;
+      }
+
+      .about-background {
+        position: absolute;
+        inset: 0;
+        z-index: 0;
+        margin: 0;
+      }
+
+      .about-background img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
+      }
+
+      .about-content {
+        position: relative;
+        z-index: 1;
+        width: min(760px, calc(100% - 48px));
+        min-height: 100svh;
+        margin: 0 auto 0 clamp(28px, 4vw, 72px);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: clamp(24px, 3vh, 38px) 0 clamp(56px, 8vh, 90px);
+        text-align: center;
+        transform: none;
+      }
+
+      .about-eyebrow {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 14px;
+        margin: 0;
+        color: #9c5f22;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.24em;
+        text-transform: uppercase;
+      }
+
+      .about-eyebrow::before {
+        display: none;
+        content: none;
+      }
+
+      .about-title {
+        margin: 18px 0 0;
+        color: #7e171c;
+        font-family: var(--serif);
+        font-size: clamp(42px, 5vw, 68px);
+        font-weight: 500;
+        line-height: 0.96;
+      }
+
+      .about-description {
+        max-width: 560px;
+        margin: 22px 0 0;
+        color: #4f4a47;
+        font-size: clamp(12px, 1.1vw, 15px);
+        line-height: 1.65;
+        text-align: left;
+      }
+
+      .about-actions {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 18px;
+        margin-top: 28px;
+      }
+
+      .about-button {
+        min-width: 190px;
+        min-height: 52px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        padding: 0 24px;
+        border: 1px solid #a9672c;
+        color: #7e171c;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        transition: transform 180ms ease, box-shadow 180ms ease, background 180ms ease, color 180ms ease;
+      }
+
+      .about-button-primary {
+        border-color: #7b1519;
+        background: linear-gradient(135deg, #8d171b, #681014);
+        box-shadow: 0 9px 24px rgba(116, 24, 25, 0.24);
+        color: #fff8ed;
+      }
+
+      .about-button:hover,
+      .about-button:focus-visible {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 28px rgba(123, 68, 26, 0.22);
+      }
+
+      .about-button-primary:hover,
+      .about-button-primary:focus-visible {
+        background: linear-gradient(135deg, #9d1c22, #741419);
+        box-shadow: 0 13px 30px rgba(116, 24, 25, 0.3);
+      }
+
+      .inspiration-section {
+        position: relative;
+        min-height: 100svh;
+        overflow: hidden;
+        isolation: isolate;
+        background: #fffdf8;
+      }
+
+      .inspiration-background {
+        position: absolute;
+        inset: 0;
+        z-index: 0;
+        margin: 0;
+      }
+
+      .inspiration-background img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
+      }
+
+      .inspiration-section::before {
+        position: absolute;
+        z-index: 1;
+        inset: 0;
+        background: transparent;
+        content: "";
+        pointer-events: none;
+      }
+
+      .inspiration-content {
+        position: relative;
+        z-index: 2;
+        width: min(700px, calc(100% - 56px));
+        min-height: 100svh;
+        margin-left: auto;
+        margin-right: clamp(0px, 1vw, 18px);
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: center;
+        padding: clamp(24px, 3vh, 38px) 0 clamp(56px, 8vh, 90px);
+      }
+
+      .inspiration-ornament {
+        margin: 0 0 24px;
+        color: #a56d34;
+        font-size: 28px;
+        letter-spacing: 0.18em;
+      }
+
+      .inspiration-eyebrow {
+        margin: 0;
+        color: #9c6b3d;
+        font-size: 13px;
+        font-weight: 600;
+        letter-spacing: 0.17em;
+        text-transform: uppercase;
+      }
+
+      .inspiration-title {
+        margin: 34px 0 0;
+        color: #a77a4e;
+        font-family: var(--serif);
+        font-size: clamp(42px, 5vw, 68px);
+        font-weight: 500;
+        line-height: 0.96;
+      }
+
+      .inspiration-title span {
+        display: block;
+        color: #8c151b;
+        font-size: 0.84em;
+      }
+
+      .inspiration-copy {
+        max-width: 560px;
+        margin: 30px 0 0;
+        color: #403c38;
+        font-size: clamp(12px, 1.1vw, 15px);
+        line-height: 1.65;
+      }
+
+      .inspiration-copy p {
+        margin: 0;
+      }
+
+      .inspiration-copy p + p {
+        margin-top: 16px;
+      }
+
+      .inspiration-button {
+        min-height: 58px;
+        margin-top: 36px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0 34px;
+        border: 3px solid rgba(186, 147, 79, 0.65);
+        border-radius: 13px;
+        background: linear-gradient(135deg, #a31619, #7e1115);
+        box-shadow: 0 12px 26px rgba(121, 28, 21, 0.28), inset 0 1px 0 rgba(255, 231, 171, 0.34);
+        color: #fff8ed;
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.17em;
+        text-transform: uppercase;
+        transition: transform 180ms ease, box-shadow 180ms ease, background 180ms ease;
+      }
+
+      .inspiration-button:hover,
+      .inspiration-button:focus-visible {
+        transform: translateY(-2px);
+        background: linear-gradient(135deg, #b31b20, #8d1519);
+        box-shadow: 0 16px 34px rgba(121, 28, 21, 0.34), inset 0 1px 0 rgba(255, 231, 171, 0.42);
+      }
+
+      .seva-section {
+        padding-top: 120px;
+        position: relative;
+        min-height: auto;
+        overflow: hidden;
+        isolation: isolate;
+        background: #fffdf8;
+      }
+
+      .seva-background {
+        position: absolute;
+        inset: 0;
+        z-index: 0;
+        margin: 0;
+      }
+
+      .seva-background img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
+      }
+
+      .seva-content {
+        position: relative;
+        z-index: 1;
+        width: min(100% - 112px, 1460px);
+        min-height: auto;
+        margin: 0 auto;
+        padding: 0 0 68px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+      }
+
+      .seva-heading {
+        text-align: center;
+      }
+
+      .seva-kicker {
+        margin: 0 auto 16px;
+        color: #bf760d;
+        font-size: 28px;
+        line-height: 1;
+      }
+
+      .seva-title {
+        margin: 0;
+        color: #161310;
+        font-family: var(--serif);
+        font-size: clamp(34px, 3.2vw, 46px);
+        font-weight: 500;
+        line-height: 1;
+      }
+
+      .seva-title span {
+        color: #c07409;
+      }
+
+      .seva-subtitle {
+        margin: 15px 0 0;
+        color: #77716b;
+        font-size: clamp(13px, 1.05vw, 16px);
+        letter-spacing: 0.04em;
+      }
+
+      .seva-grid {
+        margin-top: 34px;
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 18px;
+      }
+
+      .seva-card {
+        min-height: 214px;
+        display: grid;
+        grid-template-columns: minmax(0, 47%) minmax(0, 1fr);
+        overflow: hidden;
+        border: 1.5px solid rgba(177, 91, 23, 0.42);
+        border-radius: 8px;
+        background: rgba(255, 253, 248, 0.86);
+        box-shadow: 0 12px 34px rgba(102, 65, 29, 0.1);
+        transition: transform 220ms ease, border-color 220ms ease, box-shadow 220ms ease;
+      }
+
+      .seva-card:hover,
+      .seva-card:focus-within {
+        border-color: #b75a17;
+        box-shadow: 0 18px 42px rgba(130, 67, 20, 0.16), 0 0 0 3px rgba(183, 90, 23, 0.08);
+        transform: translateY(-3px);
+      }
+
+      .seva-card-image {
+        min-height: 100%;
+        margin: 0;
+      }
+
+      .seva-card-image img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .seva-card-body {
+        padding: 16px 18px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+      }
+
+      .seva-icon {
+        width: 39px;
+        height: 39px;
+        margin-bottom: 10px;
+        color: #bd6f08;
+      }
+
+      .seva-icon svg {
+        width: 100%;
+        height: 100%;
+        stroke: currentColor;
+      }
+
+      .seva-card-rule {
+        width: 29px;
+        height: 1px;
+        margin-bottom: 10px;
+        background: #bd6f08;
+      }
+
+      .seva-card h3 {
+        margin: 0;
+        color: #18130f;
+        font-family: var(--serif);
+        font-size: clamp(16px, 1.28vw, 19px);
+        font-weight: 600;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+      }
+
+      .seva-card p {
+        max-width: 270px;
+        margin: 9px 0 0;
+        color: #65615d;
+        font-size: clamp(11px, 0.92vw, 13px);
+        line-height: 1.55;
+      }
+
+      .seva-action {
+        min-width: 300px;
+        min-height: 52px;
+        margin: 30px auto 0;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 14px;
+        border: 1.5px solid #c27610;
+        border-radius: 999px;
+        color: #c27610;
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        transition: transform 180ms ease, box-shadow 180ms ease, background 180ms ease;
+      }
+
+      .seva-action:hover,
+      .seva-action:focus-visible {
+        background: rgba(194, 118, 16, 0.08);
+        box-shadow: 0 12px 30px rgba(150, 85, 18, 0.16);
+        transform: translateY(-2px);
+      }
+
+      .tracker-roller {
+        position: absolute;
+        z-index: 3;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 58px;
+        border: 1px solid rgba(116, 79, 35, 0.8);
+        border-radius: 12px;
+        background:
+          linear-gradient(90deg, rgba(110, 66, 23, 0.56), transparent 3%, transparent 97%, rgba(110, 66, 23, 0.56)),
+          repeating-linear-gradient(90deg, transparent 0 7px, rgba(255, 241, 183, 0.14) 8px 9px, transparent 10px 16px),
+          linear-gradient(180deg, #fff5cf 0%, #dfad4a 15%, #ffebad 31%, #b87720 46%, #f9dc8d 62%, #a86a1e 78%, #f8df9b 92%, #956022 100%);
+        box-shadow: 0 7px 19px rgba(81, 43, 16, 0.34), inset 0 2px 5px rgba(255, 250, 222, 0.92), inset 0 -2px 4px rgba(119, 70, 24, 0.35);
+        pointer-events: none;
+      }
+
+      .tracker-roller::before,
+      .tracker-roller::after {
+        position: absolute;
+        top: 50%;
+        width: 36px;
+        height: 74px;
+        border: 2px solid rgba(137, 83, 24, 0.9);
+        border-radius: 46%;
+        background:
+          repeating-linear-gradient(90deg, transparent 0 4px, rgba(255, 240, 175, 0.56) 5px 6px, transparent 7px 9px),
+          linear-gradient(90deg, #92500d, #f9d16e 18%, #a65b10 32%, #ffed9e 52%, #b6751c 70%, #ffe393 85%, #844708);
+        box-shadow: 0 2px 8px rgba(72, 39, 12, 0.38), inset 0 0 6px rgba(255, 238, 175, 0.55);
+        content: "";
+        transform: translateY(-50%);
+      }
+
+      .tracker-roller::before {
+        left: 8px;
+      }
+
+      .tracker-roller::after {
+        right: 8px;
+      }
+
+      .tracker-tassel {
+        position: absolute;
+        top: 40px;
+        width: 11px;
+        height: 58px;
+        border-radius: 0 0 6px 6px;
+        background:
+          repeating-linear-gradient(90deg, rgba(255, 214, 132, 0.6) 0 1px, transparent 1px 3px),
+          linear-gradient(90deg, #75251f, #bd6840 48%, #70221e);
+        box-shadow: 0 2px 5px rgba(75, 43, 27, 0.25);
+      }
+
+      .tracker-tassel::after {
+        position: absolute;
+        right: -3px;
+        bottom: -7px;
+        left: -3px;
+        height: 16px;
+        border-bottom: 2px solid #9e6041;
+        border-left: 1px solid #9e6041;
+        border-right: 1px solid #9e6041;
+        border-radius: 0 0 50% 50%;
+        content: "";
+      }
+
+      .tracker-tassel-start {
+        left: 13px;
+      }
+
+      .tracker-tassel-end {
+        right: 13px;
+      }
+
       @media (max-width: 1250px) {
         .nav-shell {
           width: min(100% - 44px, 1540px);
@@ -628,7 +1474,7 @@
           font-size: clamp(58px, 7vw, 75px);
         }
 
-        .hero::before {
+        .hero-stage::before {
           background:
             linear-gradient(90deg, rgba(248, 245, 238, 0.97) 0%, rgba(248, 245, 238, 0.89) 43%, rgba(248, 245, 238, 0.42) 72%, rgba(248, 245, 238, 0.1) 100%),
             linear-gradient(0deg, rgba(48, 40, 32, 0.16), transparent 42%);
@@ -641,6 +1487,15 @@
         .temple-card {
           width: min(500px, 55vw);
         }
+      }
+
+      /* Keep the compact three-card row readable on medium desktops. */
+      @media (min-width: 721px) and (max-width: 1180px) {
+        .seva-content { width: calc(100% - 48px); }
+        .seva-card { grid-template-columns: 43% minmax(0, 1fr); }
+        .seva-card-body { padding: 12px; }
+        .seva-card h3 { font-size: 15px; }
+        .seva-card p { font-size: 11px; }
       }
 
       @media (max-width: 720px) {
@@ -820,6 +1675,309 @@
         }
       }
 
+      @media (max-width: 720px) {
+        .temple-fund-section {
+          min-height: 100svh;
+          --tracker-sticky-top: 0px;
+        }
+
+        .temple-fund-stage {
+          background-image: url("images/fund-tracker-bg.png");
+          background-size: 100% 100%;
+        }
+
+        .tracker-temple-image img {
+          transform: translateY(10px);
+        }
+
+        .tracker-content {
+          width: calc(100% - 34px);
+          padding: 78px 0 34px;
+        }
+
+        .tracker-kicker {
+          font-size: clamp(13px, 3.7vw, 17px);
+          letter-spacing: 0.15em;
+        }
+
+        .tracker-location {
+          margin-top: 8px;
+          font-size: 9px;
+        }
+
+        .tracker-title {
+          margin-top: clamp(17px, 2.8vh, 25px);
+          font-size: clamp(22px, 6vw, 28px);
+        }
+
+        .tracker-progress-wrap {
+          margin-top: clamp(18px, 3vh, 25px);
+        }
+
+        .tracker-progress-label {
+          margin-top: 10px;
+          font-size: 32px;
+        }
+
+        .tracker-amounts {
+          margin-top: clamp(18px, 3vh, 25px);
+          grid-template-columns: 1fr;
+          gap: 12px;
+        }
+
+        .tracker-amount,
+        .tracker-remaining {
+          gap: 5px;
+          font-size: 8px;
+          letter-spacing: 0.07em;
+        }
+
+        .tracker-amount strong,
+        .tracker-remaining strong {
+          font-size: clamp(23px, 7vw, 30px);
+        }
+
+        .tracker-contribute {
+          min-height: 48px;
+          margin-top: clamp(20px, 3.2vh, 27px);
+          padding: 0 17px;
+          font-size: 17px;
+          letter-spacing: 0.02em;
+        }
+
+        .tracker-message {
+          max-width: 330px;
+          margin-top: clamp(16px, 2.8vh, 23px);
+          font-size: 16px;
+        }
+
+        .about-background img {
+          object-position: center;
+          transform: translateY(-126px) scale(1.14);
+        }
+
+        .about-section {
+          min-height: 82svh;
+        }
+
+        .about-content {
+          width: calc(100% - 34px);
+          min-height: 82svh;
+          margin: 0 auto;
+          padding-top: 74px;
+          padding-bottom: 0;
+          justify-content: flex-start;
+        }
+
+        .about-eyebrow {
+          font-size: 9px;
+          letter-spacing: 0.18em;
+        }
+
+        .about-title {
+          font-size: clamp(38px, 10vw, 48px);
+        }
+
+        .about-description {
+          max-width: 390px;
+          font-size: 13px;
+          line-height: 1.7;
+        }
+
+        .about-actions {
+          gap: 10px;
+          margin-top: 24px;
+        }
+
+        .about-button {
+          min-width: 144px;
+          min-height: 45px;
+          padding: 0 14px;
+          font-size: 9px;
+          letter-spacing: 0.12em;
+        }
+
+        .inspiration-background img {
+          object-position: 32% center;
+          transform: scale(1.08);
+        }
+
+        .inspiration-section::before {
+          background:
+            linear-gradient(90deg, rgba(255, 253, 248, 0.94) 0%, rgba(255, 253, 248, 0.84) 58%, rgba(255, 253, 248, 0.32) 100%),
+            linear-gradient(0deg, rgba(82, 48, 28, 0.14), transparent 45%);
+        }
+
+        .inspiration-content {
+          width: calc(100% - 38px);
+          margin: 0 auto;
+          align-items: flex-start;
+          padding-top: 44px;
+          padding-right: 0;
+          padding-left: 0;
+          min-height: 100svh;
+          border: 0;
+          border-radius: 0;
+          background: transparent;
+          box-shadow: none;
+          -webkit-backdrop-filter: none;
+          backdrop-filter: none;
+          transform: none;
+        }
+
+        .inspiration-ornament {
+          margin-bottom: 18px;
+          font-size: 20px;
+        }
+
+        .inspiration-eyebrow {
+          font-size: 10px;
+        }
+
+        .inspiration-title {
+          margin-top: 24px;
+          font-size: clamp(38px, 10vw, 48px);
+        }
+
+        .inspiration-copy {
+          max-width: 390px;
+          margin-top: 23px;
+          font-size: 13px;
+          line-height: 1.7;
+        }
+
+        .inspiration-copy p + p {
+          margin-top: 12px;
+        }
+
+        .inspiration-button {
+          min-height: 49px;
+          margin-top: 26px;
+          padding: 0 20px;
+          font-size: 10px;
+          letter-spacing: 0.12em;
+        }
+
+        .seva-section { padding-top: 140px; }
+
+        .seva-content {
+          width: calc(100% - 28px);
+          padding: 0 0 42px;
+        }
+
+        .seva-kicker {
+          margin-bottom: 12px;
+          font-size: 22px;
+        }
+
+        .seva-title {
+          font-size: clamp(28px, 7.5vw, 36px);
+        }
+
+        .seva-subtitle {
+          margin-top: 10px;
+          font-size: 13px;
+          line-height: 1.45;
+        }
+
+        .seva-grid {
+          margin-top: 25px;
+          grid-template-columns: 1fr;
+          gap: 14px;
+        }
+
+        .seva-card {
+          min-height: 190px;
+          grid-template-columns: 42% minmax(0, 1fr);
+        }
+
+        .seva-card-body {
+          padding: 12px 14px;
+        }
+
+        .seva-icon {
+          width: 33px;
+          height: 33px;
+          margin-bottom: 7px;
+        }
+
+        .seva-card-rule {
+          margin-bottom: 8px;
+        }
+
+        .seva-card h3 {
+          font-size: 15px;
+        }
+
+        .seva-card p {
+          margin-top: 7px;
+          font-size: 11px;
+          line-height: 1.45;
+        }
+
+        .seva-action {
+          min-width: min(100%, 290px);
+          min-height: 50px;
+          margin-top: 26px;
+          font-size: 10px;
+          letter-spacing: 0.14em;
+        }
+
+        .tracker-temple-art {
+          right: 3%;
+          bottom: 5%;
+          width: 74vw;
+          height: 42%;
+          color: rgba(173, 104, 35, 0.17);
+        }
+
+        .tracker-roller {
+          height: 48px;
+        }
+
+        .tracker-roller::before,
+        .tracker-roller::after {
+          width: 28px;
+          height: 62px;
+        }
+
+        .tracker-tassel {
+          top: 34px;
+          height: 43px;
+          width: 8px;
+        }
+
+        .tracker-tassel-start {
+          left: 11px;
+        }
+
+        .tracker-tassel-end {
+          right: 11px;
+        }
+      }
+
+      @media (max-height: 700px) {
+        .tracker-content {
+          padding-top: 48px;
+          padding-bottom: 42px;
+        }
+
+        .tracker-title,
+        .tracker-progress-wrap,
+        .tracker-amounts {
+          margin-top: 18px;
+        }
+
+        .tracker-contribute {
+          margin-top: 18px;
+        }
+
+        .tracker-message {
+          margin-top: 14px;
+          font-size: 16px;
+        }
+      }
+
       @media (prefers-reduced-motion: reduce) {
         *,
         *::before,
@@ -834,6 +1992,11 @@
           opacity: 1;
           transform: none;
           transition: none;
+        }
+
+        .tracker-progress-fill,
+        .tracker-contribute {
+          animation: none;
         }
       }
     </style>
@@ -929,6 +2092,151 @@
         </div>
       </section>
 
+      <section class="temple-fund-section" id="temple-fund" aria-label="Temple construction fund">
+        <div class="temple-fund-stage">
+          <div class="tracker-paper">
+            <div class="tracker-content">
+              <p class="tracker-kicker tracker-item">Neem Karoli Baba Temple</p>
+              <p class="tracker-location tracker-item" style="--tracker-delay: 70ms">Newtown, Kolkata</p>
+              <h2 class="tracker-title tracker-item" style="--tracker-delay: 140ms">Temple Construction Fund</h2>
+              <div class="tracker-progress-wrap tracker-item" style="--tracker-delay: 210ms">
+                <p class="tracker-progress-label"><span>2%</span><span>FUNDED</span></p>
+                <div
+                  class="tracker-progress"
+                  role="progressbar"
+                  aria-label="Temple construction fund progress"
+                  aria-valuemin="0"
+                  aria-valuemax="100"
+                  aria-valuetext="XX percent funded"
+                >
+                </div>
+              </div>
+              <div class="tracker-amounts" aria-label="Temple fund amounts">
+                <div class="tracker-amount tracker-item" style="--tracker-delay: 280ms"><strong>₹ 2 <span class="tracker-crore">Cr</span></strong><span>Raised So Far</span></div>
+                <div class="tracker-amount tracker-item" style="--tracker-delay: 350ms"><strong>₹ 10 <span class="tracker-crore">Cr</span></strong><span>Total Goal</span></div>
+                <div class="tracker-remaining tracker-item" style="--tracker-delay: 420ms"><strong>₹ 8 <span class="tracker-crore">Cr</span></strong><span>Remaining</span></div>
+              </div>
+              <a class="tracker-contribute tracker-item" href="#donate" style="--tracker-delay: 490ms">
+                <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0l-1 1-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8Z" fill="currentColor" /></svg>
+                Contribute to the Temple
+              </a>
+              <p class="tracker-message tracker-item" style="--tracker-delay: 560ms">Every contribution brings us one step closer to creating this sacred space.</p>
+            </div>
+            <figure class="tracker-temple-image" aria-hidden="true">
+              <picture>
+                <source media="(max-width: 720px)" srcset="images/temple-mobile.png" />
+                <img src="images/temple.png" alt="" />
+              </picture>
+            </figure>
+          </div>
+        </div>
+      </section>
+
+      <section class="about-section" id="about" aria-labelledby="about-heading">
+        <picture class="about-background" aria-hidden="true">
+          <img src="images/about.png" alt="" />
+        </picture>
+        <div class="about-content">
+          <p class="about-eyebrow reveal" style="--reveal-delay: 80ms">About BNK Seva Trust</p>
+          <h2 class="about-title reveal" id="about-heading" style="--reveal-delay: 170ms">Seva Beyond Boundaries</h2>
+          <p class="about-description reveal" style="--reveal-delay: 260ms">
+            BNK Seva Trust is a movement of compassion inspired by the teachings of Baba Neem Karoli Maharaj. Through meaningful initiatives in education, healthcare, food distribution, community welfare, spiritual activities and environmental responsibility, the Trust seeks to make a positive difference in society.
+          </p>
+          <div class="about-actions reveal" style="--reveal-delay: 350ms">
+            <a class="about-button about-button-primary" href="#stories">Know Our Story</a>
+            <a class="about-button" href="#temple">Our Vision</a>
+          </div>
+        </div>
+      </section>
+
+      <section class="inspiration-section" id="inspiration" aria-labelledby="inspiration-heading">
+        <picture class="inspiration-background" aria-hidden="true">
+          <img src="images/inspiration.png" alt="" />
+        </picture>
+        <div class="inspiration-content">
+          <p class="inspiration-eyebrow reveal" style="--reveal-delay: 80ms">Our Inspiration</p>
+          <h2 class="inspiration-title reveal" id="inspiration-heading" style="--reveal-delay: 170ms">
+            Inspired by
+            <span>Baba Neem Karoli Maharaj</span>
+          </h2>
+          <div class="inspiration-copy reveal" style="--reveal-delay: 260ms">
+            <p>Baba Neem Karoli Maharaj's life was a living message of love, simplicity and oneness. He reminded us that true spirituality lies in seeing God in everyone and serving all with a compassionate heart.</p>
+            <p>A deep devotee of Lord Hanuman, Baba showed the power of unwavering faith, reminding us that surrender, love and service open the way to inner freedom.</p>
+            <p>His teachings continue to inspire BNK Seva Trust in its journey of seva - serving people, uplifting lives and spreading love, just as Baba lived and showed.</p>
+          </div>
+          <a class="inspiration-button reveal" href="#stories" style="--reveal-delay: 350ms">Discover His Teachings</a>
+        </div>
+      </section>
+
+      <section class="seva-section" id="seva" aria-labelledby="seva-heading">
+        <picture class="seva-background" aria-hidden="true">
+          <img src="images/seva-bg.png" alt="" />
+        </picture>
+        <div class="seva-content">
+          <div class="seva-heading">
+            <h2 class="seva-title reveal" id="seva-heading" style="--reveal-delay: 160ms">Real Change Through <span>Compassion</span></h2>
+            <p class="seva-subtitle reveal" style="--reveal-delay: 240ms">Every act of seva can create a ripple of change.</p>
+          </div>
+          <div class="seva-grid">
+            <article class="seva-card reveal" style="--reveal-delay: 120ms">
+              <figure class="seva-card-image"><img src="images/food-seva.png" alt="" /></figure>
+              <div class="seva-card-body">
+                <span class="seva-icon" aria-hidden="true"><svg viewBox="0 0 64 64" fill="none"><path d="M14 29h36c0 11-8 19-18 19S14 40 14 29Z" stroke-width="2"/><path d="M20 48h24M25 22c-3-4 3-6 0-10M33 22c-3-4 3-6 0-10M41 22c-3-4 3-6 0-10" stroke-width="2" stroke-linecap="round"/></svg></span>
+                <span class="seva-card-rule"></span>
+                <h3>Food Seva</h3>
+                <p>Nutritious meals and food support for people in need.</p>
+              </div>
+            </article>
+            <article class="seva-card reveal" style="--reveal-delay: 180ms">
+              <figure class="seva-card-image"><img src="images/education-seva.png" alt="" /></figure>
+              <div class="seva-card-body">
+                <span class="seva-icon" aria-hidden="true"><svg viewBox="0 0 64 64" fill="none"><path d="M14 18h15c5 0 8 3 8 8v24c0-5-3-8-8-8H14V18Zm36 0H37c-5 0-8 3-8 8v24c0-5 3-8 8-8h13V18Z" stroke-width="2" stroke-linejoin="round"/><path d="M20 26h9M20 34h9M43 26h3M39 34h7" stroke-width="2" stroke-linecap="round"/></svg></span>
+                <span class="seva-card-rule"></span>
+                <h3>Education Seva</h3>
+                <p>Supporting children's education and creating opportunities for a better future.</p>
+              </div>
+            </article>
+            <article class="seva-card reveal" style="--reveal-delay: 240ms">
+              <figure class="seva-card-image"><img src="images/healthcare-seva.png" alt="" /></figure>
+              <div class="seva-card-body">
+                <span class="seva-icon" aria-hidden="true"><svg viewBox="0 0 64 64" fill="none"><path d="M24 15v15a8 8 0 0 0 16 0V15M20 15h8M36 15h8M40 38c0 8 4 13 10 13s10-5 10-13" stroke-width="2" stroke-linecap="round"/><circle cx="50" cy="35" r="4" stroke-width="2"/></svg></span>
+                <span class="seva-card-rule"></span>
+                <h3>Healthcare Seva</h3>
+                <p>Medical camps, healthcare assistance and health awareness.</p>
+              </div>
+            </article>
+            <article class="seva-card reveal" style="--reveal-delay: 300ms">
+              <figure class="seva-card-image"><img src="images/community-seva.png" alt="" /></figure>
+              <div class="seva-card-body">
+                <span class="seva-icon" aria-hidden="true"><svg viewBox="0 0 64 64" fill="none"><circle cx="32" cy="21" r="7" stroke-width="2"/><circle cx="16" cy="28" r="6" stroke-width="2"/><circle cx="48" cy="28" r="6" stroke-width="2"/><path d="M20 50v-5c0-7 5-12 12-12s12 5 12 12v5M6 50v-4c0-6 4-10 10-10M58 50v-4c0-6-4-10-10-10" stroke-width="2" stroke-linecap="round"/></svg></span>
+                <span class="seva-card-rule"></span>
+                <h3>Community Seva</h3>
+                <p>Supporting families and communities facing difficult circumstances.</p>
+              </div>
+            </article>
+            <article class="seva-card reveal" style="--reveal-delay: 360ms">
+              <figure class="seva-card-image"><img src="images/animal-seva.png" alt="" /></figure>
+              <div class="seva-card-body">
+                <span class="seva-icon" aria-hidden="true"><svg viewBox="0 0 64 64" fill="none"><path d="M22 30c0-10 20-10 20 0v8c0 8-5 14-10 14S22 46 22 38v-8Z" stroke-width="2"/><path d="M22 30c-7-4-9-9-7-15 7 1 11 5 13 11M42 30c7-4 9-9 7-15-7 1-11 5-13 11M27 35h.1M37 35h.1M30 43c1 1 3 1 4 0" stroke-width="2" stroke-linecap="round"/></svg></span>
+                <span class="seva-card-rule"></span>
+                <h3>Animal &amp; Gau Seva</h3>
+                <p>Compassion and care for animals.</p>
+              </div>
+            </article>
+            <article class="seva-card reveal" style="--reveal-delay: 420ms">
+              <figure class="seva-card-image"><img src="images/environment-seva.png" alt="" /></figure>
+              <div class="seva-card-body">
+                <span class="seva-icon" aria-hidden="true"><svg viewBox="0 0 64 64" fill="none"><path d="M16 42c24 0 31-15 34-30-18 2-32 10-34 30Z" stroke-width="2" stroke-linejoin="round"/><path d="M17 42c8-9 17-15 28-21M31 31l-1-10M32 31l10 2" stroke-width="2" stroke-linecap="round"/></svg></span>
+                <span class="seva-card-rule"></span>
+                <h3>Environment Seva</h3>
+                <p>Tree plantation, environmental awareness and greener communities.</p>
+              </div>
+            </article>
+          </div>
+          <a class="seva-action reveal" href="#seva" style="--reveal-delay: 500ms">Explore All Seva <span aria-hidden="true">→</span></a>
+        </div>
+      </section>
+
     </main>
 
     <script>
@@ -965,6 +2273,32 @@
           mainNav.classList.remove("is-open");
         }
       });
+
+      const fundSection = document.querySelector(".temple-fund-section");
+      const fundStage = document.querySelector(".temple-fund-stage");
+      const fundItems = document.querySelectorAll(".tracker-item");
+      const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      const openFundTracker = () => {
+        fundStage.classList.add("is-open");
+        fundItems.forEach((item) => item.classList.add("is-revealed"));
+      };
+
+      if (reducedMotion) {
+        openFundTracker();
+      } else if ("IntersectionObserver" in window) {
+        const fundOpenObserver = new IntersectionObserver((entries, observer) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              openFundTracker();
+              observer.unobserve(entry.target);
+            }
+          });
+        }, { threshold: 0.28, rootMargin: "0px 0px -12% 0px" });
+
+        fundOpenObserver.observe(fundSection);
+      } else {
+        openFundTracker();
+      }
     </script>
   </body>
 </html>
