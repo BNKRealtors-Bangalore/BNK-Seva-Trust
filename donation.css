@@ -9,17 +9,18 @@
   inset: 0;
   display: grid;
   place-items: center;
-  padding: 18px;
+  padding: 12px;
+  overflow-y: auto;
   background: rgba(36, 29, 23, 0.68);
   backdrop-filter: blur(5px);
 }
 
 .bnk-donation-panel {
   position: relative;
-  width: min(100%, 760px);
-  max-height: min(92dvh, 920px);
-  overflow: auto;
-  padding: clamp(24px, 5vw, 48px);
+  width: min(100%, 680px);
+  max-height: none;
+  overflow: visible;
+  padding: 22px 26px 20px;
   border: 1px solid #e8e0d3;
   background: #fffdf8;
   box-shadow: 0 24px 80px rgba(29, 22, 17, 0.32);
@@ -27,10 +28,10 @@
 
 .bnk-donation-close {
   position: absolute;
-  top: 14px;
-  right: 14px;
-  width: 40px;
-  height: 40px;
+  top: 10px;
+  right: 10px;
+  width: 34px;
+  height: 34px;
   border: 1px solid #ded5c8;
   background: transparent;
   color: #51483f;
@@ -39,7 +40,7 @@
 }
 
 .bnk-donation-eyebrow {
-  margin: 0 0 10px;
+  margin: 0 0 6px;
   color: #936447;
   font-size: 10px;
   font-weight: 700;
@@ -49,29 +50,29 @@
 
 .bnk-donation-title {
   max-width: 600px;
-  margin: 0 50px 8px 0;
+  margin: 0 44px 5px 0;
   color: #302820;
-  font: 500 clamp(32px, 6vw, 46px)/1 var(--serif, Georgia, serif);
+  font: 500 clamp(27px, 4.4vw, 36px)/1 var(--serif, Georgia, serif);
 }
 
 .bnk-donation-intro {
-  margin: 0 0 25px;
+  margin: 0 0 14px;
   color: #756b60;
-  font-size: 13px;
-  line-height: 1.65;
+  font-size: 12px;
+  line-height: 1.45;
 }
 
 .bnk-donation-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 15px 18px;
+  gap: 10px 14px;
 }
 
 .bnk-donation-field {
   display: grid;
-  gap: 7px;
+  gap: 4px;
   color: #51483f;
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 700;
 }
 
@@ -83,18 +84,18 @@
 .bnk-donation-field select,
 .bnk-donation-field textarea {
   width: 100%;
-  min-height: 46px;
-  padding: 11px 12px;
+  min-height: 38px;
+  padding: 8px 10px;
   border: 1px solid #d9cfc0;
   border-radius: 0;
   outline: none;
   background: #fffefa;
   color: #302820;
-  font: 400 13px var(--sans, Arial, sans-serif);
+  font: 400 12px var(--sans, Arial, sans-serif);
 }
 
 .bnk-donation-field textarea {
-  min-height: 76px;
+  min-height: 52px;
   resize: vertical;
 }
 
@@ -106,19 +107,19 @@
 }
 
 .bnk-donation-help {
-  margin: -2px 0 0;
+  margin: -1px 0 0;
   color: #756b60;
-  font-size: 10px;
+  font-size: 9px;
   font-weight: 400;
-  line-height: 1.5;
+  line-height: 1.35;
 }
 
 .bnk-donation-status {
-  min-height: 20px;
-  margin: 15px 0 0;
+  min-height: 16px;
+  margin: 9px 0 0;
   color: #7a392e;
-  font-size: 12px;
-  line-height: 1.55;
+  font-size: 11px;
+  line-height: 1.4;
 }
 
 .bnk-donation-actions {
@@ -126,13 +127,13 @@
   flex-wrap: wrap;
   align-items: center;
   gap: 12px;
-  margin-top: 17px;
+  margin-top: 9px;
 }
 
 .bnk-donation-submit,
 .bnk-donation-print {
-  min-height: 48px;
-  padding: 0 19px;
+  min-height: 40px;
+  padding: 0 16px;
   border: 1px solid #884b34;
   background: #884b34;
   color: #fffaf1;
@@ -148,10 +149,10 @@
 }
 
 .bnk-donation-legal {
-  margin: 19px 0 0;
+  margin: 10px 0 0;
   color: #756b60;
-  font-size: 10px;
-  line-height: 1.65;
+  font-size: 9px;
+  line-height: 1.4;
 }
 
 .bnk-receipt-heading {
@@ -196,12 +197,13 @@
   .bnk-donation-panel {
     width: 100%;
     max-height: 94dvh;
-    padding: 30px 20px 24px;
+    overflow: auto;
+    padding: 22px 16px 18px;
   }
 
   .bnk-donation-grid {
     grid-template-columns: minmax(0, 1fr);
-    gap: 13px;
+    gap: 9px;
   }
 
   .bnk-donation-field-full {

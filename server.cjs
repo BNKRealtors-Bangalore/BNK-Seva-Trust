@@ -419,7 +419,16 @@ async function handleRequest(request, response) {
     const requestedPath = decodeURIComponent(url.pathname === "/" ? "/index.html" : url.pathname);
     const filePath = path.resolve(root, `.${requestedPath}`);
     const relativePath = path.relative(root, filePath);
-    const isPublicAsset = ["index.html", "donation.css", "donation.js"].includes(relativePath) ||
+    const isPublicAsset = [
+      "index.html",
+      "privacy-policy.html",
+      "terms-and-conditions.html",
+      "donation-policy.html",
+      "refund-policy.html",
+      "statutory-information.html",
+      "donation.css",
+      "donation.js"
+    ].includes(relativePath) ||
       relativePath.startsWith(`images${path.sep}`);
     if (!filePath.startsWith(`${root}${path.sep}`) || !isPublicAsset) {
       response.writeHead(404);

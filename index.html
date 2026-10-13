@@ -18,30 +18,46 @@
       document.documentElement.classList.add("has-reveal");
 
       (() => {
-        if ("scrollRestoration" in history) {
-          history.scrollRestoration = "manual";
+        if ("scrollRestoration" in history) history.scrollRestoration = "manual";
+
+        const navigationEntry = performance.getEntriesByType("navigation")[0];
+        const isReload = navigationEntry?.type === "reload";
+
+        // Ordinary visits and browser refreshes begin at the hero. Do not
+        // override direct ?product=... store links.
+        const startAtHero = (!location.hash || isReload) &&
+          !new URLSearchParams(location.search).has("product");
+        if (!startAtHero) return;
+
+        if (isReload && location.hash) {
+          history.replaceState(null, "", location.pathname + location.search);
         }
 
-        const shouldStartAtTop =
-          !window.location.hash &&
-          !new URLSearchParams(window.location.search).has("product");
+        let interacted = false;
+        ["touchstart", "pointerdown", "wheel", "keydown"].forEach(type =>
+          window.addEventListener(type, () => { interacted = true; },
+            { once: true, passive: true })
+        );
 
-        if (!shouldStartAtTop) return;
-
-        const scrollToTop = () => {
-          window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+        const resetScroll = () => {
+          if (interacted || new URLSearchParams(location.search).has("product")) return;
+          const oldBehavior = document.documentElement.style.scrollBehavior;
+          document.documentElement.style.scrollBehavior = "auto";
+          window.scrollTo(0, 0);
+          document.documentElement.style.scrollBehavior = oldBehavior;
         };
 
-        scrollToTop();
+        resetScroll();
+        document.addEventListener("DOMContentLoaded", resetScroll, { once: true });
         window.addEventListener("pageshow", () => {
-          scrollToTop();
-          setTimeout(scrollToTop, 0);
-          setTimeout(scrollToTop, 120);
+          resetScroll();
+          requestAnimationFrame(resetScroll);
         });
         window.addEventListener("load", () => {
-          requestAnimationFrame(scrollToTop);
-          setTimeout(scrollToTop, 120);
-        });
+          resetScroll();
+          requestAnimationFrame(() => requestAnimationFrame(resetScroll));
+          setTimeout(resetScroll, 250);
+        }, { once: true });
       })();
     </script>
     <style>
@@ -9107,7 +9123,8 @@
   position: relative;
   display: flex;
   flex-direction: column;
-  height: 458px;
+  min-height: 500px;
+  height: auto;
   min-width: 0;
 
   background: rgba(255,253,249,.98);
@@ -9136,7 +9153,8 @@
   position: relative;
   flex-shrink: 0;
   width: 100%;
-  height: 218px;
+  height: 208px;
+  margin-top: 10px; /* Lower each portrait slightly without changing card styling. */
   overflow: hidden;
   background: #f4e7d5;
 }
@@ -9146,13 +9164,24 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center 35%;
+  object-position: center 28%;
 
   transition: transform 850ms cubic-bezier(.2,.7,.2,1);
 }
 
 .voice-card:hover .voice-card-image > img {
   transform: scale(1.06);
+}
+
+/* Graceful portrait fallback if an image asset has not been uploaded yet. */
+.voice-card-image-fallback {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  place-items: center;
+  background: radial-gradient(circle at 52% 22%, #fffbf1, #eee0c8 80%);
+  color: #be985e;
+  font: 54px "Cormorant Garamond", Georgia, serif;
 }
 
 /* Curved white transition */
@@ -9283,6 +9312,7 @@
 .voice-profile {
   display: flex;
   align-items: center;
+  flex-shrink: 0;
   gap: 12px;
   margin-top: auto;
   padding-top: 14px;
@@ -9627,7 +9657,8 @@
   }
 
   .voice-card {
-    height: 445px;
+    min-height: 500px;
+    height: auto;
   }
 }
 
@@ -9733,11 +9764,13 @@
   }
 
   .voice-card {
-    height: 448px;
+    min-height: 510px;
+    height: auto;
   }
 
   .voice-card-image {
-    height: 220px;
+    height: 210px;
+    margin-top: 10px;
   }
 
   .voice-card-body {
@@ -13144,6 +13177,7 @@
         letter-spacing: 0.28em;
         text-transform: uppercase;
         text-decoration: none;
+        cursor: pointer;
         transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease, background 180ms ease;
       }
 
@@ -13186,6 +13220,144 @@
       }
 
       .csr-reveal.is-visible { opacity: 1; transform: translateY(0); }
+
+      .csr-modal {
+        position: fixed;
+        inset: 0;
+        z-index: 9999;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        padding: 22px;
+        background: rgba(32, 14, 10, 0.62);
+      }
+
+      .csr-modal.is-open { display: flex; }
+
+      .csr-modal-dialog {
+        position: relative;
+        width: min(100%, 620px);
+        max-height: min(92vh, 760px);
+        overflow: auto;
+        padding: 30px;
+        border: 1px solid rgba(197, 143, 65, 0.48);
+        border-radius: 18px;
+        background: #fffaf2;
+        box-shadow: 0 24px 70px rgba(29, 11, 8, 0.34);
+      }
+
+      .csr-modal-close {
+        position: absolute;
+        top: 14px;
+        right: 14px;
+        width: 38px;
+        height: 38px;
+        border: 1px solid #ead8bf;
+        border-radius: 50%;
+        background: #fff;
+        color: #800b23;
+        font-size: 25px;
+        line-height: 1;
+        cursor: pointer;
+      }
+
+      .csr-modal h3 {
+        margin: 0 44px 8px 0;
+        color: #800b23;
+        font: 600 clamp(30px, 4vw, 44px)/1.05 var(--serif);
+      }
+
+      .csr-modal-intro {
+        margin: 0 0 22px;
+        color: #665a56;
+        font: 400 14px/1.6 var(--sans);
+      }
+
+      .csr-partner-form,
+      .csr-form-field {
+        display: grid;
+        gap: 14px;
+      }
+
+      .csr-form-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 14px;
+      }
+
+      .csr-form-field {
+        gap: 6px;
+        color: #473b37;
+        font: 600 12px var(--sans);
+      }
+
+      .csr-form-field input,
+      .csr-form-field select,
+      .csr-form-field textarea {
+        width: 100%;
+        min-height: 46px;
+        padding: 11px 13px;
+        border: 1px solid #ead8bf;
+        border-radius: 10px;
+        background: rgba(255, 255, 255, 0.82);
+        color: #302820;
+        font: 400 14px/1.4 var(--sans);
+      }
+
+      .csr-form-field textarea {
+        min-height: 95px;
+        resize: vertical;
+      }
+
+      .csr-form-field input:focus,
+      .csr-form-field select:focus,
+      .csr-form-field textarea:focus {
+        outline: 2px solid rgba(191, 133, 54, 0.28);
+        border-color: #bf8536;
+        background: #fff;
+      }
+
+      .csr-form-field-full { grid-column: 1 / -1; }
+
+      .csr-form-actions {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 14px;
+        margin-top: 4px;
+      }
+
+      .csr-form-note {
+        margin: 0;
+        color: #8a7469;
+        font: 400 11px/1.5 var(--sans);
+      }
+
+      .csr-form-submit {
+        min-height: 46px;
+        padding: 0 22px;
+        border: 0;
+        border-radius: 999px;
+        background: #800b23;
+        color: white;
+        font: 700 11px var(--sans);
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        cursor: pointer;
+      }
+
+      .csr-form-status {
+        margin: 4px 0 0;
+        color: #6f5427;
+        font: 600 12px/1.5 var(--sans);
+      }
+
+      @media (max-width: 650px) {
+        .csr-modal-dialog { padding: 25px 16px 18px; }
+        .csr-form-grid { grid-template-columns: 1fr; }
+        .csr-form-actions { align-items: stretch; flex-direction: column; }
+        .csr-form-submit { width: 100%; }
+      }
 
       @media (max-width: 1180px) {
         .tracker-content-updated,
@@ -13620,7 +13792,7 @@
 .bnk-partner-join span {font-size:17px;transition:transform 250ms ease;}
 .bnk-partner-join:hover span {transform:translateX(4px);}
 .bnk-partner-message {margin:0;max-width:610px;color:#765547;font:400 12px/1.55 var(--sans);}
-.bnk-partner-section button:focus-visible,.csr-section a:focus-visible {outline:2px solid #bf8536;outline-offset:3px;}
+.bnk-partner-section button:focus-visible,.csr-section a:focus-visible,.csr-section button:focus-visible {outline:2px solid #bf8536;outline-offset:3px;}
 
 /* Store: align all currency amounts, quantity and cart numbers with
    the site's chosen number font (Inter / DM Sans), not mixed display faces. */
@@ -13721,6 +13893,85 @@
   .csr-reveal {opacity:1;transform:none;transition:none;}
 }
 
+
+/* Same-page section navigation (including sticky desktop/mobile header). */
+section[id]:not(#home), #footer-contact {
+  scroll-margin-top: 90px;
+}
+#home { scroll-margin-top: 0; }
+@media (max-width: 1000px) {
+  section[id]:not(#home), #footer-contact { scroll-margin-top: 80px; }
+}
+/* Store occupies an ordinary section in the document, not an isolated viewport. */
+#store .store { min-height: 0; height: auto; }
+
+
+/* ============================================================
+   HERO • PREMIUM SITARAM AUDIO PLAYER (NO VIDEO)
+   ============================================================ */
+.bnk-music-player {
+  margin-top: 23px;
+  width: min(100%, 440px);
+  min-height: 77px;
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  padding: 12px 13px;
+  border: 1px solid rgba(178, 143, 94, .48);
+  border-radius: 15px;
+  background: linear-gradient(115deg, rgba(255,253,247,.92), rgba(255,247,232,.8));
+  box-shadow: 0 12px 30px rgba(95,65,43,.09), inset 0 1px 0 rgba(255,255,255,.85);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  color: #800b23;
+}
+.bnk-music-art {
+  position: relative;
+  width: 46px;
+  height: 46px;
+  flex: 0 0 46px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  border: 1px solid rgba(219,170,93,.6);
+  background: radial-gradient(circle at 33% 25%, #f8dc9b, #ac703f 69%, #7c302b);
+  box-shadow: 0 2px 10px rgba(127, 66, 44, .18);
+  color: #fff9e6;
+  font-family: var(--serif);
+  font-size: 24px;
+  line-height: 1;
+}
+.bnk-music-player.is-playing .bnk-music-art { animation: bnkMusicGlow 2.4s ease-in-out infinite alternate; }
+@keyframes bnkMusicGlow { from { box-shadow: 0 0 0 0 rgba(188,133,65,.12), 0 2px 10px rgba(127,66,44,.18); } to { box-shadow: 0 0 0 5px rgba(188,133,65,.13), 0 4px 18px rgba(127,66,44,.25); } }
+.bnk-music-info { min-width: 0; flex: 1; display: flex; flex-direction: column; gap: 2px; }
+.bnk-music-eyebrow { font: 700 8px/1.3 var(--sans); letter-spacing: .16em; color: #b1814c; }
+.bnk-music-title { font: 600 22px/.98 var(--serif); color: #800b23; white-space: nowrap; }
+.bnk-music-status { font: 400 10px/1.5 var(--sans); color: #887367; }
+.bnk-music-actions { display: flex; flex: 0 0 auto; gap: 7px; }
+.bnk-music-control { display: grid; place-items: center; width: 36px; height: 36px; padding: 0; border-radius: 50%; cursor: pointer; transition: transform .2s ease, box-shadow .2s ease; }
+.bnk-music-control:hover { transform: translateY(-2px); }
+.bnk-music-control:focus-visible, .bnk-music-source:focus-visible { outline: 2px solid #b18e59; outline-offset: 3px; }
+.bnk-music-play { background: #800b23; color: #fff7e7; border: 1px solid #800b23; box-shadow: 0 4px 12px rgba(128,11,35,.18); }
+.bnk-music-stop { background: transparent; border: 1px solid #c7b39c; color: #800b23; }
+.bnk-music-control svg { width: 18px; height: 18px; }
+.bnk-music-icon-pause { display: none; }
+.bnk-music-player.is-playing .bnk-music-icon-play { display: none; }
+.bnk-music-player.is-playing .bnk-music-icon-pause { display: block; }
+.bnk-music-source { display: grid; place-items: center; width: 25px; height: 34px; flex: 0 0 25px; color: #ae8b5b; }
+.bnk-music-source svg { width: 16px; height: 16px; }
+@media (max-width: 700px) {
+  .bnk-music-player { margin-top: 17px; padding: 10px; min-height: 68px; gap: 9px; width: min(100%, 385px); }
+  .bnk-music-art { width: 39px; height: 39px; flex-basis: 39px; font-size: 21px; }
+  .bnk-music-title { font-size: 20px; }
+  .bnk-music-control { width: 33px; height: 33px; }
+  .bnk-music-actions { gap: 5px; }
+  .bnk-music-source { width: 19px; flex-basis: 19px; }
+}
+@media (max-width: 370px) {
+  .bnk-music-art { display: none; }
+  .bnk-music-title { font-size: 18px; }
+}
+@media (prefers-reduced-motion: reduce) { .bnk-music-player.is-playing .bnk-music-art { animation: none; } }
 </style>
     <link rel="stylesheet" href="/donation.css" />
     <script src="/donation.js" defer></script>
@@ -13729,7 +13980,7 @@
     <div class="announcement">A life of love. A legacy of service. <span>·</span> Inspired by Neem Karoli Baba</div>
     <header class="site-header">
       <div class="nav-shell">
-        <a class="brand" href="index.html#home" aria-label="BNK Seva Trust home">
+        <a class="brand" href="#home" aria-label="BNK Seva Trust home">
           <span class="brand-mark" aria-hidden="true">
             <svg viewBox="0 0 48 54" fill="none">
               <path d="M24 3C16 12 7 19 7 31c0 10 7.4 18 17 18s17-8 17-18C41 19 32 12 24 3Z" stroke="currentColor" stroke-width="1.2" />
@@ -13744,18 +13995,18 @@
           </span>
         </a>
         <nav class="main-nav" id="site-navigation" aria-label="Main navigation">
-          <a href="index.html#home">Home</a>
-          <a href="index.html#about">About</a>
-          <a href="index.html#temple-fund">Temple Project</a>
-          <a href="index.html#seva">Our Seva</a>
-          <a href="index.html#seva-impact">Impact</a>
-          <a href="index.html#seva-stories">Stories</a>
-          <a href="index.html#seva-gallery">Gallery</a>
-          <a href="index.html#store">Store</a>
-          <a href="index.html#stay-connected">Get Involved</a>
+          <a href="#home">Home</a>
+          <a href="#about">About</a>
+          <a href="#temple">Temple Project</a>
+          <a href="#seva">Our Seva</a>
+          <a href="#seva-impact">Impact</a>
+          <a href="#seva-stories">Stories</a>
+          <a href="#seva-gallery">Gallery</a>
+          <a href="#store">Store</a>
+          <a href="#join-seva">Get Involved</a>
         </nav>
         <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-navigation">Menu</button>
-        <a class="nav-donate" href="index.html#donate">
+        <a class="nav-donate" href="#donate">
           Donate Now
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0l-1 1-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8Z" fill="currentColor" /></svg>
         </a>
@@ -13785,6 +14036,29 @@
                 <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0l-1 1-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8Z" fill="currentColor" /></svg>
               </a>
               <a class="button button-secondary" href="#join-seva">Join the Seva</a>
+            </div>
+            <!-- Premium, audio-only devotional soundtrack; no YouTube video embed. -->
+            <div class="bnk-music-player reveal" style="--reveal-delay: 490ms" role="group" aria-label="Sitaram Sitaram devotional music">
+              <div class="bnk-music-art" aria-hidden="true"><span>ॐ</span></div>
+              <div class="bnk-music-info">
+                <span class="bnk-music-eyebrow">DEVOTIONAL AMBIENCE</span>
+                <strong class="bnk-music-title">Sitaram Sitaram</strong>
+                <span class="bnk-music-status" id="bnkMusicStatus" role="status" aria-live="polite">Ready to listen</span>
+              </div>
+              <div class="bnk-music-actions">
+                <button class="bnk-music-control bnk-music-play" type="button" id="bnkMusicPlay" aria-label="Play Sitaram Sitaram" title="Play or pause devotional music">
+                  <svg class="bnk-music-icon-play" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.5v13l10-6.5z"/></svg>
+                  <svg class="bnk-music-icon-pause" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 5h4v14H7zm6 0h4v14h-4z"/></svg>
+                </button>
+                <button class="bnk-music-control bnk-music-stop" type="button" id="bnkMusicStop" aria-label="Stop Sitaram Sitaram" title="Stop music">
+                  <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6 6h12v12H6z"/></svg>
+                </button>
+              </div>
+              <a class="bnk-music-source" href="https://youtu.be/KzLfiETJ-7k?si=pV4TZ1CPkFWGT6xu" target="_blank" rel="noopener noreferrer" title="Listen to the original on YouTube" aria-label="Listen to Sitaram Sitaram on YouTube (opens in a new tab)">
+                <svg viewBox="0 0 24 24" aria-hidden="true" fill="none"><path d="M14 5h5v5M19 5l-9 9" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><path d="M18 14v4a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+              </a>
+              <!-- Supply an authorized copy of the audio at the path below. -->
+              <audio id="bnkMusicAudio" preload="auto" src="audio/sitaram-sitaram.mp3" playsinline></audio>
             </div>
             <div class="hero-note reveal" style="--reveal-delay: 520ms">Love everyone. Serve everyone. Remember God.</div>
           </div>
@@ -13988,7 +14262,6 @@
         </div>
       </section>
 
-    </main>
 
     <script>
       const menuToggle = document.querySelector(".menu-toggle");
@@ -14023,13 +14296,6 @@
           menuToggle.setAttribute("aria-expanded", "false");
           mainNav.classList.remove("is-open");
         }
-      });
-
-      window.addEventListener("load", () => {
-        if (location.hash) {
-          history.replaceState(null, "", window.location.pathname + window.location.search);
-        }
-        window.scrollTo({ top: 0, left: 0, behavior: "auto" });
       });
 
       const fundSection = document.querySelector(".temple-fund-section");
@@ -15650,7 +15916,14 @@ function render() {
     if (chapterLabel) chapterLabel.textContent = `CHAPTER ${String(index + 1).padStart(2, "0")} / 09`;
     section.querySelector(".journey-media").href = "#temple";
     section.querySelector(".journey-updates").href = "#temple-updates";
-    if (innerWidth <= 700) timeline.children[index].scrollIntoView({block:"nearest", inline:"center", behavior:"instant"});
+    if (innerWidth <= 700) {
+      // Only scroll the horizontal timeline. scrollIntoView() here used to
+      // scroll the ENTIRE website into the middle on mobile page loads.
+      const activeStep = timeline.children[index];
+      const center = activeStep.offsetLeft + activeStep.offsetWidth / 2;
+      const left = Math.max(0, center - timeline.clientWidth / 2);
+      timeline.scrollTo({ left, behavior: "instant" });
+    }
   }
   scenes.children[index].style.setProperty("--zoom", reduced.matches ? 1 : 1 + Math.min(1, position - index) * .04);
 }
@@ -17125,7 +17398,7 @@ render();
       id: "temple-01",
       title: "Temple Construction Journey",
       category: "temple",
-      image: "images/gallery-temple.jpg",
+      image: "images/01_temple_construction.jpg",
       type: "image",
       size: "featured",
       description: "Temple project gallery"
@@ -17134,7 +17407,7 @@ render();
       id: "baba-01",
       title: "Baba's Blessings",
       category: "spiritual",
-      image: "images/gallery-baba.jpg",
+      image: "images/02_babas_blessings.jpg",
       type: "image",
       size: "wide",
       description: "Spiritual moments"
@@ -17143,7 +17416,7 @@ render();
       id: "food-01",
       title: "Food Seva",
       category: "food",
-      image: "images/gallery-food.jpg",
+      image: "images/03_food_seva.jpg",
       type: "image",
       size: "small",
       description: "Serving meals with compassion"
@@ -17152,7 +17425,7 @@ render();
       id: "education-01",
       title: "Education Seva",
       category: "education",
-      image: "images/gallery-education.jpg",
+      image: "images/04_education_seva.jpg",
       type: "image",
       size: "small",
       description: "Supporting children's education"
@@ -17161,7 +17434,7 @@ render();
       id: "healthcare-01",
       title: "Healthcare Seva",
       category: "healthcare",
-      image: "images/gallery-healthcare.jpg",
+      image: "images/05_healthcare_seva.jpg",
       type: "image",
       size: "small",
       description: "Community health and care"
@@ -17170,9 +17443,8 @@ render();
       id: "events-01",
       title: "Temple Celebration",
       category: "events",
-      image: "images/gallery-events.jpg",
-      type: "video",
-      video: "videos/gallery-events.mp4",
+      image: "images/06_temple_celebration.jpg",
+      type: "image",
       size: "small",
       description: "Devotional gathering"
     },
@@ -17180,7 +17452,7 @@ render();
       id: "environment-01",
       title: "Plantation Drive",
       category: "environment",
-      image: "images/gallery-plantation.jpg",
+      image: "images/07_plantation_drive.jpg",
       type: "image",
       size: "small",
       description: "Growing greener communities"
@@ -17189,7 +17461,7 @@ render();
       id: "volunteers-01",
       title: "Volunteer Activities",
       category: "volunteers",
-      image: "images/gallery-volunteers.jpg",
+      image: "images/08_volunteer_activities.jpg",
       type: "image",
       size: "tall",
       description: "Volunteers working together"
@@ -17198,7 +17470,7 @@ render();
       id: "animal-01",
       title: "Gau Seva",
       category: "animal",
-      image: "images/gallery-animal.jpg",
+      image: "images/09_gau_seva.jpg",
       type: "image",
       size: "small",
       description: "Compassionate care for animals"
@@ -17207,7 +17479,7 @@ render();
       id: "community-01",
       title: "Community Seva",
       category: "community",
-      image: "images/gallery-community.jpg",
+      image: "images/10_community_seva.jpg",
       type: "image",
       size: "small",
       description: "Supporting local communities"
@@ -17216,9 +17488,8 @@ render();
       id: "environment-02",
       title: "Tree Plantation",
       category: "environment",
-      image: "images/gallery-environment.jpg",
-      type: "video",
-      video: "videos/gallery-plantation.mp4",
+      image: "images/11_tree_plantation.png",
+      type: "image",
       size: "small",
       description: "Environmental Seva activity"
     },
@@ -17226,7 +17497,7 @@ render();
       id: "spiritual-02",
       title: "Sacred Temple Moments",
       category: "spiritual",
-      image: "images/gallery-spiritual.jpg",
+      image: "images/12_temple_moments.png",
       type: "image",
       size: "small",
       description: "Faith and devotion"
@@ -17627,7 +17898,7 @@ render();
       </h2>
 
       <p>
-        Real people. Real experiences. Real impact.
+        Reflections on compassion, community, and the spirit of seva.
       </p>
     </header>
 
@@ -17719,7 +17990,7 @@ render();
       category: "food",
       image: "images/stories-food.jpg",
       date: null,
-      link: null,
+      link: "stories/meal-memory.html",
       layout: "featured",
       theme: "dark"
     },
@@ -17731,7 +18002,7 @@ render();
       category: "education",
       image: "images/stories-education.jpg",
       date: null,
-      link: null,
+      link: "stories/child-dream.html",
       layout: "standard",
       theme: "dark"
     },
@@ -17743,7 +18014,7 @@ render();
       category: "temple",
       image: "images/stories-temple.jpg",
       date: null,
-      link: null,
+      link: "stories/temple-community.html",
       layout: "wide",
       theme: "dark"
     },
@@ -17755,7 +18026,7 @@ render();
       category: "healthcare",
       image: "images/stories-healthcare.jpg",
       date: null,
-      link: null,
+      link: "stories/healthcare-day.html",
       layout: "standard",
       theme: "light"
     },
@@ -17767,7 +18038,7 @@ render();
       category: "volunteers",
       image: "images/stories-volunteers.jpg",
       date: null,
-      link: null,
+      link: "stories/why-we-serve.html",
       layout: "standard",
       theme: "light"
     },
@@ -17779,12 +18050,12 @@ render();
       category: "spiritual",
       image: "images/stories-baba.jpg",
       date: null,
-      link: null,
+      link: "stories/babas-grace.html",
       layout: "standard",
       theme: "dark"
     },
 
-    /* Additional examples to demonstrate Load More */
+    /* More story pages available through Load More */
     {
       id: "community-together",
       title: "The Strength of Togetherness",
@@ -17793,7 +18064,7 @@ render();
       category: "community",
       image: "images/stories-community.jpg",
       date: null,
-      link: null,
+      link: "stories/community-together.html",
       layout: "standard",
       theme: "light"
     },
@@ -17805,7 +18076,7 @@ render();
       category: "environment",
       image: "images/stories-environment.jpg",
       date: null,
-      link: null,
+      link: "stories/greener-tomorrow.html",
       layout: "wide",
       theme: "dark"
     },
@@ -17817,7 +18088,7 @@ render();
       category: "volunteers",
       image: "images/stories-service.jpg",
       date: null,
-      link: null,
+      link: "stories/journey-of-service.html",
       layout: "standard",
       theme: "dark"
     }
@@ -18162,8 +18433,8 @@ let cart=safeRead('bnk-demo-cart',{}),favs=safeRead('bnk-demo-favs',[]);
 const persist=()=>{try{localStorage.setItem('bnk-demo-cart',JSON.stringify(cart));localStorage.setItem('bnk-demo-favs',JSON.stringify(favs))}catch{}};
 let toastTimer;
 function toast(message){const t=$('#toast');t.textContent=message;t.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.remove('show'),2600)}
-function urlForProduct(id){const url=new URL(window.location.href);url.searchParams.set('product',id);return url.pathname+url.search+url.hash}
-function urlForStore(){const url=new URL(window.location.href);url.searchParams.delete('product');return url.pathname+url.search+url.hash}
+function urlForProduct(id){const url=new URL(window.location.href);url.searchParams.set('product',id);url.hash='#store';return url.pathname+url.search+url.hash}
+function urlForStore(){const url=new URL(window.location.href);url.searchParams.delete('product');url.hash='#store';return url.pathname+url.search+url.hash}
 function renderRoute(animate=true, scrollToStore=false){
  const requested=new URL(window.location.href).searchParams.get('product');
  const p=productById(requested);
@@ -18175,7 +18446,7 @@ function renderRoute(animate=true, scrollToStore=false){
  const visible=showProduct?$('#productPage'):$('#storePage');
  visible.classList.remove('view-enter');
  if(animate&&!matchMedia('(prefers-reduced-motion: reduce)').matches){void visible.offsetWidth;visible.classList.add('view-enter')}
- if(scrollToStore){requestAnimationFrame(()=>root.scrollIntoView({behavior:'smooth',block:'start'}))}
+ if(scrollToStore){requestAnimationFrame(()=>root.scrollIntoView({behavior:'instant',block:'start'}))}
 }
 function navigateProduct(id){if(!productById(id))return;history.pushState({product:id},'',urlForProduct(id));renderRoute(true,true)}
 function navigateStore(){history.pushState({product:null},'',urlForStore());renderRoute(true,true);}
@@ -18255,7 +18526,11 @@ $('#checkoutButton').addEventListener('click',()=>toast('Checkout disabled: conn
 $('#impactBtn').addEventListener('click',()=>{tab='impact';renderTab();$('#detailTabs').scrollIntoView({behavior:'smooth',block:'nearest'})});
 $('#taxBtn').addEventListener('click',()=>toast('Add the verified tax policy page URL.'));
 $('#transparencyBtn').addEventListener('click',()=>{location.href='/transparency'});
-window.addEventListener('popstate',()=>renderRoute(false,true));
+window.BNKStoreSyncSection = () => renderRoute(false, false);
+window.addEventListener('popstate', () => {
+  const product = new URL(window.location.href).searchParams.get('product');
+  renderRoute(false, Boolean(product));
+});
 renderCategories();renderProducts();renderCart();renderRoute(false,Boolean(new URL(location.href).searchParams.get('product')));
 // Smooth entrance animations, without hiding non-JavaScript content.
 if('IntersectionObserver'in window&&!matchMedia('(prefers-reduced-motion: reduce)').matches){const observer=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');observer.unobserve(e.target)}})},{threshold:.06});root.querySelectorAll('.bnk-store-reveal').forEach((el,i)=>{el.style.transitionDelay=`${Math.min(i,6)*80}ms`;observer.observe(el)})}
@@ -18453,7 +18728,7 @@ else root.querySelectorAll('.bnk-store-reveal').forEach(el=>el.classList.add('vi
       category: "beneficiary",
       quote:
         "The meals we receive are not just food, they are Baba’s blessings. It gives us strength and hope every day.",
-      image: "images/voices-savitri.jpg",
+      image: "images/beneficiary_2.png",
       video: null
     },
     {
@@ -18463,7 +18738,7 @@ else root.querySelectorAll('.bnk-store-reveal').forEach(el=>el.classList.add('vi
       category: "volunteer",
       quote:
         "Volunteering with BNK Seva Trust has changed my perspective on life. It has taught me the true meaning of service and gratitude.",
-      image: "images/voices-rohit.jpg",
+      image: "images/volunteer_1.png",
       video: null
     },
     {
@@ -18473,7 +18748,7 @@ else root.querySelectorAll('.bnk-store-reveal').forEach(el=>el.classList.add('vi
       category: "donor",
       quote:
         "Supporting the temple project feels like being a part of something divine. It is an honour to contribute to Baba’s work and see the impact firsthand.",
-      image: "images/voices-priya.jpg",
+      image: "images/donor_1.png",
       video: null
     },
     {
@@ -18483,39 +18758,48 @@ else root.querySelectorAll('.bnk-store-reveal').forEach(el=>el.classList.add('vi
       category: "community",
       quote:
         "BNK Seva Trust has brought real change to our community — from health camps to education support. We feel cared for and included in this journey.",
-      image: "images/voices-ramesh.jpg",
+      image: "images/community_member_1.png",
       video: null
     },
     {
-      id: "beneficiary-2",
-      name: "Beneficiary Story",
+      id: "mohan",
+      name: "Mohan Dutta",
       role: "Seva Beneficiary",
       category: "beneficiary",
       quote:
         "A helping hand can bring comfort, dignity and hope when it matters most.",
-      image: "images/voices-beneficiary-2.jpg",
+      image: "images/beneficiary_1.png",
       video: null
     },
     {
-      id: "volunteer-2",
-      name: "Volunteer Perspective",
+      id: "anjali",
+      name: "Anjali Singh",
       role: "Seva Volunteer",
       category: "volunteer",
-      quote:
-        "Every act of service reminds us how much we can achieve together.",
-      image: "images/voices-volunteer-2.jpg",
+      quote:"Seeing a smile on someone’s face after a simple act of kindness is the most rewarding part of being a volunteer.",
+      image: "images/volunteer_2.png",
       video: null
     },
     {
-      id: "donor-2",
-      name: "Donor Perspective",
+      id: "prakash",
+      name: "Prakash varma",
       role: "Seva Contributor",
       category: "donor",
       quote:
-        "The opportunity to contribute to a meaningful cause makes giving a deeply fulfilling experience.",
-      image: "images/voices-donor-2.jpg",
+      "Volunteering has taught me that true happiness comes from helping others. Every day of seva leaves me feeling grateful.",
+      image: "images/donor_2.png",
       video: null
-    }
+    },
+     {
+      id: "sunitha",
+      name: "Sunitha Mishra",
+      role: "Community Member",
+      category: "community",
+      quote:
+      "It is heartwarming to see people supporting one another. These initiatives are bringing hope and kindness to our community.",
+      image: "images/community_member_2.png",
+      video: null
+    },
   ];
 
   const categoryNames = {
@@ -18613,24 +18897,25 @@ else root.querySelectorAll('.bnk-store-reveal').forEach(el=>el.classList.add('vi
     image.loading = index < 4 ? "eager" : "lazy";
     image.decoding = "async";
 
-    // Category badge
-    const badge = document.createElement("span");
-    badge.className = "voice-card-badge";
-
-    const badgeIcon = document.createElement("span");
-    badgeIcon.className = "voice-card-badge-icon";
-    badgeIcon.setAttribute("aria-hidden", "true");
-    badgeIcon.textContent =
-      categoryIcons[item.category] || "♡";
-
-    badge.append(
-      badgeIcon,
-      document.createTextNode(
-        categoryNames[item.category] || "Seva"
-      )
-    );
-
-    imageArea.append(image, badge);
+    // Portrait only — roles appear beneath quotes, not as image pills.
+    // If an image is missing, use a styled placeholder, not the broken-image icon.
+    if (item.image) {
+      image.addEventListener("error", () => {
+        image.remove();
+        const fallback = document.createElement("span");
+        fallback.className = "voice-card-image-fallback";
+        fallback.setAttribute("aria-hidden", "true");
+        fallback.textContent = "♡";
+        imageArea.appendChild(fallback);
+      }, { once: true });
+      imageArea.appendChild(image);
+    } else {
+      const fallback = document.createElement("span");
+      fallback.className = "voice-card-image-fallback";
+      fallback.setAttribute("aria-hidden", "true");
+      fallback.textContent = "♡";
+      imageArea.appendChild(fallback);
+    }
 
     // Optional video
     if (item.video) {
@@ -18666,12 +18951,7 @@ else root.querySelectorAll('.bnk-store-reveal').forEach(el=>el.classList.add('vi
     const profile = document.createElement("div");
     profile.className = "voice-profile";
 
-    const avatar = document.createElement("img");
-    avatar.className = "voice-profile-avatar";
-    avatar.src = item.image;
-    avatar.alt = "";
-    avatar.loading = "lazy";
-
+    // No duplicate portrait beneath the quote: show just name and role.
     const profileText = document.createElement("div");
 
     const name = document.createElement("h3");
@@ -18683,7 +18963,7 @@ else root.querySelectorAll('.bnk-store-reveal').forEach(el=>el.classList.add('vi
     role.textContent = item.role;
 
     profileText.append(name, role);
-    profile.append(avatar, profileText);
+    profile.appendChild(profileText);
 
     body.append(quoteMark, quote, profile);
     card.append(imageArea, body);
@@ -19958,11 +20238,14 @@ else root.querySelectorAll('.bnk-store-reveal').forEach(el=>el.classList.add('vi
       return;
     }
     customInput.setCustomValidity('');
-    const detail = { amount, currency: 'INR', frequency: 'monthly', programme: 'Seva Partner' };
-    section.dispatchEvent(new CustomEvent('bnk:seva-partner-selected', { detail, bubbles: true }));
-    // Intentionally do not claim payment or registration was completed.
-    status.textContent = `₹${amount.toLocaleString('en-IN')}/month selected. Recurring payments will be available once the Trust connects its payment system.`;
-    status.hidden = false;
+    document.dispatchEvent(new CustomEvent('bnk:donation-selected', {
+      detail: {
+        category: 'General Donation',
+        amount,
+        sevaName: `Seva Partner monthly support - ₹${amount.toLocaleString('en-IN')}/month`
+      }
+    }));
+    status.hidden = true;
   });
   customInput.addEventListener('input', () => { customInput.setCustomValidity(''); status.hidden = true; });
 })();
@@ -20003,10 +20286,10 @@ else root.querySelectorAll('.bnk-store-reveal').forEach(el=>el.classList.add('vi
       </div>
 
       <div class="csr-actions csr-reveal">
-        <a class="csr-button csr-button-primary" href="#footer-contact">
+        <button class="csr-button csr-button-primary" type="button" id="openCsrPartnerForm">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 12h6l2.1 2.1a2 2 0 0 0 2.8 0L16.5 12h4a1.5 1.5 0 0 0 1.5-1.5V6a1.5 1.5 0 0 0-1.5-1.5h-4.4l-2.2-2.2a2 2 0 0 0-2.8 0L8.9 4.5H3.5A1.5 1.5 0 0 0 2 6v4.5A1.5 1.5 0 0 0 3.5 12Zm0 2.5h6.6l2.1 2.1a2 2 0 0 0 2.8 0l2.1-2.1h3.4a1.5 1.5 0 0 1 1.5 1.5V18a1.5 1.5 0 0 1-1.5 1.5H17l-2.2 2.2a2 2 0 0 1-2.8 0L9.8 19.5H3.5A1.5 1.5 0 0 1 2 18v-2a1.5 1.5 0 0 1 1.5-1.5Z" fill="currentColor"/></svg>
           Become a CSR Partner
-        </a>
+        </button>
         <a class="csr-button csr-button-secondary" href="downloads/bnk-csr-proposal-outline.html" download>
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3.5h5.8L19 8.7V20a1.5 1.5 0 0 1-1.5 1.5h-11A1.5 1.5 0 0 1 5 20V5A1.5 1.5 0 0 1 6.5 3.5H8Zm5.5.8V9h4.7" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M12 11v6m0 0-2.4-2.4M12 17l2.4-2.4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
           Download CSR Proposal
@@ -20015,6 +20298,60 @@ else root.querySelectorAll('.bnk-store-reveal').forEach(el=>el.classList.add('vi
     </div>
   </div>
 </section>
+
+<div class="csr-modal" id="csrPartnerModal" role="dialog" aria-modal="true" aria-labelledby="csrPartnerTitle" hidden>
+  <div class="csr-modal-dialog">
+    <button class="csr-modal-close" type="button" id="closeCsrPartnerForm" aria-label="Close CSR partner form">×</button>
+    <h3 id="csrPartnerTitle">CSR Partner Details</h3>
+    <p class="csr-modal-intro">Share your organisation details and the BNK Seva Trust team can follow up on possible CSR collaboration.</p>
+    <form class="csr-partner-form" id="csrPartnerForm">
+      <div class="csr-form-grid">
+        <label class="csr-form-field">
+          Organisation Name
+          <input type="text" name="organisation" autocomplete="organization" required>
+        </label>
+        <label class="csr-form-field">
+          Contact Person
+          <input type="text" name="contactName" autocomplete="name" required>
+        </label>
+        <label class="csr-form-field">
+          Email Address
+          <input type="email" name="email" autocomplete="email" required>
+        </label>
+        <label class="csr-form-field">
+          Phone Number
+          <input type="tel" name="phone" autocomplete="tel" required>
+        </label>
+        <label class="csr-form-field">
+          Partnership Interest
+          <select name="interest" required>
+            <option value="">Select an option</option>
+            <option>CSR Projects</option>
+            <option>Employee Volunteering</option>
+            <option>Education Initiatives</option>
+            <option>Healthcare Camps</option>
+            <option>Food Seva</option>
+            <option>Temple Project Support</option>
+            <option>Community Development</option>
+            <option>Sponsorship</option>
+          </select>
+        </label>
+        <label class="csr-form-field">
+          Preferred Budget
+          <input type="text" name="budget" placeholder="Optional">
+        </label>
+        <label class="csr-form-field csr-form-field-full">
+          Message
+          <textarea name="message" placeholder="Tell us about your CSR goals or timeline"></textarea>
+        </label>
+      </div>
+      <div class="csr-form-actions">
+        <button class="csr-form-submit" type="submit">Submit Details</button>
+      </div>
+      <p class="csr-form-status" id="csrPartnerStatus" role="status" hidden></p>
+    </form>
+  </div>
+</div>
 
 <script>
 (() => {
@@ -20034,6 +20371,56 @@ else root.querySelectorAll('.bnk-store-reveal').forEach(el=>el.classList.add('vi
   } else {
     show();
   }
+
+  const openButton = document.getElementById("openCsrPartnerForm");
+  const modal = document.getElementById("csrPartnerModal");
+  const closeButton = document.getElementById("closeCsrPartnerForm");
+  const form = document.getElementById("csrPartnerForm");
+  const status = document.getElementById("csrPartnerStatus");
+  let lastFocused = null;
+
+  const openModal = () => {
+    if (!modal) return;
+    lastFocused = document.activeElement;
+    modal.hidden = false;
+    modal.classList.add("is-open");
+    document.body.style.overflow = "hidden";
+    status.hidden = true;
+    status.textContent = "";
+    form.querySelector("input, select, textarea, button")?.focus();
+  };
+
+  const closeModal = () => {
+    if (!modal) return;
+    modal.classList.remove("is-open");
+    modal.hidden = true;
+    document.body.style.overflow = "";
+    lastFocused?.focus?.();
+  };
+
+  openButton?.addEventListener("click", openModal);
+  closeButton?.addEventListener("click", closeModal);
+  modal?.addEventListener("click", event => {
+    if (event.target === modal) closeModal();
+  });
+
+  document.addEventListener("keydown", event => {
+    if (event.key === "Escape" && modal && !modal.hidden) closeModal();
+  });
+
+  form?.addEventListener("submit", event => {
+    event.preventDefault();
+    if (!form.reportValidity()) return;
+
+    const data = Object.fromEntries(new FormData(form).entries());
+    const submissions = JSON.parse(localStorage.getItem("bnk-csr-partner-requests") || "[]");
+    submissions.push({ ...data, submittedAt: new Date().toISOString() });
+    localStorage.setItem("bnk-csr-partner-requests", JSON.stringify(submissions));
+
+    form.reset();
+    status.textContent = "Thank you. Your CSR partnership details have been recorded.";
+    status.hidden = false;
+  });
 })();
 </script>
 
@@ -20336,6 +20723,8 @@ else root.querySelectorAll('.bnk-store-reveal').forEach(el=>el.classList.add('vi
 })();
 </script>
 
+    </main>
+
 <!-- =========================================
      SECTION 26 — BNK SEVA TRUST FOOTER
 ========================================= -->
@@ -20377,16 +20766,16 @@ else root.querySelectorAll('.bnk-store-reveal').forEach(el=>el.classList.add('vi
         <span class="bnk-footer-heading-line"></span>
 
         <ul>
-          <li><a href="index.html#home">Home</a></li>
-          <li><a href="index.html#about">About</a></li>
-          <li><a href="index.html#temple-fund">Temple Project</a></li>
-          <li><a href="index.html#seva">Our Seva</a></li>
-          <li><a href="index.html#seva-impact">Impact</a></li>
-          <li><a href="index.html#seva-stories">Stories</a></li>
-          <li><a href="index.html#seva-gallery">Gallery</a></li>
-          <li><a href="index.html#store">Store</a></li>
-          <li><a href="index.html#stay-connected">Get Involved</a></li>
-          <li><a href="index.html#footer-contact">Contact</a></li>
+          <li><a href="#home">Home</a></li>
+          <li><a href="#about">About</a></li>
+          <li><a href="#temple">Temple Project</a></li>
+          <li><a href="#seva">Our Seva</a></li>
+          <li><a href="#seva-impact">Impact</a></li>
+          <li><a href="#seva-stories">Stories</a></li>
+          <li><a href="#seva-gallery">Gallery</a></li>
+          <li><a href="#store">Store</a></li>
+          <li><a href="#join-seva">Get Involved</a></li>
+          <li><a href="#stay-connected">Contact</a></li>
         </ul>
 
       </nav>
@@ -20400,31 +20789,31 @@ else root.querySelectorAll('.bnk-store-reveal').forEach(el=>el.classList.add('vi
 
         <ul>
           <li>
-            <a href="index.html#temple-fund">
+            <a href="#temple">
               Temple Vision
             </a>
           </li>
 
           <li>
-            <a href="index.html#temple-fund">
+            <a href="#temple-fund">
               Fund Tracker
             </a>
           </li>
 
           <li>
-            <a href="index.html#temple-contribution">
+            <a href="#temple-contribution">
               Contribute by Sq. Ft.
             </a>
           </li>
 
           <li>
-            <a href="index.html#temple-sponsorship">
+            <a href="#temple-sponsorship">
               Sponsor a Temple Element
             </a>
           </li>
 
           <li>
-            <a href="index.html#temple-updates">
+            <a href="#temple-updates">
               Project Updates
             </a>
           </li>
@@ -20440,11 +20829,11 @@ else root.querySelectorAll('.bnk-store-reveal').forEach(el=>el.classList.add('vi
         <span class="bnk-footer-heading-line"></span>
 
         <ul>
-          <li><a href="index.html#donate">Donate</a></li>
-          <li><a href="index.html#join-seva">Volunteer</a></li>
-          <li><a href="index.html#csr-partnership">CSR Partnership</a></li>
-          <li><a href="index.html#seva-partner">Seva Partner</a></li>
-          <li><a href="index.html#stay-connected">Stay Connected</a></li>
+          <li><a href="#donate">Donate</a></li>
+          <li><a href="#join-seva">Volunteer</a></li>
+          <li><a href="#csr-partnership">CSR Partnership</a></li>
+          <li><a href="#seva-partner">Seva Partner</a></li>
+          <li><a href="#stay-connected">Stay Connected</a></li>
         </ul>
 
       </nav>
@@ -20458,31 +20847,31 @@ else root.querySelectorAll('.bnk-store-reveal').forEach(el=>el.classList.add('vi
 
         <ul>
           <li>
-            <a href="index.html#transparency">
+            <a href="#transparency">
               Transparency
             </a>
           </li>
 
           <li>
-            <a href="index.html#transparency">
+            <a href="#transparency">
               Annual Reports
             </a>
           </li>
 
           <li>
-            <a href="index.html#transparency">
+            <a href="#transparency">
               Policies
             </a>
           </li>
 
           <li>
-            <a href="index.html#seva">
+            <a href="#seva">
               FAQs
             </a>
           </li>
 
           <li>
-            <a href="index.html#donate">
+            <a href="#donate">
               Donation Information
             </a>
           </li>
@@ -20692,25 +21081,11 @@ else root.querySelectorAll('.bnk-store-reveal').forEach(el=>el.classList.add('vi
       <nav class="bnk-footer-legal"
         aria-label="Legal information">
 
-        <a href="#footer-contact">
-          Privacy Policy
-        </a>
-
-        <a href="#footer-contact">
-          Terms &amp; Conditions
-        </a>
-
-        <a href="#donate">
-          Donation Policy
-        </a>
-
-        <a href="#footer-contact">
-          Refund Policy
-        </a>
-
-        <a href="#transparency">
-          Applicable Statutory Information
-        </a>
+        <a href="/privacy-policy.html">Privacy Policy</a>
+        <a href="/terms-and-conditions.html">Terms &amp; Conditions</a>
+        <a href="/donation-policy.html">Donation Policy</a>
+        <a href="/refund-policy.html">Refund Policy</a>
+        <a href="/statutory-information.html">Applicable Statutory Information</a>
 
       </nav>
 
@@ -20811,5 +21186,265 @@ else root.querySelectorAll('.bnk-store-reveal').forEach(el=>el.classList.add('vi
 })();
 </script>
 
-  </body>
+<script>
+/* BNK Seva Trust — same-document navigation, with consistent history and mobile position. */
+(() => {
+  const header = document.querySelector('.site-header');
+  const gotoSection = (id) => {
+    const section = document.getElementById(id);
+    if (!section) return;
+    const topOffset = id === 'home' ? 0 : (header?.getBoundingClientRect().height || 0) + 4;
+    const top = Math.max(0, window.scrollY + section.getBoundingClientRect().top - topOffset);
+    // Instant section navigation avoids stopping halfway through long sticky
+    // sections, including the animated temple journey, on mobile.
+    window.scrollTo({ top, behavior: 'instant' });
+  };
+
+  document.addEventListener('click', (event) => {
+    const link = event.target.closest('.site-header a[href^="#"], .bnk-footer a[href^="#"]');
+    if (!link || event.defaultPrevented || event.button !== 0 ||
+        event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+
+    const id = decodeURIComponent(link.getAttribute('href').slice(1));
+    if (!id || !document.getElementById(id)) return;
+
+    // Keep the donation integration's existing click behavior unchanged.
+    if (id === 'donate') return;
+
+    event.preventDefault();
+    const url = new URL(window.location.href);
+    url.hash = '#' + encodeURIComponent(id);
+    // Leaving a product detail restores the regular Store without a page reload.
+    url.searchParams.delete('product');
+    const destination = url.pathname + url.search + url.hash;
+    if (destination !== location.pathname + location.search + location.hash) {
+      history.pushState({}, '', destination);
+    }
+    window.BNKStoreSyncSection?.();
+    gotoSection(id);
+  });
+
+  // Back/forward must return to the selected section, never arbitrarily to Store.
+  window.addEventListener('popstate', () => {
+    const id = decodeURIComponent(location.hash.slice(1));
+    if (id && document.getElementById(id)) requestAnimationFrame(() => gotoSection(id));
+    else if (!new URLSearchParams(location.search).has('product')) requestAnimationFrame(() => gotoSection('home'));
+  });
+
+  // Deep section links are resolved after all sections are in the DOM.
+  const navigationEntry = performance.getEntriesByType('navigation')[0];
+  if (location.hash && navigationEntry?.type !== 'reload' &&
+      !new URLSearchParams(location.search).has('product')) {
+    window.addEventListener('load', () => {
+      const id = decodeURIComponent(location.hash.slice(1));
+      if (id && document.getElementById(id)) gotoSection(id);
+    }, { once: true });
+  }
+})();
+</script>
+
+  
+<script>
+/* Sitaram Sitaram • audio-only, autoplay-first music player.
+   Browsers may block unmuted autoplay; retry synchronously on the first
+   visitor gesture. User-initiated pause/stop persists for this tab's session.
+   Loop at (duration - 3 seconds), without modifying the MP3 on disk. */
+(() => {
+  'use strict';
+  const player = document.querySelector('.bnk-music-player');
+  const audio = document.getElementById('bnkMusicAudio');
+  const playButton = document.getElementById('bnkMusicPlay');
+  const stopButton = document.getElementById('bnkMusicStop');
+  const status = document.getElementById('bnkMusicStatus');
+  if (!player || !audio || !playButton || !stopButton || !status) return;
+
+  const PAUSE_KEY = 'bnk-sitaram-paused-in-session';
+  const TRIM_SECONDS = 5;
+  let pausedByVisitor = false;
+  let boundaryTimer = null;
+  let attemptingPlay = false;
+  let audioUnavailable = false;
+
+  try { pausedByVisitor = sessionStorage.getItem(PAUSE_KEY) === '1'; }
+  catch (_) { /* Session storage can be unavailable in private/restricted modes. */ }
+
+  const setVisitorPause = (paused) => {
+    pausedByVisitor = paused;
+    try {
+      if (paused) sessionStorage.setItem(PAUSE_KEY, '1');
+      else sessionStorage.removeItem(PAUSE_KEY);
+    } catch (_) { /* Playback still works if storage is unavailable. */ }
+  };
+
+  const show = (message) => { status.textContent = message; };
+  const isPlaying = () => !audio.paused && !audio.ended;
+  const sync = () => {
+    const playing = isPlaying();
+    player.classList.toggle('is-playing', playing);
+    playButton.setAttribute('aria-label', (playing ? 'Pause' : 'Play') + ' Sitaram Sitaram');
+    playButton.title = (playing ? 'Pause' : 'Play') + ' music';
+    if (playing) show('Now playing • devotional music');
+  };
+
+  // Intentionally do not set audio.loop: its native loop would play the
+  // last three seconds, whereas our custom loop restarts before them.
+  audio.loop = false;
+  audio.preload = 'auto';
+
+  const loopCutoff = () => {
+    const duration = audio.duration;
+    if (!Number.isFinite(duration) || duration <= 0) return null;
+    // For exceptionally short files, just loop normally.
+    return duration > TRIM_SECONDS ? duration - TRIM_SECONDS : duration;
+  };
+  const clearBoundaryTimer = () => {
+    if (boundaryTimer !== null) {
+      clearTimeout(boundaryTimer);
+      boundaryTimer = null;
+    }
+  };
+  const jumpToBeginning = () => {
+    if (pausedByVisitor) return;
+    try { audio.currentTime = 0; }
+    catch (_) { /* May not yet be seekable. */ }
+  };
+  const scheduleBoundary = () => {
+    clearBoundaryTimer();
+    if (!isPlaying() || pausedByVisitor) return;
+    const cutoff = loopCutoff();
+    if (cutoff === null) return;
+    const secondsRemaining = cutoff - audio.currentTime;
+    if (secondsRemaining <= 0.025) {
+      jumpToBeginning();
+      // Seek fires 'seeked' to schedule the next pass. For browsers that
+      // do not fire it on a 0-second seek, schedule explicitly as well.
+      if (audio.currentTime < 0.1) {
+        boundaryTimer = setTimeout(scheduleBoundary, 100);
+      }
+      return;
+    }
+    boundaryTimer = setTimeout(() => {
+      boundaryTimer = null;
+      if (pausedByVisitor || !isPlaying()) return;
+      if (audio.currentTime >= (loopCutoff() ?? Infinity) - 0.025) jumpToBeginning();
+      scheduleBoundary();
+    }, Math.max(20, Math.ceil(1000 * secondsRemaining / (audio.playbackRate || 1))));
+  };
+
+  const attemptPlayback = (reason = 'automatic') => {
+    if (pausedByVisitor || audioUnavailable || isPlaying() || attemptingPlay) return;
+    // The play() call must happen directly inside the user's click/tap/key
+    // event to satisfy the browser's user-activation requirement.
+    let result;
+    try { result = audio.play(); }
+    catch (error) { playbackFailure(error, reason); return; }
+    attemptingPlay = true;
+    if (result && typeof result.then === 'function') {
+      result.then(() => {
+        attemptingPlay = false;
+        sync();
+        scheduleBoundary();
+      }).catch((error) => {
+        attemptingPlay = false;
+        playbackFailure(error, reason);
+      });
+    } else {
+      attemptingPlay = false;
+      sync();
+      scheduleBoundary();
+    }
+  };
+
+  const playbackFailure = (error, reason) => {
+    sync();
+    if (error && error.name === 'NotAllowedError') {
+      show(reason === 'automatic' ? 'Tap anywhere to start music' : 'Tap Play to start music');
+    } else if (error && error.name === 'AbortError') {
+      // A rapid pause/stop cancels an in-flight play request; it is normal.
+      if (pausedByVisitor) show('Paused');
+    } else {
+      audioUnavailable = true;
+      show('Check audio/sitaram-sitaram.mp3');
+      console.warn('BNK Sitaram player could not load the MP3:', error);
+    }
+  };
+
+  const firstGesture = (event) => {
+    if (pausedByVisitor || audioUnavailable || isPlaying()) return;
+    // The player's own buttons handle their action; a first click on Stop
+    // must not accidentally cause music to start in the capture phase.
+    if (event.target?.closest?.('#bnkMusicPlay, #bnkMusicStop')) return;
+    if (event.type === 'keydown' && (
+      event.key === 'Tab' || event.key === 'Shift' || event.key === 'Control' ||
+      event.key === 'Alt' || event.key === 'Meta' || event.repeat
+    )) return;
+    attemptPlayback('visitor-interaction');
+  };
+  // Capture ensures play() executes while user activation is still active.
+  ['pointerdown', 'touchstart', 'click', 'keydown'].forEach(type => {
+    document.addEventListener(type, firstGesture, { capture: true, passive: true });
+  });
+
+  playButton.addEventListener('click', () => {
+    if (isPlaying()) {
+      setVisitorPause(true);
+      clearBoundaryTimer();
+      audio.pause();
+      sync();
+      show('Paused • tap Play to resume');
+      return;
+    }
+    setVisitorPause(false); // Explicit Play overrides a previous pause.
+    audioUnavailable = false;
+    show('Loading music…');
+    attemptPlayback('play-button');
+  });
+
+  stopButton.addEventListener('click', () => {
+    setVisitorPause(true);
+    clearBoundaryTimer();
+    audio.pause();
+    try { audio.currentTime = 0; } catch (_) {}
+    sync();
+    show('Stopped • tap Play to restart');
+  });
+
+  audio.addEventListener('playing', () => { sync(); scheduleBoundary(); });
+  audio.addEventListener('pause', () => { clearBoundaryTimer(); sync(); });
+  audio.addEventListener('loadedmetadata', scheduleBoundary);
+  audio.addEventListener('durationchange', scheduleBoundary);
+  audio.addEventListener('ratechange', scheduleBoundary);
+  audio.addEventListener('seeked', scheduleBoundary);
+  audio.addEventListener('timeupdate', () => {
+    if (isPlaying() && !pausedByVisitor) {
+      const cutoff = loopCutoff();
+      if (cutoff !== null && audio.currentTime >= cutoff - 0.025) jumpToBeginning();
+    }
+  });
+  audio.addEventListener('ended', () => {
+    clearBoundaryTimer();
+    if (!pausedByVisitor && !audioUnavailable) {
+      // Fallback for background tabs that throttle JS timers.
+      try { audio.currentTime = 0; } catch (_) {}
+      attemptPlayback('auto-loop');
+    } else sync();
+  });
+  audio.addEventListener('error', () => {
+    audioUnavailable = true;
+    clearBoundaryTimer();
+    sync();
+    show('Check audio/sitaram-sitaram.mp3');
+  });
+
+  if (pausedByVisitor) {
+    show('Paused for this visit • tap Play');
+    sync();
+  } else {
+    // Attempt immediately. If the browser refuses sound on page load,
+    // the first visitor interaction above retries playback automatically.
+    attemptPlayback('automatic');
+  }
+})();
+</script>
+</body>
 </html>

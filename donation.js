@@ -57,7 +57,7 @@
                 <option value="anonymous">Keep my donation anonymous</option>
                 <option value="public">Show my name publicly</option>
               </select>
-              <span class="bnk-donation-help">Your name and contact details are still required for payment records and the receipt.</span>
+              <span class="bnk-donation-help">Your name and contact details required for payment records and the receipt.</span>
             </label>
           </div>
           <p class="bnk-donation-status" role="status" aria-live="polite"></p>
