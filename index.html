@@ -193,7 +193,7 @@
 
       .main-nav a {
         color: #51483f;
-        font-size: 11px;
+        font-size: 13px;
         font-weight: 500;
         white-space: nowrap;
         transition: color 180ms ease;
@@ -219,6 +219,7 @@
         font-size: 10px;
         font-weight: 700;
         letter-spacing: 0.12em;
+        animation: donateBlink 1.2s ease-in-out infinite alternate;
         transition: box-shadow 180ms ease, transform 180ms ease, background 180ms ease;
       }
 
@@ -227,6 +228,7 @@
         background: linear-gradient(135deg, #b37554, #95563a);
         box-shadow: 0 0 0 4px rgba(181, 150, 96, 0.19), 0 8px 24px rgba(128, 72, 48, 0.3);
         transform: translateY(-1px);
+        animation-play-state: paused;
       }
 
       .nav-donate svg,
@@ -620,6 +622,23 @@
 
         50% {
           background-position: 0% 0, 0 0;
+        }
+      }
+
+      @keyframes donateBlink {
+        0% {
+          background: linear-gradient(135deg, #b37754, #9e5a3d);
+          box-shadow: 0 0 0 3px rgba(252, 213, 89, 0.18), 0 6px 18px rgba(128, 72, 48, 0.28), 0 0 12px rgba(255, 214, 123, 0.45);
+        }
+
+        50% {
+          background: linear-gradient(135deg, #d08a45, #b76333);
+          box-shadow: 0 0 0 4px rgba(255, 219, 117, 0.26), 0 8px 22px rgba(128, 72, 48, 0.35), 0 0 18px rgba(255, 208, 95, 0.7);
+        }
+
+        100% {
+          background: linear-gradient(135deg, #cc7d35, #9e5339);
+          box-shadow: 0 0 0 3px rgba(252, 213, 89, 0.2), 0 6px 24px rgba(128, 72, 48, 0.32), 0 0 14px rgba(255, 200, 74, 0.5);
         }
       }
 
@@ -1487,7 +1506,7 @@
         }
 
         .main-nav a {
-          font-size: 10px;
+          font-size: 12px;
         }
 
         .brand-name {
@@ -1581,7 +1600,46 @@
         }
 
         .hero {
+          position: relative;
+          inset: auto;
           min-height: 100svh;
+          z-index: 1;
+        }
+
+        .hero-stage {
+          position: absolute;
+          inset: 0;
+          height: 100%;
+          margin-bottom: 0;
+          z-index: 0;
+        }
+
+        .hero-shell {
+          position: relative;
+          z-index: 2;
+        }
+
+        .hero-copy {
+          position: relative;
+          z-index: 3;
+        }
+
+        .site-header {
+          z-index: 10;
+        }
+
+        .about-section,
+        .inspiration-section,
+        .contribution-section,
+        .special-seva-section,
+        .choose-seva-section,
+        .upcoming-seva-section,
+        .temple-updates-section,
+        .transparency-section,
+        .impact-section,
+        .journey-section {
+          position: relative;
+          z-index: 1;
         }
 
         .brand-mark {
@@ -1631,6 +1689,8 @@
 
         .hero-image {
           object-position: 82% center;
+          animation: none !important;
+          transform: none !important;
         }
 
         .hero-shell {
@@ -12580,58 +12640,69 @@
 #store .product-page .detail {gap:20px}
 #store .product-page .detail-media {min-height:340px}
 #store .product-page .main-photo {min-height:340px}}
-@media(max-width:740px){#store .bnk-store-bar {padding:12px 15px;min-height:60px}
-#store .store-brand {font-size:15px}
-#store .bnk-store-bar .tool-button {padding:8px 9px;font-size:10px}
-#store .store {padding:13px 12px 28px}
-#store .store-page {gap:12px}
-#store .store-showcase {gap:12px}
-#store .store-showcase>.panel {height:225px}
-#store .store-showcase .hero {grid-template-columns:55% 45%}
-#store .store-showcase .hero-copy {padding:18px 9px 15px 16px}
-#store .store-showcase .hero h2 {font-size:34px}
-#store .store-showcase .hero p {font-size:11px;line-height:1.45}
-#store .store-showcase .featured>div {padding:18px 12px 15px 17px}
-#store .store-showcase .featured h2 {font-size:32px}
-#store .store-showcase .featured p {font-size:11px}
-#store .store-page .categories {justify-content:flex-start;gap:8px}
-#store .store-page .category {flex-basis:86px;font-size:9px}
-#store .store-page .category-photo {width:59px;height:59px}
-#store .store-page .catalog {padding:15px 12px}
-#store .store-page .catalog-head {align-items:center}
-#store .store-page .section-title {font-size:30px}
-#store .store-page .search {width:42%;max-width:200px}
-#store .store-page .pills {padding:10px 0;gap:6px}
-#store .store-page .pill {font-size:11px;padding:7px 11px}
-#store .store-page .products {grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
-#store .store-page .product-entry img {height:150px}
-#store .store-page .product-title {font-size:19px}
-#store .store-page .product-body {padding:9px}
-#store .store-page .tiny-btn {margin:0 9px 9px;width:calc(100% - 18px)}
-#store .store-page .impact-strip {flex-wrap:wrap;justify-content:center;padding:14px 12px}
-#store .store-page .impact-strip strong {width:100%;text-align:center;font-size:22px}
-#store .product-navigation {padding:5px 0 10px}
-#store .product-route-name {font-size:10px}
-#store .product-page .detail {grid-template-columns:1fr;padding:12px;gap:13px}
-#store .product-page .detail-media {grid-template-columns:52px minmax(0,1fr);min-height:300px}
-#store .product-page .thumb {height:53px}
-#store .product-page .main-photo {min-height:300px}
-#store .product-page .detail-copy {padding:10px 6px}
-#store .product-page .detail-title {font-size:40px}
-#store .product-page .detail-copy p {font-size:13px}
-#store .product-page .right-bottom {grid-template-columns:1fr}
-#store .product-page .text-panel {min-height:0}
-#store .product-page .info-tabs {padding:11px}
-#store .product-page .tab {font-size:11px}
-#store .product-page .inside-grid {grid-template-columns:repeat(2,minmax(0,1fr))}
-#store .product-page .inside-item {font-size:11px}}
-@media(max-width:390px){#store .store-showcase>.panel {height:225px}
-#store .store-showcase .featured h2 {font-size:28px}
-#store .store-showcase .hero h2 {font-size:30px}
-#store .store-page .product-entry img {height:130px}
-#store .store-page .product-title {font-size:17px}
-#store .bnk-store-bar {gap:7px}
-#store .bnk-store-bar .store-toolbar {gap:4px}}
+@media(max-width:740px){
+  #store .bnk-store-bar {padding:12px 15px;min-height:60px}
+  #store .store-brand {font-size:15px}
+  #store .bnk-store-bar .tool-button {padding:8px 9px;font-size:10px;min-height:38px}
+  #store .store {padding:13px 12px 28px}
+  #store .store-page {gap:12px}
+  #store .store-showcase {gap:12px}
+  #store .store-showcase>.panel {height:auto;min-height:220px}
+  #store .store-showcase .hero {grid-template-columns:1fr;}
+  #store .store-showcase .hero-copy {padding:18px 14px 15px}
+  #store .store-showcase .hero h2 {font-size:34px}
+  #store .store-showcase .hero p {font-size:11px;line-height:1.45}
+  #store .store-showcase .featured {grid-template-columns:1fr;}
+  #store .store-showcase .featured>div {padding:18px 14px 15px}
+  #store .store-showcase .featured img {height:170px}
+  #store .store-showcase .featured h2 {font-size:32px}
+  #store .store-showcase .featured p {font-size:11px}
+  #store .store-page .categories {justify-content:flex-start;gap:8px}
+  #store .store-page .category {flex-basis:86px;font-size:9px}
+  #store .store-page .category-photo {width:59px;height:59px}
+  #store .store-page .catalog {padding:15px 12px}
+  #store .store-page .catalog-head {align-items:center}
+  #store .store-page .section-title {font-size:30px}
+  #store .store-page .search {width:42%;max-width:200px}
+  #store .store-page .pills {padding:10px 0;gap:6px}
+  #store .store-page .pill {font-size:11px;padding:7px 11px}
+  #store .store-page .products {grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+  #store .store-page .product-entry img {height:150px;object-position:center}
+  #store .store-page .product-title {font-size:19px}
+  #store .store-page .product-body {padding:9px}
+  #store .store-page .tiny-btn {margin:0 9px 9px;width:calc(100% - 18px);min-height:42px;font-size:10px;padding:10px 8px}
+  #store .store-page .impact-strip {flex-wrap:wrap;justify-content:center;padding:14px 12px}
+  #store .store-page .impact-strip strong {width:100%;text-align:center;font-size:22px}
+  #store .product-navigation {padding:5px 0 10px}
+  #store .product-route-name {font-size:10px}
+  #store .product-page .detail {grid-template-columns:1fr;padding:12px;gap:13px}
+  #store .product-page .detail-media {grid-template-columns:52px minmax(0,1fr);min-height:300px}
+  #store .product-page .thumb {height:53px}
+  #store .product-page .main-photo {min-height:300px}
+  #store .product-page .detail-copy {padding:10px 6px}
+  #store .product-page .detail-title {font-size:40px}
+  #store .product-page .detail-copy p {font-size:13px}
+  #store .product-page .right-bottom {grid-template-columns:1fr}
+  #store .product-page .text-panel {min-height:0}
+  #store .product-page .info-tabs {padding:11px}
+  #store .product-page .tab {font-size:11px}
+  #store .product-page .inside-grid {grid-template-columns:repeat(2,minmax(0,1fr))}
+  #store .product-page .inside-item {font-size:11px}
+}
+@media(max-width:390px){
+  #store .bnk-store-bar {gap:7px;flex-direction:column;align-items:flex-start;padding:10px 12px}
+  #store .bnk-store-bar .store-toolbar {width:100%;justify-content:space-between;gap:4px}
+  #store .bnk-store-bar .tool-button {flex:1;min-width:0}
+  #store .store-showcase>.panel {min-height:200px}
+  #store .store-showcase .featured h2 {font-size:28px}
+  #store .store-showcase .hero h2 {font-size:30px}
+  #store .store-page .product-entry img {height:130px}
+  #store .store-page .product-title {font-size:17px}
+  #store .store-page .tiny-btn {font-size:9px;letter-spacing:.03em}
+  #store .store-page .category {flex-basis:78px}
+  #store .store-page .product-body {padding:8px}
+  #store .store-showcase .hero-copy, #store .store-showcase .featured>div {padding:16px 12px}
+}
 @media(prefers-reduced-motion:reduce){#store .view-enter {animation:none}}
 
 /* ==== INTEGRATED STORE: typography and containment ==== */
@@ -13651,12 +13722,14 @@
 }
 
 </style>
+    <link rel="stylesheet" href="/donation.css" />
+    <script src="/donation.js" defer></script>
   </head>
   <body>
     <div class="announcement">A life of love. A legacy of service. <span>·</span> Inspired by Neem Karoli Baba</div>
     <header class="site-header">
       <div class="nav-shell">
-        <a class="brand" href="#home" aria-label="BNK Seva Trust home">
+        <a class="brand" href="index.html#home" aria-label="BNK Seva Trust home">
           <span class="brand-mark" aria-hidden="true">
             <svg viewBox="0 0 48 54" fill="none">
               <path d="M24 3C16 12 7 19 7 31c0 10 7.4 18 17 18s17-8 17-18C41 19 32 12 24 3Z" stroke="currentColor" stroke-width="1.2" />
@@ -13671,18 +13744,18 @@
           </span>
         </a>
         <nav class="main-nav" id="site-navigation" aria-label="Main navigation">
-          <a href="#home">Home</a>
-          <a href="#about">About</a>
-          <a href="#temple">Temple Project</a>
-          <a href="#seva">Our Seva</a>
-          <a href="#seva-impact">Impact</a>
-          <a href="#seva-stories">Stories</a>
-          <a href="#seva-gallery">Gallery</a>
-          <a href="#store">Store</a>
-          <a href="#join-seva">Get Involved</a>
+          <a href="index.html#home">Home</a>
+          <a href="index.html#about">About</a>
+          <a href="index.html#temple-fund">Temple Project</a>
+          <a href="index.html#seva">Our Seva</a>
+          <a href="index.html#seva-impact">Impact</a>
+          <a href="index.html#seva-stories">Stories</a>
+          <a href="index.html#seva-gallery">Gallery</a>
+          <a href="index.html#store">Store</a>
+          <a href="index.html#stay-connected">Get Involved</a>
         </nav>
         <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-navigation">Menu</button>
-        <a class="nav-donate" href="#donate">
+        <a class="nav-donate" href="index.html#donate">
           Donate Now
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0l-1 1-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8Z" fill="currentColor" /></svg>
         </a>
@@ -13690,6 +13763,7 @@
     </header>
 
     <main>
+      <div id="donate" aria-hidden="true"></div>
       <section class="hero" id="home">
         <div class="hero-stage" aria-hidden="true">
           <img
@@ -13710,7 +13784,7 @@
                 Donate Now
                 <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0l-1 1-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8Z" fill="currentColor" /></svg>
               </a>
-              <a class="button button-secondary" href="#involved">Join the Seva</a>
+              <a class="button button-secondary" href="#join-seva">Join the Seva</a>
             </div>
             <div class="hero-note reveal" style="--reveal-delay: 520ms">Love everyone. Serve everyone. Remember God.</div>
           </div>
@@ -13820,7 +13894,7 @@
             BNK Seva Trust is a movement of compassion inspired by the teachings of Baba Neem Karoli Maharaj. Through meaningful initiatives in education, healthcare, food distribution, community welfare, spiritual activities and environmental responsibility, the Trust seeks to make a positive difference in society.
           </p>
           <div class="about-actions reveal" style="--reveal-delay: 350ms">
-            <a class="about-button about-button-primary" href="#stories">Know Our Story</a>
+            <a class="about-button about-button-primary" href="#seva-stories">Know Our Story</a>
             <a class="about-button" href="#temple">Our Vision</a>
           </div>
         </div>
@@ -13841,7 +13915,7 @@
             <p>A deep devotee of Lord Hanuman, Baba showed the power of unwavering faith, reminding us that surrender, love and service open the way to inner freedom.</p>
             <p>His teachings continue to inspire BNK Seva Trust in its journey of seva - serving people, uplifting lives and spreading love, just as Baba lived and showed.</p>
           </div>
-          <a class="inspiration-button reveal" href="#stories" style="--reveal-delay: 350ms">Discover His Teachings</a>
+          <a class="inspiration-button reveal" href="#seva-stories" style="--reveal-delay: 350ms">Discover His Teachings</a>
         </div>
       </section>
 
@@ -13949,6 +14023,13 @@
           menuToggle.setAttribute("aria-expanded", "false");
           mainNav.classList.remove("is-open");
         }
+      });
+
+      window.addEventListener("load", () => {
+        if (location.hash) {
+          history.replaceState(null, "", window.location.pathname + window.location.search);
+        }
+        window.scrollTo({ top: 0, left: 0, behavior: "auto" });
       });
 
       const fundSection = document.querySelector(".temple-fund-section");
@@ -14147,13 +14228,17 @@
       currency: "INR"
     };
 
-    // Connect this to your payment gateway/backend.
-    // Never trust the client-side amount for payment verification.
-    console.log("Contribution selected:", contributionDetails);
-
-    alert(
-      `Selected contribution: ${formatRupees(amount)}.\n` +
-      "Payment integration is not connected yet."
+    document.dispatchEvent(
+      new CustomEvent("bnk:donation-selected", {
+        detail: {
+          category: "Temple Project",
+          sevaName: selectedContribution
+            ? `${selectedContribution.sqft} sq. ft. Temple Contribution`
+            : "Temple Contribution",
+          amount: contributionDetails.amount,
+          currency: contributionDetails.currency
+        }
+      })
     );
   });
 
@@ -14266,7 +14351,7 @@
       From school supplies to scholarships, from meals to medical care, every act of seva can change a life.
     </p>
 
-    <a class="support-story-button" href="#stories">
+    <a class="support-story-button" href="#seva-stories">
       READ THE STORY <span aria-hidden="true">→</span>
     </a>
   </div>
@@ -14481,7 +14566,6 @@
 
     card.querySelector(".sponsor-donate")
       .addEventListener("click", () => {
-        // Integration point for your payment/enquiry flow.
         document.dispatchEvent(
           new CustomEvent("temple:sponsor-selected", {
             detail: {
@@ -14490,11 +14574,6 @@
               amount: item.amount
             }
           })
-        );
-
-        alert(
-          "Sponsorship selected: " + item.name +
-          "\nPayment integration is not connected yet."
         );
       });
 
@@ -14873,20 +14952,10 @@
   }
 
   function proceedToDonation(details) {
-    // Your payment integration should listen to this event.
     document.dispatchEvent(
       new CustomEvent("bnk:seva-donation", {
         detail: details
       })
-    );
-
-    // Placeholder until payment gateway is connected.
-    alert(
-      "Selected Seva: " + details.sevaName +
-      (details.amount !== null
-        ? "\nAmount: " + formatINR(details.amount)
-        : "\nAmount to be confirmed") +
-      "\n\nPayment integration is not connected yet."
     );
   }
 
@@ -14894,18 +14963,9 @@
     const selected =
       specialSevaConfig.chalisa[selectedChalisaIndex];
 
-    if (selected.amount === null) {
-      alert(
-        "The contribution amount for " +
-        selected.copies +
-        " copies has not been configured yet."
-      );
-      return;
-    }
-
     proceedToDonation({
       sevaId: "hanuman-chalisa-vitaran",
-      sevaName: "Hanuman Chalisa Vitaran",
+      sevaName: `Hanuman Chalisa Vitaran (${selected.copies} copies)`,
       copies: selected.copies,
       amount: selected.amount,
       currency: "INR"
@@ -15331,13 +15391,6 @@
       })
     );
 
-    // Temporary message until integration.
-    alert(
-      "Selected Seva: " + selectedSeva.name +
-      "\nDonation Amount: ₹" +
-      amount.toLocaleString("en-IN") +
-      "\n\nPayment integration is not connected yet."
-    );
   });
 
   renderSevaCards();
@@ -15369,7 +15422,7 @@
         </h2>
       </div>
 
-      <a href="/events" class="upcoming-view-all">
+      <a href="#upcoming-seva" class="upcoming-view-all">
         VIEW ALL EVENTS <span aria-hidden="true">→</span>
       </a>
 
@@ -15408,7 +15461,7 @@
             </p>
           </div>
 
-          <a href="/events/medical-camp"
+          <a href="#upcoming-seva"
             class="upcoming-event-button">
             REGISTER <span aria-hidden="true">→</span>
           </a>
@@ -15449,7 +15502,7 @@
                 </p>
               </div>
 
-              <a href="/events/food-distribution"
+              <a href="#upcoming-seva"
                 class="upcoming-event-button">
                 JOIN US <span aria-hidden="true">→</span>
               </a>
@@ -15488,7 +15541,7 @@
                 </p>
               </div>
 
-              <a href="/events/education-support"
+              <a href="#upcoming-seva"
                 class="upcoming-event-button">
                 JOIN US <span aria-hidden="true">→</span>
               </a>
@@ -15595,8 +15648,8 @@ function render() {
     section.querySelector(".journey-title").textContent = title;
     const chapterLabel = section.querySelector(".journey-chapter");
     if (chapterLabel) chapterLabel.textContent = `CHAPTER ${String(index + 1).padStart(2, "0")} / 09`;
-    section.querySelector(".journey-media").href = `/temple-project/${slug}/gallery`;
-    section.querySelector(".journey-updates").href = `/temple-project/${slug}/updates`;
+    section.querySelector(".journey-media").href = "#temple";
+    section.querySelector(".journey-updates").href = "#temple-updates";
     if (innerWidth <= 700) timeline.children[index].scrollIntoView({block:"nearest", inline:"center", behavior:"instant"});
   }
   scenes.children[index].style.setProperty("--zoom", reduced.matches ? 1 : 1 + Math.min(1, position - index) * .04);
@@ -15681,7 +15734,7 @@ render();
             </p>
           </div>
 
-          <a href="/updates/project-announcements"
+          <a href="#temple-updates"
             class="temple-update-arrow"
             aria-label="View project announcements">
             <span aria-hidden="true">→</span>
@@ -15715,7 +15768,7 @@ render();
                 </svg>
               </div>
               <h3>Construction<br>Updates</h3>
-              <a href="/updates/construction"
+              <a href="#temple-updates"
                 class="temple-update-arrow"
                 aria-label="View construction updates">
                 →
@@ -15740,7 +15793,7 @@ render();
                 </svg>
               </div>
               <h3>Site<br>Updates</h3>
-              <a href="/updates/site"
+              <a href="#temple-updates"
                 class="temple-update-arrow"
                 aria-label="View site updates">
                 →
@@ -15766,7 +15819,7 @@ render();
                 </svg>
               </div>
               <h3>Architectural<br>Updates</h3>
-              <a href="/updates/architecture"
+              <a href="#temple-updates"
                 class="temple-update-arrow"
                 aria-label="View architectural updates">
                 →
@@ -15799,7 +15852,7 @@ render();
                 </svg>
               </div>
               <h3>Seva<br>Activities</h3>
-              <a href="/updates/seva-activities"
+              <a href="#temple-updates"
                 class="temple-update-arrow"
                 aria-label="View seva activities">
                 →
@@ -15828,7 +15881,7 @@ render();
                 </svg>
               </div>
               <h3>Events</h3>
-              <a href="/updates/events"
+              <a href="#upcoming-seva"
                 class="temple-update-arrow"
                 aria-label="View temple events">
                 →
@@ -15857,7 +15910,7 @@ render();
                 </svg>
               </div>
               <h3>Volunteer<br>Activities</h3>
-              <a href="/updates/volunteers"
+              <a href="#join-seva"
                 class="temple-update-arrow"
                 aria-label="View volunteer activities">
                 →
@@ -15881,7 +15934,7 @@ render();
                 </svg>
               </div>
               <h3>Temple<br>Milestones</h3>
-              <a href="/updates/milestones"
+              <a href="#temple-updates"
                 class="temple-update-arrow"
                 aria-label="View temple milestones">
                 →
@@ -15896,7 +15949,7 @@ render();
 
     <!-- SECTION FOOTER -->
     <div class="temple-updates-footer">
-      <a href="/updates" class="temple-updates-all">
+      <a href="#temple-updates" class="temple-updates-all">
         VIEW ALL UPDATES
         <span aria-hidden="true">→</span>
       </a>
@@ -16155,25 +16208,25 @@ render();
 
         <div class="transparency-links">
 
-          <a href="/transparency/annual-reports"
+          <a href="#transparency"
             class="transparency-link">
             <span>Annual reports</span>
             <span class="transparency-arrow" aria-hidden="true">→</span>
           </a>
 
-          <a href="/transparency/audited-financials"
+          <a href="#transparency"
             class="transparency-link">
             <span>Audited financial information</span>
             <span class="transparency-arrow" aria-hidden="true">→</span>
           </a>
 
-          <a href="/transparency/financial-updates"
+          <a href="#transparency"
             class="transparency-link">
             <span>Project financial updates</span>
             <span class="transparency-arrow" aria-hidden="true">→</span>
           </a>
 
-          <a href="/transparency/donation-utilisation"
+          <a href="#transparency"
             class="transparency-link">
             <span>Donation utilisation information</span>
             <span class="transparency-arrow" aria-hidden="true">→</span>
@@ -16213,25 +16266,25 @@ render();
 
         <div class="transparency-links">
 
-          <a href="/transparency/trustees"
+          <a href="#transparency"
             class="transparency-link">
             <span>Trustee information</span>
             <span class="transparency-arrow" aria-hidden="true">→</span>
           </a>
 
-          <a href="/transparency/registration"
+          <a href="#transparency"
             class="transparency-link">
             <span>Registration information</span>
             <span class="transparency-arrow" aria-hidden="true">→</span>
           </a>
 
-          <a href="/transparency/policies"
+          <a href="#transparency"
             class="transparency-link">
             <span>Policies</span>
             <span class="transparency-arrow" aria-hidden="true">→</span>
           </a>
 
-          <a href="/transparency/statutory"
+          <a href="#transparency"
             class="transparency-link">
             <span>Statutory information</span>
             <span class="transparency-arrow" aria-hidden="true">→</span>
@@ -16267,25 +16320,25 @@ render();
 
         <div class="transparency-links">
 
-          <a href="/transparency/funds-raised"
+          <a href="#temple-fund"
             class="transparency-link">
             <span>Funds raised</span>
             <span class="transparency-arrow" aria-hidden="true">→</span>
           </a>
 
-          <a href="/transparency/funds-utilised"
+          <a href="#temple-fund"
             class="transparency-link">
             <span>Funds utilised</span>
             <span class="transparency-arrow" aria-hidden="true">→</span>
           </a>
 
-          <a href="/transparency/construction-expenditure"
+          <a href="#temple-fund"
             class="transparency-link">
             <span>Construction expenditure</span>
             <span class="transparency-arrow" aria-hidden="true">→</span>
           </a>
 
-          <a href="/transparency/project-milestones"
+          <a href="#temple-updates"
             class="transparency-link">
             <span>Project milestones</span>
             <span class="transparency-arrow" aria-hidden="true">→</span>
@@ -18401,7 +18454,7 @@ else root.querySelectorAll('.bnk-store-reveal').forEach(el=>el.classList.add('vi
       quote:
         "The meals we receive are not just food, they are Baba’s blessings. It gives us strength and hope every day.",
       image: "images/voices-savitri.jpg",
-      video: "videos/voices-savitri.mp4"
+      video: null
     },
     {
       id: "rohit",
@@ -20324,16 +20377,16 @@ else root.querySelectorAll('.bnk-store-reveal').forEach(el=>el.classList.add('vi
         <span class="bnk-footer-heading-line"></span>
 
         <ul>
-          <li><a href="#home">Home</a></li>
-          <li><a href="#about">About</a></li>
-          <li><a href="#temple-project">Temple Project</a></li>
-          <li><a href="#seva">Our Seva</a></li>
-          <li><a href="#seva-impact">Impact</a></li>
-          <li><a href="#seva-stories">Stories</a></li>
-          <li><a href="#seva-gallery">Gallery</a></li>
-          <li><a href="#store">Store</a></li>
-          <li><a href="#join-seva">Get Involved</a></li>
-          <li><a href="#footer-contact">Contact</a></li>
+          <li><a href="index.html#home">Home</a></li>
+          <li><a href="index.html#about">About</a></li>
+          <li><a href="index.html#temple-fund">Temple Project</a></li>
+          <li><a href="index.html#seva">Our Seva</a></li>
+          <li><a href="index.html#seva-impact">Impact</a></li>
+          <li><a href="index.html#seva-stories">Stories</a></li>
+          <li><a href="index.html#seva-gallery">Gallery</a></li>
+          <li><a href="index.html#store">Store</a></li>
+          <li><a href="index.html#stay-connected">Get Involved</a></li>
+          <li><a href="index.html#footer-contact">Contact</a></li>
         </ul>
 
       </nav>
@@ -20347,31 +20400,31 @@ else root.querySelectorAll('.bnk-store-reveal').forEach(el=>el.classList.add('vi
 
         <ul>
           <li>
-            <a href="#temple-project">
+            <a href="index.html#temple-fund">
               Temple Vision
             </a>
           </li>
 
           <li>
-            <a href="#temple-fund">
+            <a href="index.html#temple-fund">
               Fund Tracker
             </a>
           </li>
 
           <li>
-            <a href="#temple-contribution">
+            <a href="index.html#temple-contribution">
               Contribute by Sq. Ft.
             </a>
           </li>
 
           <li>
-            <a href="#temple-sponsorship">
+            <a href="index.html#temple-sponsorship">
               Sponsor a Temple Element
             </a>
           </li>
 
           <li>
-            <a href="#temple-updates">
+            <a href="index.html#temple-updates">
               Project Updates
             </a>
           </li>
@@ -20387,11 +20440,11 @@ else root.querySelectorAll('.bnk-store-reveal').forEach(el=>el.classList.add('vi
         <span class="bnk-footer-heading-line"></span>
 
         <ul>
-          <li><a href="#donate">Donate</a></li>
-          <li><a href="#join-seva">Volunteer</a></li>
-          <li><a href="/csr-partnership">CSR Partnership</a></li>
-          <li><a href="/seva-partner">Seva Partner</a></li>
-          <li><a href="#upcoming-seva">Events</a></li>
+          <li><a href="index.html#donate">Donate</a></li>
+          <li><a href="index.html#join-seva">Volunteer</a></li>
+          <li><a href="index.html#csr-partnership">CSR Partnership</a></li>
+          <li><a href="index.html#seva-partner">Seva Partner</a></li>
+          <li><a href="index.html#stay-connected">Stay Connected</a></li>
         </ul>
 
       </nav>
@@ -20405,31 +20458,31 @@ else root.querySelectorAll('.bnk-store-reveal').forEach(el=>el.classList.add('vi
 
         <ul>
           <li>
-            <a href="/transparency">
+            <a href="index.html#transparency">
               Transparency
             </a>
           </li>
 
           <li>
-            <a href="/annual-reports">
+            <a href="index.html#transparency">
               Annual Reports
             </a>
           </li>
 
           <li>
-            <a href="/policies">
+            <a href="index.html#transparency">
               Policies
             </a>
           </li>
 
           <li>
-            <a href="/faqs">
+            <a href="index.html#seva">
               FAQs
             </a>
           </li>
 
           <li>
-            <a href="/donation-information">
+            <a href="index.html#donate">
               Donation Information
             </a>
           </li>
@@ -20639,23 +20692,23 @@ else root.querySelectorAll('.bnk-store-reveal').forEach(el=>el.classList.add('vi
       <nav class="bnk-footer-legal"
         aria-label="Legal information">
 
-        <a href="/privacy-policy">
+        <a href="#footer-contact">
           Privacy Policy
         </a>
 
-        <a href="/terms-and-conditions">
+        <a href="#footer-contact">
           Terms &amp; Conditions
         </a>
 
-        <a href="/donation-policy">
+        <a href="#donate">
           Donation Policy
         </a>
 
-        <a href="/refund-policy">
+        <a href="#footer-contact">
           Refund Policy
         </a>
 
-        <a href="/statutory-information">
+        <a href="#transparency">
           Applicable Statutory Information
         </a>
 

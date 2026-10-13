@@ -1,0 +1,16 @@
+{
+  "name": "bnk-seva-trust-donations",
+  "version": "1.0.0",
+  "private": true,
+  "description": "BNK Seva Trust donation website and verified payment backend",
+  "engines": {
+    "node": ">=22.5.0"
+  },
+  "scripts": {
+    "start": "node server.cjs",
+    "test": "node --test"
+  },
+  "dependencies": {
+    "nodemailer": "^10.1.0"
+  }
+}
