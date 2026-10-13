@@ -55,7 +55,120 @@ database.exec(`
     year INTEGER PRIMARY KEY,
     value INTEGER NOT NULL
   );
+  CREATE TABLE IF NOT EXISTS app_config (
+    key TEXT PRIMARY KEY,
+    value TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+  );
 `);
+
+const defaultPricingConfig = {
+  contributionOptions: [
+    { sqft: 1, amount: 2500 },
+    { sqft: 2, amount: 5000 },
+    { sqft: 5, amount: 12500 },
+    { sqft: 10, amount: 25000 },
+    { sqft: 20, amount: 50000 },
+    { sqft: 50, amount: 125000 },
+    { sqft: 100, amount: 250000 }
+  ],
+  sponsorshipAmounts: {
+    "temple-bell": null,
+    "murti-sthapana": null,
+    "prayer-hall": null,
+    "temple-garden": null,
+    "main-entrance": null,
+    "marble-flooring": null,
+    "temple-lighting": null,
+    "anna-seva-kitchen": null,
+    "water-facility": null,
+    "spiritual-library": null,
+    "community-hall": null,
+    "satsang-space": null,
+    "other-facilities": null
+  },
+  sevaDonationAmounts: [501, 1001, 2501, 5001, 11000],
+  storePrices: {
+    box: 1499,
+    frame: 499,
+    chalisa: 299,
+    books: 399,
+    mala: 799,
+    incense: 349,
+    idol: 1499,
+    merch: 599
+  }
+};
+
+function sanitizePositiveInteger(value) {
+  const amount = Number(value);
+  return Number.isSafeInteger(amount) && amount >= 1 ? amount : null;
+}
+
+function sanitizeNullableAmount(value) {
+  if (value === null || value === "" || value === undefined) return null;
+  return sanitizePositiveInteger(value);
+}
+
+function sanitizePricingConfig(input = {}) {
+  const contributionOptions = Array.isArray(input.contributionOptions)
+    ? input.contributionOptions
+        .map((option) => ({
+          sqft: sanitizePositiveInteger(option?.sqft),
+          amount: sanitizePositiveInteger(option?.amount)
+        }))
+        .filter((option) => option.sqft && option.amount)
+    : defaultPricingConfig.contributionOptions;
+
+  const sponsorshipAmounts = { ...defaultPricingConfig.sponsorshipAmounts };
+  if (input.sponsorshipAmounts && typeof input.sponsorshipAmounts === "object" && !Array.isArray(input.sponsorshipAmounts)) {
+    for (const id of Object.keys(sponsorshipAmounts)) {
+      sponsorshipAmounts[id] = sanitizeNullableAmount(input.sponsorshipAmounts[id]);
+    }
+  }
+
+  const sevaDonationAmounts = Array.isArray(input.sevaDonationAmounts)
+    ? input.sevaDonationAmounts.map(sanitizePositiveInteger).filter(Boolean).slice(0, 5)
+    : defaultPricingConfig.sevaDonationAmounts;
+
+  const storePrices = { ...defaultPricingConfig.storePrices };
+  if (input.storePrices && typeof input.storePrices === "object" && !Array.isArray(input.storePrices)) {
+    for (const id of Object.keys(storePrices)) {
+      storePrices[id] = sanitizePositiveInteger(input.storePrices[id]) || storePrices[id];
+    }
+  }
+
+  return {
+    contributionOptions: contributionOptions.length ? contributionOptions : defaultPricingConfig.contributionOptions,
+    sponsorshipAmounts,
+    sevaDonationAmounts: sevaDonationAmounts.length ? sevaDonationAmounts : defaultPricingConfig.sevaDonationAmounts,
+    storePrices
+  };
+}
+
+function getPricingConfig() {
+  const row = database.prepare("SELECT value FROM app_config WHERE key = ?").get("pricing");
+  if (!row) return defaultPricingConfig;
+  try {
+    return sanitizePricingConfig(JSON.parse(row.value));
+  } catch {
+    return defaultPricingConfig;
+  }
+}
+
+function savePricingConfig(input) {
+  const config = sanitizePricingConfig(input);
+  database.prepare(`
+    INSERT INTO app_config (key, value, updated_at) VALUES ('pricing', ?, ?)
+    ON CONFLICT(key) DO UPDATE SET value = excluded.value, updated_at = excluded.updated_at
+  `).run(JSON.stringify(config), new Date().toISOString());
+  return config;
+}
+
+function isAuthorizedAdmin(request) {
+  const expected = process.env.ADMIN_KEY || "admin";
+  return request.headers.authorization === `Bearer ${expected}` || request.headers["x-admin-key"] === expected;
+}
 
 const donationCategories = new Set([
   "Temple Project",
@@ -421,6 +534,18 @@ async function handleRequest(request, response) {
       sendJSON(response, 200, templeFundSummary());
       return;
     }
+    if (url.pathname === "/api/pricing-config" && request.method === "GET") {
+      sendJSON(response, 200, getPricingConfig());
+      return;
+    }
+    if (url.pathname === "/api/admin/pricing-config" && request.method === "PUT") {
+      if (!isAuthorizedAdmin(request)) {
+        sendJSON(response, 401, { error: "Admin key required." });
+        return;
+      }
+      sendJSON(response, 200, savePricingConfig(await readJSON(request)));
+      return;
+    }
     if (url.pathname === "/api/donations/order" && request.method === "POST") {
       await handleCreateOrder(request, response);
       return;
@@ -448,6 +573,7 @@ async function handleRequest(request, response) {
       "donation-policy.html",
       "refund-policy.html",
       "statutory-information.html",
+      "admin.html",
       "donation.css",
       "donation.js"
     ].includes(relativePath) ||
@@ -492,5 +618,7 @@ module.exports = {
   closeDatabase: () => database.close(),
   validateDonation,
   verifyCheckoutSignature,
-  templeFundSummary
+  templeFundSummary,
+  getPricingConfig,
+  savePricingConfig
 };

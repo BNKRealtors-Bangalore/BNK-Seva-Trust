@@ -13973,7 +13973,9 @@ section[id]:not(#home), #footer-contact {
 .bnk-music-control:hover { transform: translateY(-2px); }
 .bnk-music-control:focus-visible, .bnk-music-source:focus-visible { outline: 2px solid #b18e59; outline-offset: 3px; }
 .bnk-music-play { background: #800b23; color: #fff7e7; border: 1px solid #800b23; box-shadow: 0 4px 12px rgba(128,11,35,.18); }
-.bnk-music-stop { background: transparent; border: 1px solid #c7b39c; color: #800b23; }
+.bnk-music-stop,
+.bnk-music-volume { background: transparent; border: 1px solid #c7b39c; color: #800b23; }
+.bnk-music-volume { width: 32px; height: 32px; align-self: center; font: 700 17px/1 var(--sans); }
 .bnk-music-control svg { width: 18px; height: 18px; }
 .bnk-music-icon-pause { display: none; }
 .bnk-music-player.is-playing .bnk-music-icon-play { display: none; }
@@ -14074,6 +14076,8 @@ section[id]:not(#home), #footer-contact {
                 <button class="bnk-music-control bnk-music-stop" type="button" id="bnkMusicStop" aria-label="Stop Sitaram Sitaram" title="Stop music">
                   <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6 6h12v12H6z"/></svg>
                 </button>
+                <button class="bnk-music-control bnk-music-volume" type="button" id="bnkMusicVolumeDown" aria-label="Lower music volume" title="Lower volume">−</button>
+                <button class="bnk-music-control bnk-music-volume" type="button" id="bnkMusicVolumeUp" aria-label="Raise music volume" title="Raise volume">+</button>
               </div>
               <a class="bnk-music-source" href="https://youtu.be/KzLfiETJ-7k?si=pV4TZ1CPkFWGT6xu" target="_blank" rel="noopener noreferrer" title="Listen to the original on YouTube" aria-label="Listen to Sitaram Sitaram on YouTube (opens in a new tab)">
                 <svg viewBox="0 0 24 24" aria-hidden="true" fill="none"><path d="M14 5h5v5M19 5l-9 9" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><path d="M18 14v4a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
@@ -21328,10 +21332,13 @@ else root.querySelectorAll('.bnk-store-reveal').forEach(el=>el.classList.add('vi
   const audio = document.getElementById('bnkMusicAudio');
   const playButton = document.getElementById('bnkMusicPlay');
   const stopButton = document.getElementById('bnkMusicStop');
+  const volumeDownButton = document.getElementById('bnkMusicVolumeDown');
+  const volumeUpButton = document.getElementById('bnkMusicVolumeUp');
   const status = document.getElementById('bnkMusicStatus');
-  if (!player || !audio || !playButton || !stopButton || !status) return;
+  if (!player || !audio || !playButton || !stopButton || !volumeDownButton || !volumeUpButton || !status) return;
 
   const PAUSE_KEY = 'bnk-sitaram-paused-in-session';
+  const VOLUME_KEY = 'bnk-sitaram-volume';
   const TRIM_SECONDS = 5;
   let pausedByVisitor = false;
   let boundaryTimer = null;
@@ -21340,6 +21347,14 @@ else root.querySelectorAll('.bnk-store-reveal').forEach(el=>el.classList.add('vi
 
   try { pausedByVisitor = sessionStorage.getItem(PAUSE_KEY) === '1'; }
   catch (_) { /* Session storage can be unavailable in private/restricted modes. */ }
+
+  try {
+    const savedVolume = Number(sessionStorage.getItem(VOLUME_KEY));
+    if (Number.isFinite(savedVolume)) audio.volume = Math.min(1, Math.max(0, savedVolume));
+    else audio.volume = 0.7;
+  } catch (_) {
+    audio.volume = 0.7;
+  }
 
   const setVisitorPause = (paused) => {
     pausedByVisitor = paused;
@@ -21350,13 +21365,32 @@ else root.querySelectorAll('.bnk-store-reveal').forEach(el=>el.classList.add('vi
   };
 
   const show = (message) => { status.textContent = message; };
+  const volumePercent = () => Math.round(audio.volume * 100);
+  const volumeMessage = () => `Volume ${volumePercent()}%`;
+  const persistVolume = () => {
+    try { sessionStorage.setItem(VOLUME_KEY, String(audio.volume)); }
+    catch (_) { /* Volume still updates if storage is unavailable. */ }
+  };
+  const syncVolumeControls = () => {
+    const percent = volumePercent();
+    volumeDownButton.disabled = percent <= 0;
+    volumeUpButton.disabled = percent >= 100;
+    volumeDownButton.setAttribute('aria-label', `Lower music volume, currently ${percent}%`);
+    volumeUpButton.setAttribute('aria-label', `Raise music volume, currently ${percent}%`);
+  };
+  const changeVolume = (delta) => {
+    audio.volume = Math.min(1, Math.max(0, Number((audio.volume + delta).toFixed(2))));
+    persistVolume();
+    syncVolumeControls();
+    show(volumeMessage());
+  };
   const isPlaying = () => !audio.paused && !audio.ended;
   const sync = () => {
     const playing = isPlaying();
     player.classList.toggle('is-playing', playing);
     playButton.setAttribute('aria-label', (playing ? 'Pause' : 'Play') + ' Sitaram Sitaram');
     playButton.title = (playing ? 'Pause' : 'Play') + ' music';
-    if (playing) show('Now playing • devotional music');
+    if (playing) show(`Now playing • ${volumeMessage()}`);
   };
 
   // Intentionally do not set audio.loop: its native loop would play the
@@ -21446,7 +21480,7 @@ else root.querySelectorAll('.bnk-store-reveal').forEach(el=>el.classList.add('vi
     if (pausedByVisitor || audioUnavailable || isPlaying()) return;
     // The player's own buttons handle their action; a first click on Stop
     // must not accidentally cause music to start in the capture phase.
-    if (event.target?.closest?.('#bnkMusicPlay, #bnkMusicStop')) return;
+    if (event.target?.closest?.('#bnkMusicPlay, #bnkMusicStop, #bnkMusicVolumeDown, #bnkMusicVolumeUp')) return;
     if (event.type === 'keydown' && (
       event.key === 'Tab' || event.key === 'Shift' || event.key === 'Control' ||
       event.key === 'Alt' || event.key === 'Meta' || event.repeat
@@ -21481,6 +21515,10 @@ else root.querySelectorAll('.bnk-store-reveal').forEach(el=>el.classList.add('vi
     sync();
     show('Stopped • tap Play to restart');
   });
+
+  volumeDownButton.addEventListener('click', () => changeVolume(-0.1));
+  volumeUpButton.addEventListener('click', () => changeVolume(0.1));
+  audio.addEventListener('volumechange', syncVolumeControls);
 
   audio.addEventListener('playing', () => { sync(); scheduleBoundary(); });
   audio.addEventListener('pause', () => { clearBoundaryTimer(); sync(); });
@@ -21517,6 +21555,7 @@ else root.querySelectorAll('.bnk-store-reveal').forEach(el=>el.classList.add('vi
     // the first visitor interaction above retries playback automatically.
     attemptPlayback('automatic');
   }
+  syncVolumeControls();
 })();
 </script>
 </body>
