@@ -15928,87 +15928,123 @@ section[id]:not(#home), #footer-contact {
 })();
 </script>
 
-<section class="temple-journey" id="temple-journey">
-  <div class="journey-screen">
-    <div class="journey-scenes" aria-hidden="true"></div>
-    <div class="journey-copy">
-      <p class="journey-eyebrow">TEMPLE PROJECT JOURNEY</p>
-   
-      <h2>The Journey of a Sacred Dream</h2>
-      <h3 class="journey-title"></h3>
-      <div class="journey-links">
-        <a class="journey-media" href="#">Photos &amp; Videos →</a>
-        <a class="journey-updates" href="#">Project Updates →</a>
-      </div>
+<!-- Temple Project Journey — two-row flowing path (replaces sticky scroll wheel) -->
+<style>
+  #temple-journey {
+    --journey-wine: #800b23;
+    --journey-gold: #bb8745;
+    position: relative;
+    height: auto;
+    min-height: 0;
+    padding: clamp(52px, 6vw, 86px) 0 clamp(52px, 6vw, 84px);
+    overflow: hidden;
+    background: radial-gradient(ellipse at 50% 0%, #fffaf1, #fffdf8 60%);
+    color: var(--journey-wine);
+  }
+  #temple-journey .jp-inner { width: min(1480px, calc(100% - 72px)); margin: auto; }
+  #temple-journey .jp-heading { text-align: center; margin-bottom: 38px; }
+  #temple-journey .journey-eyebrow {
+    margin: 0 0 12px; color: #a47338; font-family: var(--sans);
+    font-size: 11px; font-weight: 600; letter-spacing: .22em; text-transform: uppercase;
+  }
+  #temple-journey .jp-heading h2 {
+    margin: 0; color: #800b23; font: 600 var(--section-heading-size, clamp(34px,3.55vw,56px)) / 1.08 var(--serif);
+    letter-spacing: 0;
+  }
+  #temple-journey .jp-subtitle {
+    margin: 10px auto 0; color: #6d625c; font: 400 clamp(12px, 1vw, 15px)/1.6 var(--sans);
+  }
+  #temple-journey .jp-row { display: grid; gap: 18px 14px; align-items: start; }
+  #temple-journey .jp-row-top { grid-template-columns: repeat(5, minmax(0,1fr)); }
+  #temple-journey .jp-row-bottom {
+    grid-template-columns: repeat(5, minmax(0,1fr));
+    margin-top: 18px;
+  }
+  #temple-journey .jp-stage { min-width: 0; position: relative; display: flex; flex-direction: column; }
+  #temple-journey .jp-stage-heading {
+    min-height: 132px; height: 132px; text-align: center; padding: 0 6px 14px;
+    display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
+  }
+  #temple-journey .jp-number {
+    display: grid; place-items: center; width: 35px; height: 35px;
+    margin: 0 auto 9px; border-radius: 50%; background: #b5803c; color: #fff;
+    font: 600 15px/1 var(--sans); font-variant-numeric: tabular-nums;
+  }
+  #temple-journey .jp-stage h3 {
+    margin: 0; color: #800b23; font: 600 clamp(20px, 1.8vw, 28px)/1.02 var(--serif);
+  }
+  #temple-journey .jp-stage p {
+    max-width: 210px; margin: 7px auto 0; color: #5f5853;
+    font: 400 clamp(11px, .86vw, 13px)/1.45 var(--sans);
+  }
+  #temple-journey .jp-photo {
+    position: relative; height: clamp(158px, 17vw, 250px); overflow: hidden;
+    border-radius: 6px; background: #f1e8d7;
+  }
+  #temple-journey .jp-photo img {
+    display: block; width: 100%; height: 100%; object-fit: cover;
+    object-position: center; transition: transform 600ms ease;
+  }
+  #temple-journey .jp-stage:hover .jp-photo img { transform: scale(1.045); }
+  #temple-journey .jp-row-top .jp-photo,
+  #temple-journey .jp-row-bottom .jp-photo { border-bottom: 3px solid #d4aa6d; }
+  #temple-journey .jp-flow { display: none; }
+  #temple-journey .jp-row-bottom .jp-stage:nth-child(1) { grid-column: 1; }
+  #temple-journey .jp-row-bottom .jp-stage:nth-child(2) { grid-column: 2; }
+  #temple-journey .jp-row-bottom .jp-stage:nth-child(3) { grid-column: 3; }
+  #temple-journey .jp-row-bottom .jp-stage:nth-child(4) { grid-column: 4; }
+  #temple-journey .jp-bottom-link {
+    display: flex; justify-content: center; gap: 18px; margin-top: 32px; flex-wrap: wrap;
+  }
+  #temple-journey .jp-bottom-link a {
+    display: inline-flex; align-items: center; justify-content: center; min-height: 42px;
+    padding: 0 19px; border: 1px solid #bd945d; border-radius: 999px;
+    font: 600 11px/1 var(--sans); letter-spacing: .05em; color: #800b23;
+    background: rgba(255,253,248,.8); transition: background .2s, transform .2s;
+  }
+  #temple-journey .jp-bottom-link a:hover { background: #f9eddf; transform: translateY(-2px); }
+  @media(max-width: 900px) {
+    #temple-journey .jp-inner { width: min(100% - 36px, 720px); }
+    #temple-journey .jp-row-top, #temple-journey .jp-row-bottom { grid-template-columns: repeat(2, minmax(0,1fr)); }
+    #temple-journey .jp-row-bottom { margin-top: 12px; }
+    #temple-journey .jp-row-bottom .jp-stage:nth-child(n) { grid-column: auto; }
+    #temple-journey .jp-stage-heading, #temple-journey .jp-row-bottom .jp-stage-heading { min-height: 118px; height: 118px; }
+    #temple-journey .jp-photo { height: clamp(145px, 31vw, 225px); }
+  }
+  @media(max-width: 520px) {
+    #temple-journey { padding: 48px 0 56px; }
+    #temple-journey .jp-heading h2 { font-size: var(--section-heading-mobile-size, 39px); }
+    #temple-journey .jp-row { gap: 18px 10px; }
+    #temple-journey .jp-stage h3 { font-size: 21px; }
+    #temple-journey .jp-stage p { font-size: 11px; }
+    #temple-journey .jp-number { width: 30px; height: 30px; font-size: 12px; }
+    #temple-journey .jp-stage-heading, #temple-journey .jp-row-bottom .jp-stage-heading { min-height: 126px; height: 126px; }
+  }
+  @media(prefers-reduced-motion: reduce) { #temple-journey .jp-photo img { transition: none; } }
+</style>
+<section class="temple-journey" id="temple-journey" aria-labelledby="jp-main-title">
+  <div class="jp-inner">
+    <header class="jp-heading">
+      <p class="journey-eyebrow">OUR PATH OF SEVA</p>
+      <h2 id="jp-main-title">Temple Project Journey</h2>
+      <p class="jp-subtitle">A shared journey of faith, effort and collective support.</p>
+    </header>
+    <div class="jp-row jp-row-top">
+      <article class="jp-stage"><div class="jp-stage-heading"><span class="jp-number">01</span><h3>Vision</h3><p>A divine inspiration for generations.</p></div><div class="jp-photo"><img src="/images/vision.png" alt="Temple vision" loading="lazy"></div></article>
+      <article class="jp-stage"><div class="jp-stage-heading"><span class="jp-number">02</span><h3>Land &amp; Site</h3><p>Identifying and acquiring the sacred land.</p></div><div class="jp-photo"><img src="/images/land and site.png" alt="Land and site" loading="lazy"></div></article>
+      <article class="jp-stage"><div class="jp-stage-heading"><span class="jp-number">03</span><h3>Architectural Design</h3><p>Designing a temple rooted in tradition and purpose.</p></div><div class="jp-photo"><img src="/images/architectural design.png" alt="Architectural drawings" loading="lazy"></div></article>
+      <article class="jp-stage"><div class="jp-stage-heading"><span class="jp-number">04</span><h3>Approvals</h3><p>Obtaining necessary clearances and permissions.</p></div><div class="jp-photo"><img src="/images/approvals.png" alt="Approvals" loading="lazy"></div></article>
+      <article class="jp-stage"><div class="jp-stage-heading"><span class="jp-number">05</span><h3>Ground Breaking</h3><p>A sacred beginning on holy land.</p></div><div class="jp-photo"><img src="/images/groundbreaking.png" alt="Ground breaking" loading="lazy"></div></article>
     </div>
-    <nav class="journey-timeline" aria-label="Temple journey chapters"></nav>
-   
+    <div class="jp-row jp-row-bottom">
+      <article class="jp-stage"><div class="jp-stage-heading"><span class="jp-number">06</span><h3>Foundation</h3><p>Building the base for a lasting legacy.</p></div><div class="jp-photo"><img src="/images/foundation.png" alt="Foundation works" loading="lazy"></div></article>
+      <article class="jp-stage"><div class="jp-stage-heading"><span class="jp-number">07</span><h3>Construction</h3><p>Turning vision into reality.</p></div><div class="jp-photo"><img src="/images/construction.png" alt="Temple construction" loading="lazy"></div></article>
+      <article class="jp-stage"><div class="jp-stage-heading"><span class="jp-number">08</span><h3>Murti Sthapana</h3><p>Installing the divine presence in the sacred shrine.</p></div><div class="jp-photo"><img src="/images/murty stapana.png" alt="Murti sthapana" loading="lazy"></div></article>
+      <article class="jp-stage"><div class="jp-stage-heading"><span class="jp-number">09</span><h3>Pran Pratishtha</h3><p>Consecrating the temple for generations.</p></div><div class="jp-photo"><img src="/images/pran pratista.png" alt="Pran pratishtha" loading="lazy"></div></article>
+    </div>
+    <div class="jp-bottom-link"><a href="#temple-updates">View Project Updates →</a></div>
   </div>
 </section>
-<script>
-  const stages = [
-  ["Vision", "vision.png", "vision"],
-  ["Land & Site", "land and site.png", "land-site"],
-  ["Architectural Design", "architectural design.png", "architecture"],
-  ["Approvals", "approvals.png", "approvals"],
-  ["Ground Breaking", "groundbreaking.png", "ground-breaking"],
-  ["Foundation", "foundation.png", "foundation"],
-  ["Construction", "construction.png", "construction"],
-  ["Murti Sthapana", "murty stapana.png", "murti-sthapana"],
-  ["Pran Pratishtha", "pran pratista.png", "pran-pratishtha"]
-];
-const section = document.querySelector("#temple-journey");
-const timeline = section.querySelector(".journey-timeline");
-const scenes = section.querySelector(".journey-scenes");
-const reduced = matchMedia("(prefers-reduced-motion: reduce)");
-stages.forEach(([title, image], i) => {
-  const scene = document.createElement("div");
-  scene.className = "journey-scene";
-  const img = new Image(); img.src = `/images/${image}`;
-  img.alt = ""; img.decoding = "async"; scene.append(img); scenes.append(scene);
-  const button = document.createElement("button");
-  button.className = "journey-step"; button.type = "button";
-  const number = document.createElement("span"); number.textContent = String(i + 1).padStart(2, "0");
-  button.append(number, document.createTextNode(title)); timeline.append(button);
-  button.onclick = () => {
-    const start = section.getBoundingClientRect().top + scrollY;
-    const distance = section.offsetHeight - innerHeight;
-    scrollTo({top: start + distance * i / stages.length, behavior: reduced.matches ? "instant" : "smooth"});
-  };
-});
-let active = -1, queued = false;
-function render() {
-  queued = false;
-  const distance = Math.max(1, section.offsetHeight - innerHeight);
-  const progress = Math.min(1, Math.max(0, -section.getBoundingClientRect().top / distance));
-  const position = progress * stages.length;
-  const index = Math.min(stages.length - 1, Math.floor(position));
-  if (index !== active) {
-    active = index;
-    [...scenes.children].forEach((scene, i) => scene.classList.toggle("is-active", i === index));
-    [...timeline.children].forEach((button, i) => i === index ? button.setAttribute("aria-current", "step") : button.removeAttribute("aria-current"));
-    const [title, , slug] = stages[index];
-    section.querySelector(".journey-title").textContent = title;
-    const chapterLabel = section.querySelector(".journey-chapter");
-    if (chapterLabel) chapterLabel.textContent = `CHAPTER ${String(index + 1).padStart(2, "0")} / 09`;
-    section.querySelector(".journey-media").href = "#temple";
-    section.querySelector(".journey-updates").href = "#temple-updates";
-    if (innerWidth <= 700) {
-      // Only scroll the horizontal timeline. scrollIntoView() here used to
-      // scroll the ENTIRE website into the middle on mobile page loads.
-      const activeStep = timeline.children[index];
-      const center = activeStep.offsetLeft + activeStep.offsetWidth / 2;
-      const left = Math.max(0, center - timeline.clientWidth / 2);
-      timeline.scrollTo({ left, behavior: "instant" });
-    }
-  }
-  scenes.children[index].style.setProperty("--zoom", reduced.matches ? 1 : 1 + Math.min(1, position - index) * .04);
-}
-function schedule() { if (!queued) { queued = true; requestAnimationFrame(render); } }
-addEventListener("scroll", schedule, {passive:true});
-addEventListener("resize", schedule);
-render();
-</script>
 
 
 <!-- =========================================
