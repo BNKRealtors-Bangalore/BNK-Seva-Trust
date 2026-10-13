@@ -14,7 +14,36 @@
       href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=DM+Sans:wght@400;500;600;700&family=Inter:wght@500;600;700;800&display=swap"
       rel="stylesheet"
     />
-    <script>document.documentElement.classList.add("has-reveal");</script>
+    <script>
+      document.documentElement.classList.add("has-reveal");
+
+      (() => {
+        if ("scrollRestoration" in history) {
+          history.scrollRestoration = "manual";
+        }
+
+        const shouldStartAtTop =
+          !window.location.hash &&
+          !new URLSearchParams(window.location.search).has("product");
+
+        if (!shouldStartAtTop) return;
+
+        const scrollToTop = () => {
+          window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+        };
+
+        scrollToTop();
+        window.addEventListener("pageshow", () => {
+          scrollToTop();
+          setTimeout(scrollToTop, 0);
+          setTimeout(scrollToTop, 120);
+        });
+        window.addEventListener("load", () => {
+          requestAnimationFrame(scrollToTop);
+          setTimeout(scrollToTop, 120);
+        });
+      })();
+    </script>
     <style>
       :root {
         color-scheme: light;
