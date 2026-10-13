@@ -131,7 +131,8 @@
 }
 
 .bnk-donation-submit,
-.bnk-donation-print {
+.bnk-donation-print,
+.bnk-certificate-download {
   min-height: 40px;
   padding: 0 16px;
   border: 1px solid #884b34;
@@ -141,6 +142,11 @@
   letter-spacing: 0.09em;
   text-transform: uppercase;
   cursor: pointer;
+}
+
+.bnk-certificate-download {
+  border-color: #b98232;
+  background: #9b0e26;
 }
 
 .bnk-donation-submit:disabled {
@@ -188,6 +194,71 @@
   font-weight: 600;
 }
 
+.bnk-certificate {
+  margin-top: 18px;
+  padding: 8px;
+  border: 1px solid #d9b36f;
+  background: linear-gradient(135deg, #fffaf0, #f8e8c7 58%, #fff4d8);
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.72);
+}
+
+.bnk-certificate-border {
+  padding: 28px 24px;
+  border: 2px solid #c48a32;
+  text-align: center;
+}
+
+.bnk-certificate-kicker {
+  margin: 0;
+  color: #b77a2f;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+}
+
+.bnk-certificate h3 {
+  margin: 12px 0 14px;
+  color: #800b23;
+  font: 500 clamp(30px, 5vw, 46px)/0.96 var(--serif, Georgia, serif);
+}
+
+.bnk-certificate-text {
+  max-width: 520px;
+  margin: 0 auto 13px;
+  color: #5e4b40;
+  font: 400 15px/1.5 var(--serif, Georgia, serif);
+}
+
+.bnk-certificate-text span {
+  color: #800b23;
+  font-weight: 600;
+}
+
+.bnk-certificate-name {
+  display: block;
+  margin: 6px auto 16px;
+  color: #800b23;
+  font: 600 clamp(28px, 5vw, 44px)/1 var(--serif, Georgia, serif);
+  overflow-wrap: anywhere;
+}
+
+.bnk-certificate-meta {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px 22px;
+  margin-top: 18px;
+  color: #6b5a4d;
+  font-size: 11px;
+}
+
+.bnk-certificate-blessing {
+  margin: 18px 0 0;
+  color: #a86f2e;
+  font: italic 15px/1.45 var(--serif, Georgia, serif);
+}
+
 @media (max-width: 560px) {
   .bnk-donation-dialog {
     align-items: end;
@@ -212,6 +283,10 @@
 
   .bnk-donation-actions > button {
     width: 100%;
+  }
+
+  .bnk-certificate-border {
+    padding: 22px 14px;
   }
 }
 
@@ -251,7 +326,8 @@
   }
 
   .bnk-donation-close,
-  .bnk-donation-print {
+  .bnk-donation-print,
+  .bnk-certificate-download {
     display: none !important;
   }
 }

@@ -890,7 +890,7 @@
       .tracker-progress::after {
         position: absolute;
         inset: 4px auto 4px 4px;
-        width: calc(36% - 8px);
+        width: max(0px, calc(var(--fund-progress, 0%) - 8px));
         border-radius: inherit;
         background: linear-gradient(180deg, #ba0d2b, #97061d);
         box-shadow: 0 5px 16px rgba(128, 11, 35, 0.28);
@@ -1943,14 +1943,14 @@
         }
 
         .inspiration-background img {
-          object-position: 32% center;
+          object-position: 24% center;
           transform: scale(1.08);
         }
 
         .inspiration-section::before {
           background:
-            linear-gradient(90deg, rgba(255, 253, 248, 0.94) 0%, rgba(255, 253, 248, 0.84) 58%, rgba(255, 253, 248, 0.32) 100%),
-            linear-gradient(0deg, rgba(82, 48, 28, 0.14), transparent 45%);
+            linear-gradient(90deg, rgba(255, 253, 248, 0.88) 0%, rgba(255, 253, 248, 0.74) 58%, rgba(255, 253, 248, 0.24) 100%),
+            linear-gradient(0deg, rgba(82, 48, 28, 0.1), transparent 45%);
         }
 
         .inspiration-content {
@@ -4285,8 +4285,8 @@
 .support-story-section {
   position: relative;
   isolation: isolate;
-  min-height: 100svh;
-  padding: clamp(58px, 7vh, 88px) 40px;
+  min-height: 75svh;
+  padding: clamp(44px, 5.25vh, 66px) 40px;
   display: grid;
   place-items: center;
   overflow: hidden;
@@ -4312,7 +4312,7 @@
   margin: 0;
   color: #3c1710;
   font-family: var(--serif);
-  font-size: clamp(42px, 5.4vw, 78px);
+  font-size: clamp(38px, 4.2vw, 58px);
   font-weight: 600;
   line-height: 1.03;
   letter-spacing: 0;
@@ -12904,7 +12904,7 @@
       }
 
       .tracker-progress::after {
-        width: calc(36% - 8px);
+        width: max(0px, calc(var(--fund-progress, 0%) - 8px));
         background: linear-gradient(90deg, #a80722 0%, #c61534 55%, #a80722 100%);
         background-size: 200% 100%;
         animation: trackerShimmer 3s linear infinite;
@@ -13524,31 +13524,44 @@
 
 /* Fund tracker: original clip-path parchment opening retained. */
 .temple-fund-stage {
-  background: linear-gradient(125deg,#fffdf9,#fbf6ec 68%,#fffefc);
+  background: linear-gradient(125deg,#fff7df 0%,#f7e5bb 58%,#fff3d2 100%);
 }
 .temple-fund-stage::before { opacity:0.24; }
 .tracker-paper-glass {
-  background:linear-gradient(130deg,rgba(255,255,255,.93),rgba(255,253,250,.82));
+  background:
+    linear-gradient(130deg,rgba(255,255,255,.62),rgba(255,253,250,.48)),
+    url("images/temple-fund-bg.png") center center / cover no-repeat;
   backdrop-filter:blur(16px) saturate(1.05);
   -webkit-backdrop-filter:blur(16px) saturate(1.05);
 }
 .tracker-content-updated {
   width:min(1370px,calc(100% - 100px));
-  grid-template-columns:minmax(0,1fr) minmax(0,.91fr);
+  grid-template-columns:minmax(0,1fr);
   gap:clamp(20px,3vw,48px);
   padding:clamp(55px,7vh,78px) 0 clamp(24px,4vh,40px);
+  place-items:center;
 }
-.tracker-copy {max-width:635px;}
-.tracker-heading-mark { gap:9px; }
+.tracker-copy {max-width:760px;}
+.tracker-copy {text-align:center;}
+.tracker-heading-mark { gap:14px; justify-content:center; width:100%; }
 .tracker-heading-mark span {width:clamp(45px,6vw,78px);}
 .tracker-heading-mark b {font-size:21px;}
+.tracker-devotion {
+  margin:11px 0 0;
+  color:#b77a2f;
+  font-family:var(--sans);
+  font-size:clamp(10px,.9vw,13px);
+  font-weight:500;
+  letter-spacing:.42em;
+  text-transform:uppercase;
+}
 .tracker-kicker {
   margin-top:15px;
   color:#800b23;
   font-family:var(--serif);
-  font-size:clamp(32px,3.1vw,48px);
-  font-weight:600;
-  line-height:1.05;
+  font-size:clamp(34px,3.2vw,50px);
+  font-weight:500;
+  line-height:1.02;
   letter-spacing:-.02em;
   text-transform:uppercase;
 }
@@ -13556,8 +13569,9 @@
   margin-top:11px;
   font-family:var(--sans);
   font-size:clamp(10px,.88vw,12px);
-  font-weight:600;
+  font-weight:500;
   letter-spacing:.23em;
+  justify-content:center;
 }
 .tracker-location::before,.tracker-location::after {width:clamp(30px,4vw,60px);}
 .tracker-title {
@@ -13565,18 +13579,18 @@
   color:#800b23;
   font-family:var(--serif);
   font-size:clamp(25px,2.3vw,36px);
-  font-weight:600;
+  font-weight:500;
   line-height:1.1;
 }
 .tracker-amounts {margin-top:22px;gap:14px;width:100%;}
 .tracker-stat-card {min-height:90px;padding:11px 13px;gap:12px;
-  grid-template-columns:58px minmax(0,1fr);border-radius:16px;}
-.tracker-stat-icon {width:56px;height:56px;background:#fff1db;color:#c17d24;}
+  grid-template-columns:1fr;border-radius:8px;text-align:center;background:rgba(255,252,245,.46);border-color:rgba(194,122,36,.28);}
+.tracker-stat-icon {display:none;}
 .tracker-amount strong,.tracker-remaining strong {
   font-family:var(--number);
-  font-size:clamp(23px,2.1vw,31px);
-  font-weight:700;
-  line-height:1.1;
+  font-size:clamp(28px,2.7vw,40px);
+  font-weight:600;
+  line-height:.95;
   letter-spacing:-.035em;
   color:#800b23;
 }
@@ -13584,42 +13598,44 @@
   display:block;
   color:#63554d;
   font-family:var(--sans);
-  font-size:12px;
+  font-size:clamp(12px,1vw,15px);
   line-height:1.5;
   font-weight:400;
 }
 .tracker-progress-wrap {margin-top:18px;}
-.tracker-progress {height:29px;}
-.tracker-progress-label {margin-top:13px;font-size:clamp(17px,1.65vw,24px);line-height:1.2;}
+.tracker-progress {height:29px;border:0;background:linear-gradient(90deg,#a90824 0 var(--fund-progress, 0%),rgba(222,202,166,.72) var(--fund-progress, 0%) 100%);box-shadow:none;}
+.tracker-progress-label {margin-top:13px;font-size:clamp(13px,1.05vw,16px);line-height:1.2;}
 .tracker-progress-label span:first-child {
-  color:#800b23;font-family:var(--number);font-weight:700;
+  color:#800b23;font-family:var(--number);font-weight:600;
 }
 
 
 .tracker-progress-label span:last-child {
   font-family: var(--number);
-  font-weight: 700;
+  font-weight: 600;
   color: #800b23;
 }
 
 .tracker-contribute {
   margin:23px 0 0;
-  min-height:51px;
-  padding:0 28px;
+  min-height:52px;
+  padding:0 clamp(28px,3vw,42px);
   font-family:var(--sans);
-  font-size:11px;
-  font-weight:600;
+  font-size:clamp(11px,.95vw,13px);
+  font-weight:500;
   letter-spacing:.12em;
 }
 .tracker-contribute svg {width:17px;height:17px;}
 .tracker-message {
   margin-top:17px;
-  font-family:var(--sans);
-  font-size:clamp(12px,1vw,15px);
+  font-family:var(--serif);
+  font-size:clamp(14px,1.15vw,17px);
   font-weight:400;
-  line-height:1.6;
+  font-style:italic;
+  line-height:1.35;
+  text-align:center;
 }
-.tracker-temple-image {width:min(100%,550px);}
+.tracker-temple-image {display:none;}
 .tracker-temple-image img {object-fit:cover;object-position:50% 46%;}
 
 /* CSR: same Cormorant headings + DM Sans subtitles and pills. */
@@ -13815,7 +13831,7 @@
 @media (max-width:1180px) {
   .tracker-content-updated {
     width:min(900px,calc(100% - 46px));
-    grid-template-columns:minmax(0,1fr) minmax(0,.85fr);
+    grid-template-columns:minmax(0,1fr);
   }
   .csr-shell {grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);}
   .csr-visual {min-height:460px;}
@@ -13843,6 +13859,11 @@
   .bnk-partner-content {padding:24px 17px;}
 }
 @media (max-width:650px) {
+  .tracker-paper-glass {
+    background:
+      linear-gradient(130deg,rgba(255,255,255,.62),rgba(255,253,250,.48)),
+      url("images/temple-fund-mobile-bg.png") center center / cover no-repeat;
+  }
   .tracker-content-updated {width:calc(100% - 36px);padding:70px 0 38px;gap:20px;}
   .tracker-kicker {font-size:clamp(28px,8vw,37px);line-height:1.05;}
   .tracker-location {font-size:9px;letter-spacing:.13em;gap:7px;}
@@ -14078,7 +14099,7 @@ section[id]:not(#home), #footer-contact {
             BNK Seva Trust is working towards building a Neem Karoli Baba Temple in Newtown, Kolkata — a sacred space dedicated to devotion, humanity, community and seva. A temple that is not only a place of worship, but a place where people can come together to pray, serve, learn and give.
           </p>
           <div class="temple-actions reveal" style="--reveal-delay: 430ms">
-            <a class="temple-button temple-button-primary" href="#temple">
+            <a class="temple-button temple-button-primary" href="#temple-journey">
               Explore Temple Project
               <svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M3 10h13m-5-5 5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" /></svg>
             </a>
@@ -14098,9 +14119,12 @@ section[id]:not(#home), #footer-contact {
             <div class="tracker-content tracker-content-updated">
               <div class="tracker-copy">
                 <div class="tracker-heading-mark tracker-item" aria-hidden="true">
-             
+                  <span></span>
+                  <b>✦</b>
+                  <span></span>
                 </div>
-                <p class="tracker-kicker tracker-item">Neem Karoli Baba Temple</p>
+                <p class="tracker-devotion tracker-item" style="--tracker-delay: 35ms">Seva • Shraddha • Samarpan</p>
+                <p class="tracker-kicker tracker-item">Neem Karoli Baba<br>Temple</p>
                 <p class="tracker-location tracker-item" style="--tracker-delay: 70ms">Newtown, Kolkata</p>
                 <h2 class="tracker-title tracker-item" style="--tracker-delay: 140ms">Temple Construction Fund</h2>
 
@@ -14110,7 +14134,7 @@ section[id]:not(#home), #footer-contact {
                       <svg viewBox="0 0 24 24"><path d="M12 3c-3.3 0-6 1.1-6 2.5S8.7 8 12 8s6-1.1 6-2.5S15.3 3 12 3Zm-6 4.9V11c0 1.4 2.7 2.5 6 2.5s6-1.1 6-2.5V7.9c-1.3 1-3.5 1.6-6 1.6S7.3 8.9 6 7.9Zm0 5.5v3.1c0 1.4 2.7 2.5 6 2.5s6-1.1 6-2.5v-3.1c-1.3 1-3.5 1.6-6 1.6s-4.7-.6-6-1.6Z" fill="currentColor"/></svg>
                     </div>
                     <div>
-                      <strong>₹ 18 <span class="tracker-crore">Cr</span></strong>
+                      <strong data-fund-raised>₹ 0</strong>
                       <span>Raised So Far</span>
                     </div>
                   </div>
@@ -14133,13 +14157,13 @@ section[id]:not(#home), #footer-contact {
                     aria-label="Temple construction fund progress"
                     aria-valuemin="0"
                     aria-valuemax="100"
-                    aria-valuenow="36"
-                    aria-valuetext="36 percent funded"
+                    aria-valuenow="0"
+                    aria-valuetext="0 percent funded"
                   ></div>
-                  <p class="tracker-progress-label"><span>36% FUNDED</span><span>₹ 32 Cr Remaining</span></p>
+                  <p class="tracker-progress-label"><span data-fund-percent>0% FUNDED</span><span data-fund-remaining>₹ 50 Cr Remaining</span></p>
                 </div>
 
-                <a class="tracker-contribute tracker-item" href="#donate" style="--tracker-delay: 350ms">
+                <a class="tracker-contribute tracker-item" href="#donate" data-donation-category="Temple Project" data-donation-purpose="Temple Construction Fund" style="--tracker-delay: 350ms">
                   <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0l-1 1-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8Z" fill="currentColor" /></svg>
                   Contribute to the Temple
                 </a>
@@ -14189,7 +14213,7 @@ section[id]:not(#home), #footer-contact {
             <p>A deep devotee of Lord Hanuman, Baba showed the power of unwavering faith, reminding us that surrender, love and service open the way to inner freedom.</p>
             <p>His teachings continue to inspire BNK Seva Trust in its journey of seva - serving people, uplifting lives and spreading love, just as Baba lived and showed.</p>
           </div>
-          <a class="inspiration-button reveal" href="#seva-stories" style="--reveal-delay: 350ms">Discover His Teachings</a>
+       <a class="inspiration-button reveal" href="teachings.html" style="--reveal-delay: 350ms">Discover His Teachings</a>
         </div>
       </section>
 
@@ -14258,7 +14282,7 @@ section[id]:not(#home), #footer-contact {
               </div>
             </article>
           </div>
-          <a class="seva-action reveal" href="#seva" style="--reveal-delay: 500ms">Explore All Seva <span aria-hidden="true">→</span></a>
+          <a class="seva-action reveal" href="#join-seva" style="--reveal-delay: 500ms">Explore All Seva <span aria-hidden="true">→</span></a>
         </div>
       </section>
 
@@ -14322,6 +14346,55 @@ section[id]:not(#home), #footer-contact {
         fundOpenObserver.observe(fundSection);
       } else {
         openFundTracker();
+      }
+
+      const fundTrackerSection = document.querySelector("#temple-fund");
+      if (fundTrackerSection) {
+        const raised = fundTrackerSection.querySelector("[data-fund-raised]");
+        const remaining = fundTrackerSection.querySelector("[data-fund-remaining]");
+        const percent = fundTrackerSection.querySelector("[data-fund-percent]");
+        const progress = fundTrackerSection.querySelector(".tracker-progress");
+
+        const formatFundAmount = (amount) => {
+          const value = Number(amount) || 0;
+          if (value >= 10000000) {
+            const crore = value / 10000000;
+            const formatted = new Intl.NumberFormat("en-IN", {
+              maximumFractionDigits: crore >= 10 ? 1 : 2
+            }).format(crore);
+            return `₹ ${formatted} Cr`;
+          }
+          return new Intl.NumberFormat("en-IN", {
+            style: "currency",
+            currency: "INR",
+            maximumFractionDigits: 0
+          }).format(value);
+        };
+
+        const refreshTempleFund = async () => {
+          try {
+            const response = await fetch("/api/temple-fund", { cache: "no-store" });
+            if (!response.ok) return;
+            const summary = await response.json();
+            const progressValue = Math.min(100, Math.max(0, Number(summary.progress) || 0));
+            const roundedProgress = Math.round(progressValue);
+
+            if (raised) raised.textContent = formatFundAmount(summary.raisedAmount);
+            if (remaining) remaining.textContent = `${formatFundAmount(summary.remainingAmount)} Remaining`;
+            if (percent) percent.textContent = `${roundedProgress}% FUNDED`;
+            if (progress) {
+              progress.style.setProperty("--fund-progress", `${progressValue}%`);
+              progress.setAttribute("aria-valuenow", String(roundedProgress));
+              progress.setAttribute("aria-valuetext", `${roundedProgress} percent funded`);
+            }
+          } catch {
+            // Keep the zero-state visible if the donation summary cannot load.
+          }
+        };
+
+        window.bnkRefreshTempleFund = refreshTempleFund;
+        document.addEventListener("bnk:donation-confirmed", refreshTempleFund);
+        refreshTempleFund();
       }
     </script>
     
@@ -14617,9 +14690,9 @@ section[id]:not(#home), #footer-contact {
       From school supplies to scholarships, from meals to medical care, every act of seva can change a life.
     </p>
 
-    <a class="support-story-button" href="#seva-stories">
-      READ THE STORY <span aria-hidden="true">→</span>
-    </a>
+   <a class="support-story-button" href="support-story.html">
+  READ THE STORY <span aria-hidden="true">→</span>
+</a>
   </div>
 </section>
 

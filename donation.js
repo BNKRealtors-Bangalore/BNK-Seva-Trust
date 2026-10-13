@@ -72,8 +72,27 @@
         <h2 class="bnk-receipt-heading" id="bnkReceiptTitle">Your Seva has been received.</h2>
         <p class="bnk-receipt-thanks">Thank you for becoming a part of this sacred journey.</p>
         <table class="bnk-receipt-table"><tbody></tbody></table>
+        <article class="bnk-certificate" aria-labelledby="bnkCertificateTitle">
+          <div class="bnk-certificate-border">
+            <p class="bnk-certificate-kicker">BNK Seva Trust</p>
+            <h3 id="bnkCertificateTitle">Certificate of Seva</h3>
+            <p class="bnk-certificate-text">This certificate is presented to</p>
+            <strong class="bnk-certificate-name" data-certificate-name></strong>
+            <p class="bnk-certificate-text">
+              with gratitude for a heartfelt contribution of
+              <span data-certificate-amount></span>
+              towards <span data-certificate-purpose></span>.
+            </p>
+            <div class="bnk-certificate-meta">
+              <span>Receipt: <b data-certificate-receipt></b></span>
+              <span>Date: <b data-certificate-date></b></span>
+            </div>
+            <p class="bnk-certificate-blessing">Love everyone. Serve everyone. Remember God.</p>
+          </div>
+        </article>
         <p class="bnk-donation-legal"></p>
         <div class="bnk-donation-actions">
+          <button class="bnk-certificate-download" type="button">Download certificate</button>
           <button class="bnk-donation-print" type="button">Print / Save receipt</button>
         </div>
       </section>
@@ -168,6 +187,75 @@
     timeZone: "Asia/Kolkata"
   }).format(new Date(value));
 
+  const formatCertificateDate = (value) => new Intl.DateTimeFormat("en-IN", {
+    dateStyle: "long",
+    timeZone: "Asia/Kolkata"
+  }).format(new Date(value));
+
+  const formatAmount = (amount) => new Intl.NumberFormat("en-IN", {
+    style: "currency",
+    currency: "INR",
+    maximumFractionDigits: 0
+  }).format(amount);
+
+  const certificateState = { receipt: null };
+
+  const updateCertificate = (receipt) => {
+    certificateState.receipt = receipt;
+    dialog.querySelector("[data-certificate-name]").textContent = receipt.anonymous ? "Anonymous Sevak" : receipt.donorName;
+    dialog.querySelector("[data-certificate-amount]").textContent = formatAmount(receipt.amount);
+    dialog.querySelector("[data-certificate-purpose]").textContent = receipt.purpose;
+    dialog.querySelector("[data-certificate-receipt]").textContent = receipt.receiptNumber;
+    dialog.querySelector("[data-certificate-date]").textContent = formatCertificateDate(receipt.date);
+  };
+
+  const certificateSVG = (receipt) => {
+    const donorName = receipt.anonymous ? "Anonymous Sevak" : receipt.donorName;
+    const amount = formatAmount(receipt.amount);
+    const date = formatCertificateDate(receipt.date);
+    return `<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1100" viewBox="0 0 1600 1100">
+  <defs>
+    <linearGradient id="paper" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#fffaf0"/>
+      <stop offset="0.55" stop-color="#f8e8c7"/>
+      <stop offset="1" stop-color="#fff4d8"/>
+    </linearGradient>
+    <linearGradient id="maroon" x1="0" x2="1">
+      <stop offset="0" stop-color="#8b1026"/>
+      <stop offset="1" stop-color="#b3132f"/>
+    </linearGradient>
+  </defs>
+  <rect width="1600" height="1100" fill="url(#paper)"/>
+  <rect x="70" y="70" width="1460" height="960" rx="22" fill="none" stroke="#c48a32" stroke-width="7"/>
+  <rect x="98" y="98" width="1404" height="904" rx="18" fill="none" stroke="#d8ad65" stroke-width="2"/>
+  <text x="800" y="205" text-anchor="middle" fill="#b77a2f" font-family="Arial, sans-serif" font-size="34" letter-spacing="12">BNK SEVA TRUST</text>
+  <text x="800" y="330" text-anchor="middle" fill="url(#maroon)" font-family="Georgia, serif" font-size="96" font-weight="600">Certificate of Seva</text>
+  <text x="800" y="430" text-anchor="middle" fill="#5e4b40" font-family="Georgia, serif" font-size="34" font-style="italic">This certificate is presented to</text>
+  <text x="800" y="535" text-anchor="middle" fill="#800b23" font-family="Georgia, serif" font-size="72" font-weight="600">${escapeHTML(donorName)}</text>
+  <text x="800" y="635" text-anchor="middle" fill="#5e4b40" font-family="Georgia, serif" font-size="34">with gratitude for a heartfelt contribution of</text>
+  <text x="800" y="710" text-anchor="middle" fill="#800b23" font-family="Georgia, serif" font-size="52" font-weight="600">${escapeHTML(amount)}</text>
+  <text x="800" y="780" text-anchor="middle" fill="#5e4b40" font-family="Georgia, serif" font-size="32">towards ${escapeHTML(receipt.purpose)}</text>
+  <text x="260" y="910" fill="#6b5a4d" font-family="Arial, sans-serif" font-size="26">Receipt: ${escapeHTML(receipt.receiptNumber)}</text>
+  <text x="1340" y="910" text-anchor="end" fill="#6b5a4d" font-family="Arial, sans-serif" font-size="26">Date: ${escapeHTML(date)}</text>
+  <text x="800" y="965" text-anchor="middle" fill="#a86f2e" font-family="Georgia, serif" font-size="30" font-style="italic">Love everyone. Serve everyone. Remember God.</text>
+</svg>`;
+  };
+
+  const downloadCertificate = () => {
+    if (!certificateState.receipt) return;
+    const blob = new Blob([certificateSVG(certificateState.receipt)], { type: "image/svg+xml;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    const safeReceipt = String(certificateState.receipt.receiptNumber || "certificate").replace(/[^a-z0-9-]+/gi, "-");
+    link.href = url;
+    link.download = `BNK-Seva-Certificate-${safeReceipt}.svg`;
+    document.body.append(link);
+    link.click();
+    link.remove();
+    window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+  };
+
   const displayReceipt = (receipt) => {
     const rows = [
       ["Receipt number", receipt.receiptNumber],
@@ -177,7 +265,7 @@
       ["Email", receipt.email],
       ["Donation category", receipt.donationCategory],
       ["Donation purpose", receipt.purpose],
-      ["Amount", new Intl.NumberFormat("en-IN", { style: "currency", currency: "INR", maximumFractionDigits: 0 }).format(receipt.amount)],
+      ["Amount", formatAmount(receipt.amount)],
       ["Payment method", receipt.paymentMethod],
       ["Payment reference", receipt.paymentReference],
       ["Name display", receipt.anonymous ? "Anonymous" : "Public"]
@@ -185,8 +273,10 @@
     dialog.querySelector(".bnk-receipt-table tbody").innerHTML = rows.map(([label, value]) =>
       `<tr><th scope="row">${escapeHTML(label)}</th><td>${escapeHTML(value)}</td></tr>`
     ).join("");
+    updateCertificate(receipt);
     formView.hidden = true;
     receiptView.hidden = false;
+    document.dispatchEvent(new CustomEvent("bnk:donation-confirmed", { detail: receipt }));
     closeButton.focus();
   };
 
@@ -215,6 +305,7 @@
     if (event.key === "Escape" && !dialog.hidden) closeDialog();
   });
   dialog.querySelector(".bnk-donation-print").addEventListener("click", () => window.print());
+  dialog.querySelector(".bnk-certificate-download").addEventListener("click", downloadCertificate);
 
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
@@ -285,7 +376,10 @@
     const donateLink = event.target.closest('a[href$="#donate"]');
     if (donateLink) {
       event.preventDefault();
-      openDialog({ category: "General Donation", sevaName: "General Donation" });
+      openDialog({
+        category: donateLink.dataset.donationCategory || "General Donation",
+        sevaName: donateLink.dataset.donationPurpose || "General Donation"
+      });
     }
   });
 })();

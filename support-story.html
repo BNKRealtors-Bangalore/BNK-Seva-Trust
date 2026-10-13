@@ -1,0 +1,369 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#fffdf8" />
+  <meta name="description" content="A Small Support. A Big Change. A reflection on the power of kindness, education, food seva, healthcare and compassion, inspired by Baba Neem Karoli Maharaj." />
+  <title>A Small Support. A Big Change. | BNK Seva Trust</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      color-scheme: light;
+      --wine: #800b23;
+      --wine-dark: #630a1c;
+      --gold: #b59660;
+      --ivory: #fffdf8;
+      --cream: #f8f5ee;
+      --ink: #302820;
+      --muted: #70645c;
+      --border: #e9dfd2;
+      --serif: "Cormorant Garamond", Georgia, serif;
+      --sans: "DM Sans", Arial, sans-serif;
+    }
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; scroll-padding-top: 90px; }
+    body { margin: 0; color: var(--ink); background: var(--ivory); font-family: var(--sans); -webkit-font-smoothing: antialiased; }
+    a { color: inherit; text-decoration: none; }
+    a:focus-visible, button:focus-visible { outline: 2px solid var(--wine); outline-offset: 4px; }
+    img { max-width: 100%; }
+    .container { width: min(calc(100% - 92px), 1200px); margin-inline: auto; }
+    .announcement { display: flex; align-items: center; justify-content: center; min-height: 34px; padding: 8px 16px; background: #6d4938; color: #f8f2e7; text-align: center; font-size: 10px; line-height: 1.5; letter-spacing: .13em; text-transform: uppercase; }
+    .announcement span { margin-inline: 8px; color: #dfc58f; }
+    .site-header { position: sticky; z-index: 20; top: 0; border-bottom: 1px solid rgba(111,89,67,.14); background: rgba(255,253,248,.97); backdrop-filter: blur(14px); }
+    .nav-shell { width: min(calc(100% - 72px), 1540px); min-height: 84px; margin: auto; display: flex; align-items: center; justify-content: space-between; gap: 27px; }
+    .brand { display: inline-flex; align-items: center; gap: 12px; flex: 0 0 auto; }
+    .brand-mark { display: grid; place-items: center; width: 44px; height: 48px; color: #a9613e; }
+    .brand-mark svg { width: 42px; height: 46px; }
+    .brand-copy { display: flex; flex-direction: column; gap: 3px; }
+    .brand-name { font: 600 22px/1 var(--serif); letter-spacing: .015em; }
+    .brand-caption { color: #83786a; font-size: 8px; font-weight: 600; letter-spacing: .2em; text-transform: uppercase; }
+    .main-nav { display: flex; align-items: center; gap: clamp(13px,1.6vw,28px); margin-left: auto; }
+    .main-nav a { font-size: 12px; font-weight: 500; white-space: nowrap; color: #51483f; transition: color .2s; }
+    .main-nav a:hover { color: var(--wine); }
+    .nav-donate { display: inline-flex; align-items: center; min-height: 43px; padding-inline: 20px; background: linear-gradient(135deg, #a76849, #884b34); color: #fffaf1; font-size: 10px; letter-spacing: .12em; font-weight: 700; text-transform: uppercase; white-space: nowrap; }
+    .menu-toggle { display: none; border: 1px solid #d4c8b7; background: transparent; padding: 10px 13px; color: #51483f; font: 600 11px var(--sans); letter-spacing: .08em; text-transform: uppercase; cursor: pointer; }
+
+    .hero { position: relative; overflow: hidden; isolation: isolate; background: #faf5ed; }
+    .hero::before { content: ""; position: absolute; z-index: -2; inset: 0; background: radial-gradient(circle at 8% 100%, rgba(181,150,96,.1), transparent 39%), radial-gradient(circle at 100% 0%,rgba(128,11,35,.035),transparent 38%); }
+    .hero::after { content: ""; position: absolute; z-index: -1; width: 600px; height: 600px; right: -265px; top: -260px; border: 1px solid rgba(181,150,96,.22); border-radius: 50%; pointer-events: none; }
+    .hero-layout { display: grid; grid-template-columns: 1.02fr .98fr; align-items: center; gap: clamp(38px,5.5vw,82px); min-height: 665px; padding-top: 68px; padding-bottom: 85px; }
+    .back-link { display: inline-flex; align-items: center; gap: 9px; margin-bottom: 58px; color: var(--wine); font-size: 11px; font-weight: 600; }
+    .back-link:hover { text-decoration: underline; text-underline-offset: 5px; }
+    .eyebrow { display: inline-flex; align-items: center; gap: 12px; color: #9e713f; font-size: 10px; font-weight: 700; letter-spacing: .2em; text-transform: uppercase; }
+    .eyebrow::before { content: ""; width: 31px; height: 1px; flex: 0 0 31px; background: var(--gold); }
+    h1, h2, h3, p { margin-top: 0; }
+    h1 { margin: 24px 0 23px; color: var(--wine); font: 600 clamp(59px,6vw,88px)/.93 var(--serif); letter-spacing: -.035em; }
+    h1 span { color: #a77a4e; }
+    .hero-lead { max-width: 520px; margin-bottom: 22px; color: #885c3b; font: italic 500 clamp(23px,2.3vw,33px)/1.18 var(--serif); }
+    .hero-copy > p:last-of-type { max-width: 520px; color: #655c54; font-size: 14px; line-height: 1.9; }
+    .hero-action { display: inline-flex; align-items: center; gap: 17px; min-height: 48px; margin-top: 12px; padding-inline: 23px; border: 1px solid var(--wine); background: var(--wine); color: #fffdf8; font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; transition: transform .2s, box-shadow .2s; }
+    .hero-action:hover { transform: translateY(-2px); box-shadow: 0 12px 22px rgba(128,11,35,.14); }
+    .hero-art { position: relative; min-width: 0; padding: 12px; border: 1px solid #d7bea0; background: rgba(255,253,248,.7); box-shadow: 0 24px 60px rgba(75,43,24,.13); }
+    .hero-art img { display: block; width: 100%; height: clamp(375px,38vw,522px); object-fit: cover; object-position: center; background: #e9d8c3; }
+    .hero-art::after { position: absolute; content: ""; inset: 12px; pointer-events: none; background: linear-gradient(180deg,transparent 66%,rgba(52,30,22,.46)); }
+    .hero-art-caption { position: absolute; z-index: 1; left: 35px; right: 30px; bottom: 35px; color: #fffaf1; font: 500 26px/1.03 var(--serif); letter-spacing: .015em; }
+
+    .opening { max-width: 815px; padding: clamp(75px,9vw,116px) 0 clamp(75px,8vw,105px); text-align: center; }
+    .opening .eyebrow { justify-content: center; }
+    .opening h2, .section-heading h2, .closing h2 { margin: 17px 0 24px; color: var(--wine); font: 600 clamp(42px,4.4vw,62px)/1.04 var(--serif); letter-spacing: -.026em; }
+    .opening p { color: #625b55; font-size: 14px; line-height: 1.95; }
+    .opening p + p { margin-top: 17px; }
+
+    .editorial { padding: 95px 0 105px; background: #fbf7f0; border-block: 1px solid #ede2d5; }
+    .article-layout { display: grid; grid-template-columns: minmax(0,1fr) 310px; gap: clamp(38px,5vw,94px); align-items: start; }
+    .article-copy { max-width: 710px; }
+    .article-copy h2 { margin: 50px 0 18px; color: var(--wine); font: 600 clamp(35px,3.4vw,47px)/1.09 var(--serif); }
+    .article-copy h2:first-child { margin-top: 0; }
+    .article-copy p { margin: 0 0 19px; color: #5d554e; font-size: 14px; line-height: 1.95; }
+    .article-copy strong { color: #553c30; }
+    .article-copy blockquote { position: relative; margin: 43px 0; padding: 25px 31px; border-left: 3px solid var(--gold); background: #f1e7d8; color: var(--wine); font: italic 500 clamp(26px,2.5vw,35px)/1.24 var(--serif); }
+    .story-sidebar { position: sticky; top: 112px; padding: 27px; border: 1px solid #dfd1bf; background: #fffdf9; box-shadow: 0 14px 32px rgba(69,43,24,.055); }
+    .story-sidebar img { display: block; width: 100%; aspect-ratio: 1.22; object-fit: cover; margin-bottom: 27px; }
+    .sidebar-kicker { color: #a37438; font-size: 10px; font-weight: 700; letter-spacing: .15em; text-transform: uppercase; }
+    .story-sidebar h3 { margin: 12px 0; color: var(--wine); font: 600 37px/1.02 var(--serif); }
+    .story-sidebar p { color: #6c6258; font-size: 12px; line-height: 1.8; }
+    .sidebar-link { display: inline-flex; margin-top: 12px; align-items: center; gap: 9px; color: var(--wine); font-size: 11px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; }
+    .sidebar-link:hover { text-decoration: underline; text-underline-offset: 4px; }
+    .editorial-note { margin-top: 38px !important; padding-top: 17px; border-top: 1px solid #e3d6c6; color: #88796e !important; font-size: 11px !important; line-height: 1.75 !important; }
+
+    .journey { padding: 90px 0 100px; background: #fffdf8; }
+    .section-heading { max-width: 730px; margin: 0 auto 47px; text-align: center; }
+    .section-heading .eyebrow { justify-content: center; }
+    .section-heading p { color: var(--muted); font-size: 13px; line-height: 1.8; }
+    .journey-grid { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 17px; }
+    .journey-card { padding: 34px 31px; border: 1px solid #eadfd1; background: #fffaf2; }
+    .journey-number { color: #ad8253; font: 600 28px/1 var(--serif); }
+    .journey-card h3 { margin: 16px 0 10px; color: var(--wine); font: 600 34px/1.03 var(--serif); }
+    .journey-card p { margin-bottom: 0; color: #6a5f55; font-size: 12px; line-height: 1.82; }
+
+    .closing { position: relative; overflow: hidden; padding: 110px 20px 115px; background: #f4ecdf; text-align: center; }
+    .closing::before { content: ""; position: absolute; width: 350px; height: 350px; left: -160px; bottom: -240px; border: 1px solid rgba(181,150,96,.25); border-radius: 50%; }
+    .closing .eyebrow { justify-content: center; }
+    .closing h2 { margin-top: 22px; }
+    .closing p { max-width: 715px; margin: 0 auto 19px; color: #655a51; font-size: 14px; line-height: 1.92; }
+    .closing-quote { margin-top: 24px !important; color: #966b40 !important; font: italic 500 28px/1.15 var(--serif) !important; }
+    .action-row { display: flex; flex-wrap: wrap; gap: 14px; justify-content: center; margin-top: 34px; }
+    .action-primary, .action-secondary { display: inline-flex; align-items: center; justify-content: center; min-height: 51px; padding: 0 26px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .075em; transition: transform .2s, background .2s; }
+    .action-primary { background: var(--wine); color: #fff; }
+    .action-secondary { border: 1px solid var(--gold); color: var(--wine); }
+    .action-primary:hover, .action-secondary:hover { transform: translateY(-2px); }
+
+    .more-stories { padding: 94px 0 110px; border-top: 1px solid #eee1d1; background: #fffdf9; }
+    .more-grid { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 19px; }
+    .more-card { display: flex; flex-direction: column; min-width: 0; overflow: hidden; border: 1px solid #eadbc8; background: #fff; transition: transform .22s, box-shadow .22s; }
+    .more-card:hover { transform: translateY(-4px); box-shadow: 0 17px 36px rgba(65,38,26,.11); }
+    .more-card img { width: 100%; height: 207px; object-fit: cover; background: #e8ddd0; }
+    .more-card-copy { display: flex; flex-direction: column; flex: 1; padding: 23px 24px 27px; }
+    .more-category { color: #9d723b; font-size: 10px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; }
+    .more-card h3 { margin: 12px 0 19px; color: var(--wine); font: 600 30px/1.04 var(--serif); }
+    .more-card-link { margin-top: auto; color: #9a542f; font-size: 10px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }
+    .more-actions { margin-top: 36px; text-align: center; }
+    .more-actions a { display: inline-flex; align-items: center; gap: 16px; padding: 14px 25px; border: 1px solid var(--gold); color: var(--wine); font-size: 11px; font-weight: 700; }
+    .more-actions a:hover { background: #fff5e8; }
+
+    .footer { padding: 40px 0; border-top: 1px solid #e7ddce; background: #f6f0e7; }
+    .footer-shell { display: flex; align-items: center; justify-content: space-between; gap: 25px; }
+    .footer-brand { color: var(--wine); font: 600 28px/1 var(--serif); }
+    .footer-small { display: block; margin-top: 7px; color: #7e746c; font-size: 11px; }
+    .footer-nav { display: flex; flex-wrap: wrap; gap: 21px; }
+    .footer-nav a { color: #66594e; font-size: 12px; }
+    .footer-nav a:hover { color: var(--wine); }
+
+    @media (max-width: 1000px) {
+      .nav-shell { width: min(calc(100% - 40px),1540px); min-height: 73px; }
+      .main-nav { display: none; position: absolute; top: 100%; left: 0; right: 0; padding: 12px 22px; flex-direction: column; align-items: stretch; gap: 0; background: #fffdf8; border-bottom: 1px solid #e6d8c8; box-shadow: 0 13px 25px rgba(55,37,27,.09); }
+      .main-nav.is-open { display: flex; }
+      .main-nav a { padding: 12px; }
+      .menu-toggle { display: inline-block; margin-left: auto; }
+      .container { width: min(calc(100% - 50px),1200px); }
+      .article-layout { grid-template-columns: minmax(0,1fr) 270px; gap: 30px; }
+      .hero-layout { min-height: 570px; }
+      h1 { font-size: clamp(52px,6.3vw,74px); }
+    }
+    @media (max-width: 760px) {
+      .hero-layout { grid-template-columns: 1fr; gap: 28px; min-height: auto; padding-top: 35px; padding-bottom: 55px; }
+      .back-link { margin-bottom: 34px; }
+      .hero-art img { height: 335px; }
+      .article-layout { grid-template-columns: 1fr; }
+      .story-sidebar { position: static; max-width: 500px; }
+      .journey-grid, .more-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
+      .more-grid .more-card:last-child { grid-column: 1/-1; }
+      .footer-shell { flex-direction: column; align-items: flex-start; }
+    }
+    @media (max-width: 560px) {
+      .announcement { font-size: 8px; letter-spacing: .08em; }
+      .container { width: min(calc(100% - 36px),1200px); }
+      .brand-mark { width: 34px; height: 39px; }
+      .brand-mark svg { width: 34px; height: 39px; }
+      .brand-name { font-size: 20px; }
+      .brand-caption { font-size: 7px; }
+      .nav-donate { display: none; }
+      .hero-layout { padding-top: 27px; }
+      h1 { font-size: clamp(55px,12vw,73px); }
+      .hero-lead { font-size: 25px; }
+      .hero-copy > p:last-of-type { font-size: 13px; }
+      .hero-art { padding: 8px; }
+      .hero-art img { height: 265px; }
+      .hero-art::after { inset: 8px; }
+      .hero-art-caption { left: 24px; bottom: 23px; font-size: 24px; }
+      .opening { padding-top: 67px; padding-bottom: 67px; }
+      .opening p, .article-copy p, .closing p { font-size: 13px; }
+      .editorial { padding-block: 68px 74px; }
+      .article-copy h2 { margin-top: 38px; }
+      .article-copy blockquote { margin: 34px 0; padding: 23px; }
+      .journey, .more-stories { padding-top: 67px; padding-bottom: 75px; }
+      .journey-grid, .more-grid { grid-template-columns: 1fr; }
+      .more-grid .more-card:last-child { grid-column: auto; }
+      .journey-card { padding: 28px; }
+      .more-card img { height: 200px; }
+      .closing { padding: 82px 20px 86px; }
+      .action-row a { width: 100%; }
+      .footer-nav { gap: 16px; }
+    }
+    @media (prefers-reduced-motion: reduce) { *,*::before,*::after { scroll-behavior: auto !important; transition: none !important; } }
+  </style>
+</head>
+<body>
+  <div class="announcement">A life of love. A legacy of service. <span>·</span> Inspired by Neem Karoli Baba</div>
+  <header class="site-header">
+    <div class="nav-shell">
+      <a class="brand" href="index.html#home" aria-label="BNK Seva Trust home">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 48 54" fill="none"><path d="M24 3C16 12 7 19 7 31c0 10 7.4 18 17 18s17-8 17-18C41 19 32 12 24 3Z" stroke="currentColor" stroke-width="1.2"/><path d="M24 14c-4.5 5.6-10 10.5-10 17a10 10 0 0 0 20 0c0-6.5-5.5-11.4-10-17Z" stroke="currentColor" stroke-width="1"/><path d="M24 25v16M19 32c1.5 2 3.2 3 5 3s3.5-1 5-3" stroke="currentColor"/><circle cx="24" cy="45" r="1.2" fill="currentColor"/></svg>
+        </span>
+        <span class="brand-copy"><span class="brand-name">BNK Seva Trust</span><span class="brand-caption">In the spirit of Maharaj-ji</span></span>
+      </a>
+      <nav class="main-nav" id="site-navigation" aria-label="Main navigation">
+        <a href="index.html#home">Home</a>
+        <a href="index.html#about">About</a>
+        <a href="index.html#temple">Temple Project</a>
+        <a href="index.html#seva">Our Seva</a>
+        <a href="index.html#seva-stories">Stories</a>
+        <a href="teachings.html">Teachings</a>
+      </nav>
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-navigation">Menu</button>
+      <a class="nav-donate" href="index.html#donate">Donate Now</a>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero" aria-labelledby="page-heading">
+      <div class="container hero-layout">
+        <div class="hero-copy">
+          <a class="back-link" href="index.html#support-story">← Back to Our Story</a>
+          <div class="eyebrow">An Invitation to Kindness</div>
+          <h1 id="page-heading">A Small Support.<br /><span>A Big Change.</span></h1>
+          <p class="hero-lead">Sometimes the smallest act of kindness can become the beginning of a brighter tomorrow.</p>
+          <p>A reflection on how everyday gestures of compassion can open doors, restore dignity and inspire others to serve.</p>
+          <a class="hero-action" href="#the-story">Read the Story <span aria-hidden="true">↓</span></a>
+        </div>
+        <figure class="hero-art">
+          <img src="images/babaneemkaroli3.webp" alt="Illustrative scene of education support and the possibilities created by learning" fetchpriority="high" />
+          <figcaption class="hero-art-caption">One act of kindness.<br />Countless possibilities.</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="opening container" id="the-story" aria-labelledby="opening-heading">
+      <div class="eyebrow">Where Compassion Begins</div>
+      <h2 id="opening-heading">Every Great Change Begins with a Small Act</h2>
+      <p>Imagine a child sitting in a classroom, eager to learn but without the books and supplies needed to participate fully. For some, a notebook is an ordinary purchase. For that child, it can represent an opportunity to learn, to grow and to dream of something greater.</p>
+      <p>A school bag, a warm meal or a helping hand may seem like a small gesture. But for someone facing difficult circumstances, it can carry hope, dignity and the reassurance that they have not been forgotten.</p>
+      <p>This is the beauty of seva. Its value is not measured only by what we give, but by the care and compassion behind it.</p>
+    </section>
+
+    <section class="editorial" aria-label="A Small Support. A Big Change. article">
+      <div class="container article-layout">
+        <article class="article-copy">
+          <h2>More Than a Gift. A New Possibility.</h2>
+          <p>When we support a child's education, we do more than provide books. We help make learning accessible and encourage the confidence to pursue a better future.</p>
+          <p>When we offer food to someone in need, we do more than satisfy hunger. We offer comfort, care and a moment of relief.</p>
+          <p>When we help someone access medical care, we offer more than assistance. We may help ease uncertainty and make a difficult journey a little less overwhelming.</p>
+          <p><strong>Every act of support can touch different lives in different ways.</strong> Sometimes what seems small to the giver means a great deal to the person receiving it.</p>
+
+          <blockquote>“The measure of kindness is not how much we give, but how deeply we care.”</blockquote>
+
+          <h2>The Ripple Effect of Kindness</h2>
+          <p>One thoughtful act can inspire another. A volunteer's time may encourage a neighbour to participate. A donor's generosity may inspire someone else to contribute. A community coming together may create opportunities that no individual could have created alone.</p>
+          <p>This is how compassion grows: not always through grand gestures, but through ordinary people choosing to care.</p>
+          <p>A single act becomes a shared responsibility. A shared responsibility becomes collective strength. And collective strength can bring meaningful change.</p>
+
+          <h2>Inspired by Love. Guided by Seva.</h2>
+          <p>Baba Neem Karoli Maharaj's message of loving everyone, serving everyone and remembering God reminds us that spirituality finds expression in the way we treat others.</p>
+          <p>At BNK Seva Trust, this philosophy inspires our commitment to food seva, education, healthcare, community welfare and other compassionate initiatives. We believe that every individual deserves dignity and that every sincere effort to help has value.</p>
+          <p>Seva is not simply about providing assistance. It is about recognizing our shared humanity and choosing to respond with kindness.</p>
+
+          <h2>Be the Reason Someone Smiles Tomorrow</h2>
+          <p>You do not need to change the entire world to make a difference in someone's life. Sometimes, all it takes is one thoughtful decision.</p>
+          <p>One meal. One book. One helping hand. One moment of compassion.</p>
+          <p>Because meaningful change does not always begin with something big. <strong>Sometimes, it begins with you.</strong></p>
+          <p class="editorial-note"><strong>Editorial note:</strong> This is an inspirational, illustrative reflection about seva, not a documented account of a particular beneficiary or completed Trust activity. Adapt it with verified experiences before presenting it as a real-life case study.</p>
+        </article>
+
+        <aside class="story-sidebar" aria-label="Get involved">
+          <img src="images/stories-food.jpg" alt="Illustration representing the warmth of food seva" loading="lazy" />
+          <span class="sidebar-kicker">The Spirit of Giving</span>
+          <h3>Little things can mean so much.</h3>
+          <p>A meal shared with care. A book offered with encouragement. A little time given wholeheartedly. Explore ways to make compassion part of everyday life.</p>
+          <a class="sidebar-link" href="index.html#join-seva">Explore Ways to Serve <span aria-hidden="true">↗</span></a>
+        </aside>
+      </div>
+    </section>
+
+    <section class="journey" aria-labelledby="journey-heading">
+      <div class="container">
+        <div class="section-heading">
+          <div class="eyebrow">How Kindness Grows</div>
+          <h2 id="journey-heading">From One Act to a Ripple of Change</h2>
+          <p>The spirit of seva grows stronger when care is shared and compassion becomes a habit.</p>
+        </div>
+        <div class="journey-grid">
+          <div class="journey-card"><span class="journey-number">01</span><h3>A Simple Gesture</h3><p>One person chooses to give time, encouragement, care or support with an open heart.</p></div>
+          <div class="journey-card"><span class="journey-number">02</span><h3>A New Possibility</h3><p>That support can ease a burden, create an opportunity or help someone feel seen and valued.</p></div>
+          <div class="journey-card"><span class="journey-number">03</span><h3>Compassion Spreads</h3><p>Kindness inspires more kindness, connecting individuals through the shared purpose of seva.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="closing" aria-labelledby="closing-heading">
+      <div class="container">
+        <div class="eyebrow">An Invitation to Serve</div>
+        <h2 id="closing-heading">Be Part of the Change</h2>
+        <p>Every life deserves compassion. Every act of kindness is an offering. Whether you give your time, share a resource or support an initiative, your willingness to care can make a meaningful difference.</p>
+        <p class="closing-quote">Small gestures. Open hearts. A shared journey of seva.</p>
+        <div class="action-row">
+          <a class="action-primary" href="index.html#join-seva">Be Part of the Change →</a>
+          <a class="action-secondary" href="index.html#seva">Explore Our Work →</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="more-stories" aria-labelledby="other-stories-heading">
+      <div class="container">
+        <div class="section-heading">
+          <div class="eyebrow">Continue the Journey</div>
+          <h2 id="other-stories-heading">Read Other Stories of Seva</h2>
+          <p>Discover more reflections on kindness, community and the spirit of service.</p>
+        </div>
+        <div class="more-grid">
+          <a class="more-card" href="stories/child-dream.html">
+            <img src="images/stories-education.jpg" alt="" loading="lazy" />
+            <div class="more-card-copy"><span class="more-category">Education Seva</span><h3>The First Step Towards a Child's Dream</h3><span class="more-card-link">Read Story →</span></div>
+          </a>
+          <a class="more-card" href="stories/meal-memory.html">
+            <img src="images/stories-food.jpg" alt="" loading="lazy" />
+            <div class="more-card-copy"><span class="more-category">Food Seva</span><h3>A Meal, A Memory</h3><span class="more-card-link">Read Story →</span></div>
+          </a>
+          <a class="more-card" href="stories/healthcare-day.html">
+            <img src="images/stories-healthcare.jpg" alt="" loading="lazy" />
+            <div class="more-card-copy"><span class="more-category">Healthcare Seva</span><h3>A Day of Healthcare Seva</h3><span class="more-card-link">Read Story →</span></div>
+          </a>
+        </div>
+        <div class="more-actions"><a href="index.html#seva-stories">Explore All Stories of Seva <span aria-hidden="true">→</span></a></div>
+      </div>
+    </section>
+  </main>
+
+
+  <footer class="footer">
+    <div class="container footer-shell">
+      <div><a href="index.html#home" class="footer-brand">BNK Seva Trust</a><span class="footer-small">Seva • Shraddha • Samarpan</span></div>
+      <nav class="footer-nav" aria-label="Footer navigation">
+        <a href="index.html#home">Home</a>
+        <a href="index.html#support-story">Support Story</a>
+        <a href="index.html#seva-stories">Stories of Seva</a>
+        <a href="teachings.html">His Teachings</a>
+        <a href="index.html#join-seva">Get Involved</a>
+      </nav>
+    </div>
+  </footer>
+  <script>
+    (() => {
+      const toggle = document.querySelector('.menu-toggle');
+      const nav = document.querySelector('.main-nav');
+      if (!toggle || !nav) return;
+      function closeMenu() {
+        toggle.setAttribute('aria-expanded', 'false');
+        nav.classList.remove('is-open');
+      }
+      toggle.addEventListener('click', () => {
+        const open = toggle.getAttribute('aria-expanded') !== 'true';
+        toggle.setAttribute('aria-expanded', String(open));
+        nav.classList.toggle('is-open', open);
+      });
+      nav.addEventListener('click', event => {
+        if (event.target.closest('a')) closeMenu();
+      });
+      document.addEventListener('keydown', event => {
+        if (event.key === 'Escape') closeMenu();
+      });
+      document.addEventListener('click', event => {
+        if (!event.target.closest('.site-header')) closeMenu();
+      });
+    })();
+  </script>
+</body>
+</html>

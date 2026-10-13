@@ -180,6 +180,24 @@ function publicReceipt(row) {
   };
 }
 
+function templeFundSummary() {
+  const goalAmount = Number(process.env.TEMPLE_FUND_GOAL_AMOUNT || 500000000);
+  const total = database.prepare(`
+    SELECT COALESCE(SUM(amount_paise), 0) AS amount_paise
+    FROM donations
+    WHERE status = 'paid' AND donation_category = 'Temple Project'
+  `).get();
+  const raisedAmount = total.amount_paise / 100;
+  const safeGoal = Number.isFinite(goalAmount) && goalAmount > 0 ? Math.floor(goalAmount) : 500000000;
+  const progress = Math.min(100, Math.max(0, (raisedAmount / safeGoal) * 100));
+  return {
+    raisedAmount,
+    goalAmount: safeGoal,
+    remainingAmount: Math.max(0, safeGoal - raisedAmount),
+    progress
+  };
+}
+
 function captureDonation(orderId, paymentId, paymentMethod, amountPaise) {
   database.exec("BEGIN IMMEDIATE");
   try {
@@ -399,6 +417,10 @@ async function handleRequest(request, response) {
       });
       return;
     }
+    if (url.pathname === "/api/temple-fund" && request.method === "GET") {
+      sendJSON(response, 200, templeFundSummary());
+      return;
+    }
     if (url.pathname === "/api/donations/order" && request.method === "POST") {
       await handleCreateOrder(request, response);
       return;
@@ -469,5 +491,6 @@ module.exports = {
   server,
   closeDatabase: () => database.close(),
   validateDonation,
-  verifyCheckoutSignature
+  verifyCheckoutSignature,
+  templeFundSummary
 };

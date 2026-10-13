@@ -1,0 +1,295 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#fffdf8" />
+  <meta name="description" content="Explore the timeless teachings of Baba Neem Karoli Maharaj: love everyone, serve everyone and remember God. Learn how his message guides BNK Seva Trust." />
+  <title>Teachings of Baba Neem Karoli Maharaj | BNK Seva Trust</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --wine: #800b23;
+      --wine-dark: #630a1c;
+      --gold: #b59660;
+      --ivory: #fffdf8;
+      --cream: #f8f5ee;
+      --ink: #302820;
+      --muted: #71675e;
+      --border: #e7dece;
+      --serif: "Cormorant Garamond", Georgia, serif;
+      --sans: "DM Sans", Arial, sans-serif;
+    }
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { margin: 0; background: var(--ivory); color: var(--ink); font-family: var(--sans); -webkit-font-smoothing: antialiased; }
+    a { color: inherit; text-decoration: none; }
+    button { font: inherit; }
+    a:focus-visible, button:focus-visible { outline: 2px solid var(--gold); outline-offset: 4px; }
+    .announcement { padding: 10px 18px; background: #6d4938; color: #faf2e7; text-align: center; font-size: 10px; letter-spacing: .13em; text-transform: uppercase; }
+    .announcement span { color: #dfc58f; margin: 0 7px; }
+    .site-header { position: sticky; top: 0; z-index: 20; background: rgba(255,253,248,.97); border-bottom: 1px solid rgba(111,89,67,.14); backdrop-filter: blur(14px); }
+    .nav-shell { width: min(100% - 64px, 1380px); min-height: 82px; margin: auto; display: flex; align-items: center; justify-content: space-between; gap: 25px; }
+    .brand { display: flex; gap: 12px; align-items: center; flex-shrink: 0; }
+    .brand-mark { display: grid; place-items: center; width: 42px; height: 46px; color: #a9613e; }
+    .brand-mark svg { width: 42px; height: 46px; }
+    .brand-copy { display: grid; gap: 3px; }
+    .brand-name { font: 600 22px/1 var(--serif); }
+    .brand-caption { color: #83786a; font-size: 8px; font-weight: 600; letter-spacing: .19em; text-transform: uppercase; }
+    .main-nav { display: flex; align-items: center; gap: clamp(15px,2vw,29px); margin-left: auto; }
+    .main-nav a { color: #51483f; font-size: 12px; font-weight: 500; transition: color .2s; }
+    .main-nav a:hover { color: var(--wine); }
+    .nav-donate { padding: 14px 21px; background: linear-gradient(135deg,#a76849,#884b34); color: white; font-size: 10px; font-weight: 700; letter-spacing: .11em; text-transform: uppercase; flex-shrink: 0; }
+    .menu-toggle { display: none; border: 1px solid #d4c8b7; background: transparent; padding: 10px 13px; font-size: 11px; font-weight: 600; cursor: pointer; }
+    .container { width: min(100% - 90px, 1190px); margin-inline: auto; }
+    .eyebrow { display: flex; align-items: center; gap: 12px; color: #9c6b3d; font-size: 10px; font-weight: 700; letter-spacing: .21em; text-transform: uppercase; }
+    .eyebrow::before { content: ''; width: 32px; height: 1px; background: var(--gold); }
+    .page-hero { position: relative; overflow: hidden; background: #faf6ef; }
+    .page-hero::before { content: ''; position: absolute; right: -140px; top: -220px; width: 570px; height: 570px; border: 1px solid rgba(181,150,96,.23); border-radius: 50%; pointer-events: none; }
+    .page-hero::after { content: ''; position: absolute; right: -210px; top: -285px; width: 710px; height: 710px; border: 1px solid rgba(181,150,96,.13); border-radius: 50%; pointer-events: none; }
+    .hero-layout { display: grid; grid-template-columns: 1.05fr .95fr; gap: clamp(35px, 6vw, 88px); align-items: center; min-height: 610px; padding-top: 65px; padding-bottom: 70px; }
+    .hero-copy { position: relative; z-index: 2; }
+    .back-link { display: inline-flex; align-items: center; gap: 9px; color: var(--wine); font-size: 11px; font-weight: 600; margin-bottom: 54px; }
+    .back-link:hover { text-decoration: underline; text-underline-offset: 5px; }
+    h1, h2, h3, p { margin-top: 0; }
+    h1 { margin: 23px 0 23px; color: var(--wine); font: 600 clamp(55px, 5.7vw, 85px)/.94 var(--serif); letter-spacing: -.035em; }
+    .hero-subtitle { max-width: 520px; margin-bottom: 25px; color: #84613f; font: italic 500 clamp(25px, 2.45vw, 34px)/1.18 var(--serif); }
+    .hero-description { max-width: 560px; color: #645d54; font-size: 14px; line-height: 1.95; }
+    .hero-image-frame { position: relative; z-index: 1; min-height: 485px; border: 1px solid #decbb0; box-shadow: 0 24px 55px rgba(75,43,24,.13); padding: 12px; background: #fff9ef; }
+    .hero-image-frame img { width: 100%; height: 100%; min-height: 460px; display: block; object-fit: cover; object-position: center; background: #eee5d5; }
+    .hero-image-frame::after { content: 'सेवा  •  श्रद्धा  •  समर्पण'; position: absolute; bottom: 27px; left: 27px; right: 27px; padding: 13px; text-align: center; background: rgba(255,253,248,.87); color: var(--wine); font-size: 12px; letter-spacing: .12em; }
+    .intro { text-align: center; max-width: 840px; padding: 105px 0 82px; }
+    .intro .eyebrow, .section-heading .eyebrow { justify-content: center; }
+    .intro h2, .section-heading h2, .closing h2 { color: var(--wine); font: 600 clamp(43px, 4vw, 62px)/1.02 var(--serif); letter-spacing: -.022em; margin: 18px 0 24px; }
+    .intro p { color: #635b54; font-size: 14px; line-height: 1.95; }
+    .intro p + p { margin-top: 14px; }
+    .teaching-section { position: relative; padding: 85px 0 100px; background: #fbf8f2; border-top: 1px solid #eee4d6; }
+    .section-heading { text-align: center; max-width: 780px; margin: 0 auto 45px; }
+    .section-heading p { color: var(--muted); font-size: 13px; line-height: 1.8; }
+    .teachings-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 19px; }
+    .teaching-card { position: relative; padding: 42px 42px 39px; background: var(--ivory); border: 1px solid var(--border); box-shadow: 0 9px 27px rgba(64,40,29,.035); overflow: hidden; }
+    .teaching-card::before { position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: var(--gold); content: ''; }
+    .teaching-number { color: #b49361; font: 600 29px/1 var(--serif); }
+    .teaching-card h3 { margin: 16px 0 8px; color: var(--wine); font: 600 clamp(32px, 3vw, 44px)/1 var(--serif); }
+    .teaching-card .teaching-lead { margin: 0 0 21px; color: #9a6a3e; font: italic 500 23px/1.24 var(--serif); }
+    .teaching-card p:not(.teaching-lead) { margin-bottom: 0; color: #655b53; font-size: 13px; line-height: 1.9; }
+    .teaching-card p:not(.teaching-lead) + p { margin-top: 13px; }
+    .reflection { padding: 78px 24px; text-align: center; background: #f2e9db; border-block: 1px solid #e2d4c0; }
+    .reflection-mark { display: block; color: #b59660; font-size: 29px; margin-bottom: 12px; }
+    .reflection p { max-width: 820px; margin: 0 auto; color: var(--wine); font: italic 500 clamp(30px, 3.1vw, 43px)/1.21 var(--serif); }
+    .closing { padding: 100px 0 115px; text-align: center; }
+    .closing .eyebrow { justify-content: center; }
+    .closing p { max-width: 760px; margin: 0 auto 20px; color: #655b53; font-size: 14px; line-height: 1.95; }
+    .closing .blessing { color: #92663c; font: italic 500 26px/1.25 var(--serif); margin-top: 26px; }
+    .actions { margin-top: 35px; display: flex; justify-content: center; gap: 14px; flex-wrap: wrap; }
+    .action-primary, .action-secondary { display: inline-flex; min-height: 50px; justify-content: center; align-items: center; padding: 0 26px; font-size: 11px; letter-spacing: .08em; font-weight: 700; text-transform: uppercase; transition: transform .2s, box-shadow .2s; }
+    .action-primary { background: var(--wine); color: white; box-shadow: 0 7px 20px rgba(128,11,35,.16); }
+    .action-secondary { border: 1px solid var(--gold); color: var(--wine); }
+    .action-primary:hover, .action-secondary:hover { transform: translateY(-2px); }
+    .footer { background: #f6f0e7; border-top: 1px solid #e7ddce; padding: 42px 0; }
+    .footer-shell { display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+    .footer-brand { color: var(--wine); font: 600 25px/1 var(--serif); }
+    .footer-small { display: block; color: #7e746c; font-size: 11px; margin-top: 8px; }
+    .footer-nav { display: flex; gap: 22px; flex-wrap: wrap; }
+    .footer-nav a { color: #66594e; font-size: 12px; }
+    .footer-nav a:hover { color: var(--wine); }
+    @media (max-width: 960px) {
+      .nav-shell { width: min(100% - 40px, 1380px); min-height: 72px; }
+      .main-nav { position: absolute; top: 100%; left: 0; right: 0; display: none; flex-direction: column; align-items: stretch; gap: 0; padding: 10px 20px; background: var(--ivory); border-bottom: 1px solid var(--border); box-shadow: 0 16px 22px rgba(40,20,10,.06); }
+      .main-nav.is-open { display: flex; }
+      .main-nav a { padding: 13px; }
+      .menu-toggle { display: inline-block; margin-left: auto; }
+      .nav-donate { padding: 12px 14px; }
+      .container { width: min(100% - 50px, 1190px); }
+      .hero-layout { grid-template-columns: 1fr 1fr; gap: 28px; min-height: 520px; }
+      h1 { font-size: clamp(48px, 6vw, 67px); }
+      .hero-image-frame, .hero-image-frame img { min-height: 400px; }
+      .teaching-card { padding: 35px 30px; }
+    }
+    @media (max-width: 680px) {
+      .announcement { font-size: 9px; line-height: 1.6; }
+      .brand-mark { width: 34px; }
+      .brand-mark svg { width: 34px; }
+      .brand-name { font-size: 20px; }
+      .brand-caption { font-size: 7px; }
+      .nav-donate { display: none; }
+      .container { width: min(100% - 36px, 1190px); }
+      .hero-layout { grid-template-columns: 1fr; gap: 27px; min-height: auto; padding: 32px 0 48px; }
+      .back-link { margin-bottom: 33px; }
+      h1 { font-size: clamp(52px, 12vw, 66px); }
+      .hero-subtitle { font-size: 28px; }
+      .hero-description { font-size: 13px; line-height: 1.85; }
+      .hero-image-frame { width: 100%; max-width: 500px; margin: 0 auto; min-height: 0; padding: 9px; }
+      .hero-image-frame img { height: 320px; min-height: 0; }
+      .hero-image-frame::after { bottom: 17px; left: 17px; right: 17px; }
+      .intro { padding: 70px 0 59px; }
+      .intro h2, .section-heading h2, .closing h2 { font-size: 43px; }
+      .intro p { font-size: 13px; }
+      .teaching-section { padding: 67px 0 73px; }
+      .section-heading { margin-bottom: 31px; }
+      .teachings-grid { grid-template-columns: 1fr; gap: 14px; }
+      .teaching-card { padding: 30px 26px 30px 28px; }
+      .teaching-card h3 { font-size: 37px; }
+      .teaching-card .teaching-lead { font-size: 22px; }
+      .reflection { padding: 57px 21px; }
+      .reflection p { font-size: 32px; }
+      .closing { padding: 72px 0 85px; }
+      .actions { flex-direction: column; }
+      .actions a { width: 100%; }
+      .footer-shell { flex-direction: column; align-items: flex-start; gap: 26px; }
+      .footer-nav { gap: 14px 20px; }
+    }
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; transition: none !important; } }
+  </style>
+</head>
+<body>
+  <div class="announcement">A life of love. A legacy of service. <span>·</span> Inspired by Neem Karoli Baba</div>
+  <header class="site-header">
+    <div class="nav-shell">
+      <a class="brand" href="index.html#home" aria-label="BNK Seva Trust home">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 48 54" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M24 3C16 12 7 19 7 31c0 10 7.4 18 17 18s17-8 17-18C41 19 32 12 24 3Z" stroke="currentColor" stroke-width="1.2"/><path d="M24 14c-4.5 5.6-10 10.5-10 17a10 10 0 0 0 20 0c0-6.5-5.5-11.4-10-17Z" stroke="currentColor"/><path d="M24 25v16M19 32c1.5 2 3.2 3 5 3s3.5-1 5-3" stroke="currentColor"/><circle cx="24" cy="45" r="1.2" fill="currentColor"/></svg>
+        </span>
+        <span class="brand-copy"><span class="brand-name">BNK Seva Trust</span><span class="brand-caption">In the spirit of Maharaj-ji</span></span>
+      </a>
+      <nav class="main-nav" id="site-navigation" aria-label="Main navigation">
+        <a href="index.html#home">Home</a>
+        <a href="index.html#about">About</a>
+        <a href="index.html#temple">Temple Project</a>
+        <a href="index.html#seva">Our Seva</a>
+        <a href="index.html#seva-stories">Stories</a>
+        <a href="index.html#store">Store</a>
+      </nav>
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-navigation">Menu</button>
+      <a class="nav-donate" href="index.html#donate">Donate Now</a>
+    </div>
+  </header>
+
+  <main>
+    <section class="page-hero" aria-labelledby="page-title">
+      <div class="container hero-layout">
+        <div class="hero-copy">
+          <a class="back-link" href="index.html#inspiration">← Back to Our Inspiration</a>
+          <div class="eyebrow">Our Inspiration &amp; Guiding Wisdom</div>
+          <h1 id="page-title">Teachings of<br />Baba Neem Karoli<br />Maharaj</h1>
+          <p class="hero-subtitle">Love Everyone. Serve Everyone. Remember God.</p>
+          <p class="hero-description">Maharaj-ji's timeless message of unconditional love, selfless service and devotion continues to inspire hearts across generations. Discover the principles that guide the spirit of BNK Seva Trust.</p>
+        </div>
+        <div class="hero-image-frame">
+          <img src="images/babaneemkaroli.jpg" alt="Devotional artwork inspired by Baba Neem Karoli Maharaj" />
+        </div>
+      </div>
+    </section>
+
+    <section class="intro container" aria-labelledby="intro-title">
+      <div class="eyebrow">A Life That Continues to Inspire</div>
+      <h2 id="intro-title">Spirituality in Everyday Life</h2>
+      <p>Baba Neem Karoli Maharaj, lovingly known as Maharaj-ji, continues to inspire countless hearts through his message of unconditional love, selfless service and devotion to God.</p>
+      <p>His teachings remind us that spirituality is not separate from everyday life. It is found in the kindness we extend, the compassion we offer and the love with which we treat every living being.</p>
+      <p>At BNK Seva Trust, these principles form the foundation of our journey of seva, shraddha and samarpan.</p>
+    </section>
+
+    <section class="teaching-section" id="teachings" aria-labelledby="teachings-title">
+      <div class="container">
+        <div class="section-heading">
+          <div class="eyebrow">Six Guiding Principles</div>
+          <h2 id="teachings-title">The Wisdom That Guides Our Journey</h2>
+          <p>Simple principles with the power to transform how we think, live and serve.</p>
+        </div>
+        <div class="teachings-grid">
+          <article class="teaching-card">
+            <span class="teaching-number">01</span><h3>Love Everyone</h3>
+            <p class="teaching-lead">Love without boundaries or expectations.</p>
+            <p>Maharaj-ji's message of love transcends differences of religion, background, status and circumstance. True love asks for nothing in return. It is expressed through understanding, forgiveness, acceptance and kindness.</p>
+            <p>When we open our hearts to others, we begin to recognize the humanity that connects us all. Every small gesture of compassion becomes an expression of this teaching.</p>
+          </article>
+          <article class="teaching-card">
+            <span class="teaching-number">02</span><h3>Serve Everyone</h3>
+            <p class="teaching-lead">Service to humanity is an expression of devotion.</p>
+            <p>Seva is more than material assistance. It is offering our time, care and attention with humility, without expecting recognition or reward.</p>
+            <p>Whether through feeding someone who is hungry, supporting a child's education, caring for the unwell or comforting someone in difficulty, every sincere act of service carries spiritual meaning.</p>
+          </article>
+          <article class="teaching-card">
+            <span class="teaching-number">03</span><h3>Remember God</h3>
+            <p class="teaching-lead">Let devotion become part of everyday life.</p>
+            <p>Remembering God is not confined to temples, prayers or sacred rituals. It is an inner awareness that can accompany us through ordinary moments.</p>
+            <p>Through prayer, meditation, remembrance of the divine name and a compassionate way of living, we can nurture a deeper connection with the divine.</p>
+          </article>
+          <article class="teaching-card">
+            <span class="teaching-number">04</span><h3>Faith &amp; Surrender</h3>
+            <p class="teaching-lead">Trust deeply. Walk with courage and humility.</p>
+            <p>Maharaj-ji inspired devotees to cultivate faith beyond fear and uncertainty. Surrender does not mean abandoning responsibility; it means acting sincerely while letting go of excessive attachment to outcomes.</p>
+            <p>Faith gives us strength during challenges, patience during uncertainty and gratitude throughout life's journey.</p>
+          </article>
+          <article class="teaching-card">
+            <span class="teaching-number">05</span><h3>Simplicity &amp; Humility</h3>
+            <p class="teaching-lead">A compassionate heart matters more than recognition.</p>
+            <p>Maharaj-ji's life continues to remind devotees that spiritual richness is not measured by possessions, status or outward appearances.</p>
+            <p>Humility allows us to serve quietly, listen deeply and approach others without judgment. The smallest good deed, performed with sincerity, can carry great meaning.</p>
+          </article>
+          <article class="teaching-card">
+            <span class="teaching-number">06</span><h3>See the Divine in Everyone</h3>
+            <p class="teaching-lead">Beyond differences lies our shared humanity.</p>
+            <p>Maharaj-ji's teachings encourage us to recognize the sacred worth of every individual.</p>
+            <p>When we look beyond social divisions and approach each person with dignity and respect, compassion becomes a natural part of how we live.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <div class="reflection" aria-label="Reflection">
+      <span class="reflection-mark" aria-hidden="true">✧</span>
+      <p>“May every act of kindness become an offering, and may seva remain at the heart of everything we do.”</p>
+    </div>
+
+    <section class="closing container" aria-labelledby="closing-title">
+      <div class="eyebrow">From Wisdom to Action</div>
+      <h2 id="closing-title">From His Teachings to Our Seva</h2>
+      <p>Inspired by Maharaj-ji's philosophy, BNK Seva Trust seeks to transform devotion into compassionate service. Our vision encompasses food seva, education, healthcare, community welfare, environmental responsibility and spiritual engagement.</p>
+      <p>Each initiative is guided by one belief: love becomes truly meaningful when expressed through action.</p>
+      <p class="blessing">May every life be treated with dignity and every act of service offered with love.</p>
+      <div class="actions">
+        <a class="action-primary" href="index.html#join-seva">Join the Seva →</a>
+        <a class="action-secondary" href="index.html#seva">Explore Our Work →</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-shell">
+      <div><a class="footer-brand" href="index.html#home">BNK Seva Trust</a><span class="footer-small">Seva • Shraddha • Samarpan</span></div>
+      <div class="footer-nav">
+        <a href="index.html#inspiration">Our Inspiration</a>
+        <a href="index.html#seva-stories">Stories of Seva</a>
+        <a href="index.html#join-seva">Get Involved</a>
+        <a href="index.html#home">Return Home ↑</a>
+      </div>
+    </div>
+  </footer>
+  <script>
+    (() => {
+      const button = document.querySelector('.menu-toggle');
+      const nav = document.querySelector('.main-nav');
+      if (!button || !nav) return;
+      button.addEventListener('click', () => {
+        const opening = button.getAttribute('aria-expanded') !== 'true';
+        button.setAttribute('aria-expanded', String(opening));
+        nav.classList.toggle('is-open', opening);
+      });
+      nav.addEventListener('click', event => {
+        if (!event.target.closest('a')) return;
+        nav.classList.remove('is-open');
+        button.setAttribute('aria-expanded', 'false');
+      });
+      document.addEventListener('keydown', event => {
+        if (event.key === 'Escape') {
+          nav.classList.remove('is-open');
+          button.setAttribute('aria-expanded', 'false');
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

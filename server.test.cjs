@@ -10,7 +10,7 @@ const test = require("node:test");
 const databasePath = path.join(os.tmpdir(), `bnk-donations-${crypto.randomUUID()}.sqlite`);
 process.env.DATABASE_PATH = databasePath;
 process.env.RAZORPAY_KEY_SECRET = "test-secret";
-const { closeDatabase, validateDonation, verifyCheckoutSignature } = require("./server.cjs");
+const { closeDatabase, templeFundSummary, validateDonation, verifyCheckoutSignature } = require("./server.cjs");
 
 const validDonation = {
   donorName: "A Donor",
@@ -41,6 +41,15 @@ test("accepts a matching checkout signature and rejects a forged one", () => {
   const signature = crypto.createHmac("sha256", "test-secret").update(`${orderId}|${paymentId}`).digest("hex");
   assert.equal(verifyCheckoutSignature(orderId, paymentId, signature), true);
   assert.equal(verifyCheckoutSignature(orderId, paymentId, "f".repeat(64)), false);
+});
+
+test("reports zero temple fund progress before confirmed temple donations", () => {
+  assert.deepEqual(templeFundSummary(), {
+    raisedAmount: 0,
+    goalAmount: 500000000,
+    remainingAmount: 500000000,
+    progress: 0
+  });
 });
 
 test.after(() => {
