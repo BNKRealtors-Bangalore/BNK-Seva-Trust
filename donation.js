@@ -30,6 +30,8 @@
                 <option value="Temple Project">Temple Project</option>
                 <option value="Seva">Seva</option>
                 <option value="Sponsorship">Sponsorship</option>
+                <option value="Seva Store">Seva Store</option>
+                <option value="Seva Partner">Seva Partner</option>
                 <option value="General Donation">General Donation</option>
               </select>
             </label>
@@ -40,11 +42,7 @@
             <label class="bnk-donation-field">
               Payment method
               <select name="paymentMethod" required>
-                <option value="auto">Choose in secure checkout</option>
                 <option value="upi">UPI</option>
-                <option value="card">Card</option>
-                <option value="netbanking">Net Banking</option>
-                <option value="other">Other supported methods</option>
               </select>
             </label>
             <label class="bnk-donation-field bnk-donation-field-full">
@@ -62,9 +60,23 @@
           </div>
           <p class="bnk-donation-status" role="status" aria-live="polite"></p>
           <div class="bnk-donation-actions">
-            <button class="bnk-donation-submit" type="submit">Continue to secure payment</button>
+            <button class="bnk-donation-submit" type="submit">Show payment QR</button>
           </div>
         </form>
+        <section class="bnk-donation-qr" hidden aria-live="polite">
+          <h3>Scan QR to Pay</h3>
+          <p class="bnk-donation-qr-summary"></p>
+          <img src="/payment/scanner.jpeg" alt="UPI QR code to pay BNK Seva Trust" loading="lazy" decoding="async" />
+          <p class="bnk-donation-qr-note">Open any UPI app, scan this QR, complete the payment, and keep the payment confirmation for Trust records.</p>
+          <label class="bnk-donation-field bnk-donation-reference">
+            UPI transaction / reference ID
+            <input name="paymentReference" maxlength="120" placeholder="Enter UPI reference after payment" />
+          </label>
+          <div class="bnk-donation-actions bnk-donation-qr-actions">
+            <a class="bnk-donation-qr-open" href="/payment/scanner.jpeg" target="_blank" rel="noopener noreferrer">Open QR image</a>
+            <button class="bnk-donation-paid" type="button">I Have Paid</button>
+          </div>
+        </section>
         <p class="bnk-donation-legal"></p>
       </div>
       <section class="bnk-donation-receipt" hidden aria-labelledby="bnkReceiptTitle">
@@ -107,7 +119,12 @@
   const legalNotes = dialog.querySelectorAll(".bnk-donation-legal");
   const closeButton = dialog.querySelector(".bnk-donation-close");
   const submitButton = dialog.querySelector(".bnk-donation-submit");
+  const qrView = dialog.querySelector(".bnk-donation-qr");
+  const qrSummary = dialog.querySelector(".bnk-donation-qr-summary");
+  const referenceInput = dialog.querySelector('[name="paymentReference"]');
+  const paidButton = dialog.querySelector(".bnk-donation-paid");
   let paymentConfig;
+  let pendingDonation = null;
 
   const setStatus = (message) => {
     status.textContent = message;
@@ -132,27 +149,18 @@
 
   const loadPaymentConfig = async () => {
     if (!paymentConfig) {
-      const { result } = await fetchJSON("/api/payment-config");
+      let result = {};
+      try {
+        ({ result } = await fetchJSON("/api/payment-config"));
+      } catch {
+        result = {};
+      }
       paymentConfig = result;
       legalNotes.forEach((note) => {
         note.textContent = result.receiptPolicyNote || "A statutory or tax-exemption certificate is issued only where applicable under Trust policy and law.";
       });
     }
-    if (!paymentConfig.configured) {
-      throw new Error("Online donations are not configured yet. Please contact BNK Seva Trust.");
-    }
     return paymentConfig;
-  };
-
-  const loadRazorpay = async () => {
-    if (window.Razorpay) return;
-    await new Promise((resolve, reject) => {
-      const script = document.createElement("script");
-      script.src = "https://checkout.razorpay.com/v1/checkout.js";
-      script.onload = resolve;
-      script.onerror = () => reject(new Error("Secure payment checkout could not be loaded. Please try again."));
-      document.head.append(script);
-    });
   };
 
   const setField = (name, value) => {
@@ -165,6 +173,9 @@
     form.reset();
     formView.hidden = false;
     receiptView.hidden = true;
+    qrView.hidden = true;
+    referenceInput.value = "";
+    pendingDonation = null;
     setStatus("");
     setField("donationCategory", details.category);
     setField("amount", details.amount);
@@ -307,14 +318,68 @@
   dialog.querySelector(".bnk-donation-print").addEventListener("click", () => window.print());
   dialog.querySelector(".bnk-certificate-download").addEventListener("click", downloadCertificate);
 
+  const showQrPayment = (payload) => {
+    pendingDonation = payload;
+    referenceInput.value = "";
+    qrSummary.textContent = `${formatAmount(payload.amount)} towards ${payload.purpose}`;
+    qrView.hidden = false;
+    setStatus("Scan the QR below to complete your UPI payment.");
+    qrView.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    qrView.querySelector(".bnk-donation-qr-open")?.focus({ preventScroll: true });
+  };
+
+  const savePendingDonation = async () => {
+    if (!pendingDonation) return;
+    const reference = referenceInput.value.trim();
+    if (!reference) {
+      referenceInput.setCustomValidity("Enter the UPI transaction/reference ID after payment.");
+      referenceInput.reportValidity();
+      return;
+    }
+    referenceInput.setCustomValidity("");
+    paidButton.disabled = true;
+    paidButton.textContent = "Saving...";
+    try {
+      const { result } = await fetchJSON("/api/public-submissions/donation", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "Accept": "application/json" },
+        body: JSON.stringify({ ...pendingDonation, reference })
+      });
+      const record = result.record;
+      displayReceipt({
+        receiptNumber: record.id,
+        date: record.submittedAt || new Date().toISOString(),
+        donorName: pendingDonation.donorName,
+        mobile: pendingDonation.mobile,
+        email: pendingDonation.email,
+        donationCategory: pendingDonation.donationCategory,
+        purpose: pendingDonation.purpose,
+        amount: pendingDonation.amount,
+        paymentMethod: "UPI QR",
+        paymentReference: reference + " (pending verification)",
+        anonymous: pendingDonation.anonymous
+      });
+    } catch (error) {
+      setStatus(error.message);
+    } finally {
+      paidButton.disabled = false;
+      paidButton.textContent = "I Have Paid";
+    }
+  };
+
+  referenceInput.addEventListener("input", () => {
+    referenceInput.setCustomValidity("");
+  });
+
+  paidButton.addEventListener("click", savePendingDonation);
+
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
     if (!form.reportValidity()) return;
     submitButton.disabled = true;
-    setStatus("Preparing secure payment…");
+    setStatus("Preparing QR payment...");
     try {
-      const config = await loadPaymentConfig();
-      await loadRazorpay();
+      await loadPaymentConfig();
       const fields = new FormData(form);
       const payload = {
         donorName: fields.get("donorName"),
@@ -326,36 +391,7 @@
         anonymous: fields.get("visibility") === "anonymous",
         paymentMethod: fields.get("paymentMethod")
       };
-      const { result: order } = await fetchJSON("/api/donations/order", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload)
-      });
-      setStatus("");
-      const selectedMethod = ["upi", "card", "netbanking"].includes(payload.paymentMethod)
-        ? payload.paymentMethod
-        : undefined;
-      const checkout = new window.Razorpay({
-        key: config.keyId,
-        amount: order.amount,
-        currency: order.currency,
-        name: "BNK Seva Trust",
-        description: `Donation to BNK Seva Trust`,
-        order_id: order.id,
-        prefill: { name: payload.donorName, email: payload.email, contact: payload.mobile },
-        theme: { color: "#884b34" },
-        ...(selectedMethod ? { method: selectedMethod } : {}),
-        modal: { ondismiss: () => setStatus("Payment was not completed. You may try again when ready.") },
-        handler: (response) => verifyPayment({
-          orderId: response.razorpay_order_id,
-          paymentId: response.razorpay_payment_id,
-          signature: response.razorpay_signature
-        }).catch((error) => setStatus(error.message))
-      });
-      checkout.on("payment.failed", (response) => {
-        setStatus(response.error?.description || "Payment was not completed. Please try another supported method.");
-      });
-      checkout.open();
+      showQrPayment(payload);
     } catch (error) {
       setStatus(error.message);
     } finally {

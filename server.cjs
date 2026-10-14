@@ -27,6 +27,8 @@ const keySecret = process.env.RAZORPAY_KEY_SECRET || "";
 const webhookSecret = process.env.RAZORPAY_WEBHOOK_SECRET || "";
 const databasePath = path.resolve(root, process.env.DATABASE_PATH || "./data/donations.sqlite");
 fs.mkdirSync(path.dirname(databasePath), { recursive: true });
+const uploadDir = path.join(root, "uploads");
+fs.mkdirSync(uploadDir, { recursive: true });
 
 const database = new DatabaseSync(databasePath);
 database.exec(`
@@ -60,6 +62,22 @@ database.exec(`
     value TEXT NOT NULL,
     updated_at TEXT NOT NULL
   );
+  CREATE TABLE IF NOT EXISTS admin_users (
+    id TEXT PRIMARY KEY,
+    name TEXT NOT NULL,
+    email TEXT NOT NULL UNIQUE,
+    password_hash TEXT NOT NULL,
+    role TEXT NOT NULL CHECK (role IN ('Admin', 'Editor', 'Viewer')),
+    status TEXT NOT NULL CHECK (status IN ('Active', 'Disabled')),
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+  );
+  CREATE TABLE IF NOT EXISTS admin_sessions (
+    token_hash TEXT PRIMARY KEY,
+    user_id TEXT NOT NULL REFERENCES admin_users(id) ON DELETE CASCADE,
+    expires_at TEXT NOT NULL,
+    created_at TEXT NOT NULL
+  );
 `);
 
 const defaultPricingConfig = {
@@ -88,6 +106,13 @@ const defaultPricingConfig = {
     "other-facilities": null
   },
   sevaDonationAmounts: [501, 1001, 2501, 5001, 11000],
+  specialSevaChalisa: [
+    { copies: 108, amount: 2100 },
+    { copies: 216, amount: 4200 },
+    { copies: 501, amount: null },
+    { copies: 1008, amount: null }
+  ],
+  sevaPartnerAmounts: [501, 1001, 2501],
   storePrices: {
     box: 1499,
     frame: 499,
@@ -138,10 +163,25 @@ function sanitizePricingConfig(input = {}) {
     }
   }
 
+  const specialSevaChalisa = Array.isArray(input.specialSevaChalisa)
+    ? input.specialSevaChalisa
+        .map((option) => ({
+          copies: sanitizePositiveInteger(option?.copies),
+          amount: sanitizeNullableAmount(option?.amount)
+        }))
+        .filter((option) => option.copies)
+    : defaultPricingConfig.specialSevaChalisa;
+
+  const sevaPartnerAmounts = Array.isArray(input.sevaPartnerAmounts)
+    ? input.sevaPartnerAmounts.map(sanitizePositiveInteger).filter(Boolean).slice(0, 3)
+    : defaultPricingConfig.sevaPartnerAmounts;
+
   return {
     contributionOptions: contributionOptions.length ? contributionOptions : defaultPricingConfig.contributionOptions,
     sponsorshipAmounts,
     sevaDonationAmounts: sevaDonationAmounts.length ? sevaDonationAmounts : defaultPricingConfig.sevaDonationAmounts,
+    specialSevaChalisa: specialSevaChalisa.length ? specialSevaChalisa : defaultPricingConfig.specialSevaChalisa,
+    sevaPartnerAmounts: sevaPartnerAmounts.length ? sevaPartnerAmounts : defaultPricingConfig.sevaPartnerAmounts,
     storePrices
   };
 }
@@ -165,19 +205,422 @@ function savePricingConfig(input) {
   return config;
 }
 
+const defaultInitiatives = [
+  {
+    id: "initiative_medical_camp",
+    campaignName: "Free Medical Camp",
+    name: "Free Medical Camp",
+    location: "Newtown, Kolkata",
+    date: "2026-10-15",
+    image: "images/medical-camp-event.jpg",
+    status: "Active"
+  },
+  {
+    id: "initiative_food_distribution",
+    campaignName: "Food Distribution Drive",
+    name: "Food Distribution Drive",
+    location: "Siliguri",
+    date: "2026-10-22",
+    image: "images/food-distribution-event.jpg",
+    status: "Active"
+  },
+  {
+    id: "initiative_education_support",
+    campaignName: "Educational Support Programme",
+    name: "Educational Support Programme",
+    location: "Bengaluru",
+    date: "2026-11-02",
+    image: "images/education-event.jpg",
+    status: "Active"
+  }
+];
+
+const defaultStories = [
+  {
+    id: "meal-memory",
+    name: "A Meal That Became a Memory",
+    quote: "For many, it was just a meal. For him, it was care, kindness and a reminder that he is not forgotten.",
+    image: "images/stories-food.jpg",
+    category: "Beneficiary",
+    siteCategory: "food",
+    status: "Published",
+    link: "stories/meal-memory.html",
+    layout: "featured"
+  },
+  {
+    id: "child-dream",
+    name: "The First Step Towards a Child's Dream",
+    quote: "With a little support and encouragement, a brighter future begins.",
+    image: "images/stories-education.jpg",
+    category: "Beneficiary",
+    siteCategory: "education",
+    status: "Published",
+    link: "stories/child-dream.html",
+    layout: "standard"
+  },
+  {
+    id: "temple-community",
+    name: "Building a Temple, Building a Community",
+    quote: "A sacred vision bringing people together through faith, compassion and collective seva.",
+    image: "images/stories-temple.jpg",
+    category: "Community Member",
+    siteCategory: "temple",
+    status: "Published",
+    link: "stories/temple-community.html",
+    layout: "wide"
+  },
+  {
+    id: "healthcare-day",
+    name: "A Day of Healthcare Seva",
+    quote: "Compassionate healthcare and support for communities in need.",
+    image: "images/stories-healthcare.jpg",
+    category: "Beneficiary",
+    siteCategory: "healthcare",
+    status: "Published",
+    link: "stories/healthcare-day.html",
+    layout: "standard"
+  },
+  {
+    id: "why-we-serve",
+    name: "Why We Serve",
+    quote: "The meaning of seva, shared through people who choose to help.",
+    image: "images/stories-volunteers.jpg",
+    category: "Volunteer",
+    siteCategory: "volunteers",
+    status: "Published",
+    link: "stories/why-we-serve.html",
+    layout: "standard"
+  },
+  {
+    id: "babas-grace",
+    name: "In Baba's Grace",
+    quote: "Reflections on devotion, faith and the spiritual journey.",
+    image: "images/stories-baba.jpg",
+    category: "Community Member",
+    siteCategory: "spiritual",
+    status: "Published",
+    link: "stories/babas-grace.html",
+    layout: "standard"
+  },
+  {
+    id: "community-together",
+    name: "The Strength of Togetherness",
+    quote: "How collective acts of kindness can bring a community closer.",
+    image: "images/stories-community.jpg",
+    category: "Community Member",
+    siteCategory: "community",
+    status: "Published",
+    link: "stories/community-together.html",
+    layout: "standard"
+  },
+  {
+    id: "greener-tomorrow",
+    name: "A Greener Tomorrow",
+    quote: "Small steps towards a more sustainable and caring world.",
+    image: "images/stories-environment.jpg",
+    category: "Community Member",
+    siteCategory: "environment",
+    status: "Published",
+    link: "stories/greener-tomorrow.html",
+    layout: "wide"
+  },
+  {
+    id: "journey-of-service",
+    name: "A Journey of Service",
+    quote: "The people and values behind an enduring commitment to seva.",
+    image: "images/stories-service.jpg",
+    category: "Volunteer",
+    siteCategory: "volunteers",
+    status: "Published",
+    link: "stories/journey-of-service.html",
+    layout: "standard"
+  }
+];
+
+const defaultSiteContent = {
+  records: {
+    donations: [],
+    initiatives: defaultInitiatives,
+    updates: [],
+    store: [],
+    stories: defaultStories,
+    csr: [],
+    partners: [],
+    volunteers: [],
+    beneficiaries: [],
+    users: []
+  },
+  milestones: [
+    "Vision",
+    "Land & Site",
+    "Architectural Design",
+    "Approvals",
+    "Ground Breaking",
+    "Foundation",
+    "Construction",
+    "Murti Sthapana",
+    "Pran Pratishtha"
+  ].map((name, index) => ({ name, status: index === 0 ? "Completed" : "Upcoming" })),
+  goal: 0,
+  templeNote: ""
+};
+
+const siteRecordKeys = Object.keys(defaultSiteContent.records);
+const milestoneStatuses = new Set(["Upcoming", "In Progress", "Completed"]);
+
+function cleanText(value, maxLength = 500) {
+  return String(value ?? "").trim().slice(0, maxLength);
+}
+
+function sanitizeSiteRecord(record = {}) {
+  const clean = {};
+  for (const [key, value] of Object.entries(record)) {
+    if (key === "amount" || key === "price" || key === "stock") {
+      const numeric = Number(value);
+      clean[key] = Number.isFinite(numeric) && numeric >= 0 ? Math.floor(numeric) : 0;
+    } else {
+      clean[key] = cleanText(value, key === "quote" || key === "description" || key === "notes" ? 1000 : 220);
+    }
+  }
+  clean.id = clean.id || `rec_${crypto.randomUUID()}`;
+  return clean;
+}
+
+function sanitizeSiteContent(input = {}) {
+  const records = {};
+  for (const key of siteRecordKeys) {
+    records[key] = Array.isArray(input.records?.[key])
+      ? input.records[key].slice(0, 200).map(sanitizeSiteRecord)
+      : [];
+  }
+  records.csr = records.csr.map((record) => ({
+    ...record,
+    organisation: record.organisation || record.name || "",
+    contactName: record.contactName || record.contact || "",
+    interest: record.interest || record.focus || "",
+    name: record.name || record.organisation || "",
+    contact: record.contact || record.contactName || "",
+    focus: record.focus || record.interest || ""
+  }));
+  records.volunteers = records.volunteers.map((record) => ({
+    ...record,
+    areaOfInterest: record.areaOfInterest || record.activity || "",
+    activity: record.activity || record.areaOfInterest || ""
+  }));
+  records.initiatives = records.initiatives.map((record) => ({
+    ...record,
+    campaignName: record.campaignName || record.name || "",
+    name: record.name || record.campaignName || "",
+    location: record.location || "",
+    date: record.date || "",
+    image: record.image || ""
+  }));
+  const milestones = Array.isArray(input.milestones)
+    ? defaultSiteContent.milestones.map((fallback, index) => {
+        const item = input.milestones[index] || {};
+        return {
+          name: cleanText(item.name || fallback.name, 80),
+          status: milestoneStatuses.has(item.status) ? item.status : fallback.status
+        };
+      })
+    : defaultSiteContent.milestones;
+  const goal = Number(input.goal);
+  return {
+    records,
+    milestones,
+    goal: Number.isFinite(goal) && goal >= 0 ? Math.floor(goal) : 0,
+    templeNote: cleanText(input.templeNote, 500)
+  };
+}
+
+function getSiteContent() {
+  const row = database.prepare("SELECT value FROM app_config WHERE key = ?").get("site_content");
+  if (!row) return defaultSiteContent;
+  try {
+    return sanitizeSiteContent(JSON.parse(row.value));
+  } catch {
+    return defaultSiteContent;
+  }
+}
+
+function saveSiteContent(input) {
+  const content = sanitizeSiteContent(input);
+  database.prepare(`
+    INSERT INTO app_config (key, value, updated_at) VALUES ('site_content', ?, ?)
+    ON CONFLICT(key) DO UPDATE SET value = excluded.value, updated_at = excluded.updated_at
+  `).run(JSON.stringify(content), new Date().toISOString());
+  return content;
+}
+
+function todayISODate() {
+  return new Date().toISOString().slice(0, 10);
+}
+
+function appendPublicSubmission(type, input = {}) {
+  const content = getSiteContent();
+  const now = new Date().toISOString();
+  let record;
+  if (type === "csr") {
+    record = {
+      id: `csr_${crypto.randomUUID()}`,
+      organisation: cleanText(input.organisation || input.name, 160),
+      contactName: cleanText(input.contactName || input.contact, 120),
+      email: cleanText(input.email, 254).toLowerCase(),
+      interest: cleanText(input.interest || input.focus, 180),
+      status: "Enquiry",
+      phone: cleanText(input.phone, 40),
+      budget: cleanText(input.budget, 120),
+      message: cleanText(input.message, 1000),
+      submittedAt: now
+    };
+    record.name = record.organisation;
+    record.contact = record.contactName;
+    record.focus = record.interest;
+    if (!record.organisation || !record.contactName || !record.email || !record.interest) throw new Error("Please complete the CSR partner form.");
+    content.records.csr.unshift(record);
+  } else if (type === "partner") {
+    record = {
+      id: `partner_${crypto.randomUUID()}`,
+      name: cleanText(input.name, 120),
+      email: cleanText(input.email, 254).toLowerCase(),
+      amount: sanitizePositiveInteger(input.amount),
+      start: todayISODate(),
+      status: "Active",
+      phone: cleanText(input.phone, 40),
+      city: cleanText(input.city, 120),
+      submittedAt: now
+    };
+    if (!record.name || !record.email || !record.amount) throw new Error("Please complete the Seva Partner form.");
+    content.records.partners.unshift(record);
+  } else if (type === "volunteer") {
+    record = {
+      id: `volunteer_${crypto.randomUUID()}`,
+      name: cleanText(input.name, 120),
+      email: cleanText(input.email, 254).toLowerCase(),
+      phone: cleanText(input.phone, 40),
+      areaOfInterest: cleanText(input.areaOfInterest || input.activity, 180),
+      status: "Active",
+      city: cleanText(input.city, 120),
+      availability: cleanText(input.availability, 120),
+      submittedAt: now
+    };
+    record.activity = record.areaOfInterest;
+    if (!record.name || !record.email || !record.phone || !record.areaOfInterest) throw new Error("Please complete the volunteer form.");
+    content.records.volunteers.unshift(record);
+  } else if (type === "donation") {
+    const amount = sanitizePositiveInteger(input.amount);
+    record = {
+      id: `donation_${crypto.randomUUID()}`,
+      name: cleanText(input.donorName || input.name, 120),
+      amount,
+      type: cleanText(input.donationCategory || input.type || "General Donation", 80),
+      source: "UPI QR",
+      date: todayISODate(),
+      reference: cleanText(input.reference || input.paymentReference, 120),
+      status: "Pending",
+      phone: cleanText(input.mobile || input.phone, 40),
+      email: cleanText(input.email, 254).toLowerCase(),
+      purpose: cleanText(input.purpose, 500),
+      visibility: cleanText(input.visibility, 40),
+      submittedAt: now
+    };
+    if (!record.name || !record.phone || !record.email || !record.amount || !record.type || !record.reference) {
+      throw new Error("Please complete the donation form and enter the UPI transaction reference.");
+    }
+    content.records.donations.unshift(record);
+  } else {
+    throw new Error("Unsupported submission type.");
+  }
+  saveSiteContent(content);
+  return record;
+}
+
 function isAuthorizedAdmin(request) {
   const expected = process.env.ADMIN_KEY || "admin";
-  return request.headers.authorization === `Bearer ${expected}` || request.headers["x-admin-key"] === expected;
+  if (request.headers.authorization === `Bearer ${expected}` || request.headers["x-admin-key"] === expected) return true;
+  return Boolean(getSessionUser(request, ["Admin", "Editor"]));
+}
+
+function hashPassword(password, salt = crypto.randomBytes(16).toString("hex")) {
+  const hash = crypto.pbkdf2Sync(String(password), salt, 120000, 32, "sha256").toString("hex");
+  return `pbkdf2_sha256$120000$${salt}$${hash}`;
+}
+
+function verifyPassword(password, encoded) {
+  const [scheme, iterations, salt, expectedHash] = String(encoded || "").split("$");
+  if (scheme !== "pbkdf2_sha256" || !iterations || !salt || !expectedHash) return false;
+  const actual = crypto.pbkdf2Sync(String(password), salt, Number(iterations), 32, "sha256");
+  const expected = Buffer.from(expectedHash, "hex");
+  return actual.length === expected.length && crypto.timingSafeEqual(actual, expected);
+}
+
+function publicAdminUser(row) {
+  if (!row) return null;
+  return { id: row.id, name: row.name, email: row.email, role: row.role, status: row.status };
+}
+
+function ensureInitialAdminUser() {
+  const count = database.prepare("SELECT COUNT(*) AS total FROM admin_users").get().total;
+  if (count) return;
+  const now = new Date().toISOString();
+  database.prepare(`
+    INSERT INTO admin_users (id, name, email, password_hash, role, status, created_at, updated_at)
+    VALUES (?, ?, ?, ?, 'Admin', 'Active', ?, ?)
+  `).run(
+    crypto.randomUUID(),
+    process.env.ADMIN_NAME || "BNK Admin",
+    (process.env.ADMIN_EMAIL || "admin@bnk.local").toLowerCase(),
+    hashPassword(process.env.ADMIN_PASSWORD || process.env.ADMIN_KEY || "admin"),
+    now,
+    now
+  );
+}
+
+ensureInitialAdminUser();
+
+function getCookie(request, name) {
+  const cookies = String(request.headers.cookie || "").split(";").map((entry) => entry.trim());
+  const pair = cookies.find((entry) => entry.startsWith(`${name}=`));
+  return pair ? decodeURIComponent(pair.slice(name.length + 1)) : "";
+}
+
+function sessionCookie(token, expires) {
+  return `bnk_admin_session=${encodeURIComponent(token)}; Path=/; HttpOnly; SameSite=Strict; Expires=${expires.toUTCString()}`;
+}
+
+function clearSessionCookie() {
+  return "bnk_admin_session=; Path=/; HttpOnly; SameSite=Strict; Expires=Thu, 01 Jan 1970 00:00:00 GMT";
+}
+
+function getSessionUser(request, roles) {
+  const token = getCookie(request, "bnk_admin_session");
+  if (!token) return null;
+  const tokenHash = crypto.createHash("sha256").update(token).digest("hex");
+  const row = database.prepare(`
+    SELECT u.* FROM admin_sessions s
+    JOIN admin_users u ON u.id = s.user_id
+    WHERE s.token_hash = ? AND s.expires_at > ? AND u.status = 'Active'
+  `).get(tokenHash, new Date().toISOString());
+  if (!row || (roles && !roles.includes(row.role))) return null;
+  return row;
 }
 
 const donationCategories = new Set([
   "Temple Project",
   "Seva",
   "Sponsorship",
+  "Seva Store",
+  "Seva Partner",
   "General Donation"
 ]);
 const paymentMethods = new Set(["auto", "upi", "card", "netbanking", "other"]);
-const maxBodyBytes = 20 * 1024;
+const maxBodyBytes = 6 * 1024 * 1024;
+const uploadTypes = new Map([
+  ["image/jpeg", ".jpg"],
+  ["image/png", ".png"],
+  ["image/webp", ".webp"],
+  ["image/svg+xml", ".svg"]
+]);
 
 function validateDonation(input) {
   if (!input || typeof input !== "object" || Array.isArray(input)) {
@@ -227,12 +670,13 @@ function verifyCheckoutSignature(orderId, paymentId, signature) {
   return safeEqualHex(signature, expected);
 }
 
-function sendJSON(response, statusCode, body) {
+function sendJSON(response, statusCode, body, headers = {}) {
   response.writeHead(statusCode, {
     "Content-Type": "application/json; charset=utf-8",
     "Cache-Control": "no-store",
     "X-Content-Type-Options": "nosniff",
-    "Referrer-Policy": "strict-origin-when-cross-origin"
+    "Referrer-Policy": "strict-origin-when-cross-origin",
+    ...headers
   });
   response.end(JSON.stringify(body));
 }
@@ -254,6 +698,121 @@ async function readJSON(request) {
     return JSON.parse(body.toString("utf8"));
   } catch {
     throw new Error("Request must contain valid JSON.");
+  }
+}
+
+function parseMultipartFile(body, contentTypeHeader) {
+  const boundaryMatch = String(contentTypeHeader || "").match(/boundary=(?:"([^"]+)"|([^;]+))/i);
+  if (!boundaryMatch) throw new Error("Upload must use multipart/form-data.");
+  const boundary = Buffer.from(`--${boundaryMatch[1] || boundaryMatch[2]}`);
+  let start = body.indexOf(boundary);
+  while (start !== -1) {
+    const headerStart = start + boundary.length + 2;
+    const headerEnd = body.indexOf(Buffer.from("\r\n\r\n"), headerStart);
+    if (headerEnd === -1) break;
+    const headers = body.slice(headerStart, headerEnd).toString("utf8");
+    const nameMatch = headers.match(/name="([^"]+)"/i);
+    const filenameMatch = headers.match(/filename="([^"]*)"/i);
+    const typeMatch = headers.match(/content-type:\s*([^\r\n]+)/i);
+    const nextBoundary = body.indexOf(boundary, headerEnd + 4);
+    if (nextBoundary === -1) break;
+    if (nameMatch?.[1] === "image" && filenameMatch?.[1]) {
+      return {
+        filename: filenameMatch[1],
+        contentType: (typeMatch?.[1] || "").trim().toLowerCase(),
+        data: body.slice(headerEnd + 4, Math.max(headerEnd + 4, nextBoundary - 2))
+      };
+    }
+    start = nextBoundary;
+  }
+  throw new Error("Choose an image file to upload.");
+}
+
+async function handleAdminImageUpload(request, response) {
+  if (!isAuthorizedAdmin(request)) {
+    sendJSON(response, 401, { error: "Admin key required." });
+    return;
+  }
+  try {
+    const file = parseMultipartFile(await readBody(request), request.headers["content-type"]);
+    const extension = uploadTypes.get(file.contentType);
+    if (!extension) throw new Error("Upload a JPG, PNG, WebP or SVG image.");
+    if (!file.data.length || file.data.length > 5 * 1024 * 1024) throw new Error("Image must be 5 MB or smaller.");
+    const filename = `${Date.now()}-${crypto.randomUUID()}${extension}`;
+    const filePath = path.join(uploadDir, filename);
+    await fs.promises.writeFile(filePath, file.data, { flag: "wx" });
+    sendJSON(response, 200, { url: `/uploads/${filename}` });
+  } catch (error) {
+    sendJSON(response, 400, { error: error.message || "Upload failed." });
+  }
+}
+
+async function handleAdminLogin(request, response) {
+  const input = await readJSON(request);
+  const email = cleanText(input.email, 254).toLowerCase();
+  const password = String(input.password || "");
+  const user = database.prepare("SELECT * FROM admin_users WHERE email = ? AND status = 'Active'").get(email);
+  if (!user || !verifyPassword(password, user.password_hash)) {
+    sendJSON(response, 401, { error: "Invalid email or password." });
+    return;
+  }
+  const token = crypto.randomBytes(32).toString("base64url");
+  const expires = new Date(Date.now() + 1000 * 60 * 60 * 8);
+  database.prepare(`
+    INSERT INTO admin_sessions (token_hash, user_id, expires_at, created_at)
+    VALUES (?, ?, ?, ?)
+  `).run(crypto.createHash("sha256").update(token).digest("hex"), user.id, expires.toISOString(), new Date().toISOString());
+  sendJSON(response, 200, { user: publicAdminUser(user) }, { "Set-Cookie": sessionCookie(token, expires) });
+}
+
+function handleAdminLogout(request, response) {
+  const token = getCookie(request, "bnk_admin_session");
+  if (token) {
+    database.prepare("DELETE FROM admin_sessions WHERE token_hash = ?").run(crypto.createHash("sha256").update(token).digest("hex"));
+  }
+  sendJSON(response, 200, { ok: true }, { "Set-Cookie": clearSessionCookie() });
+}
+
+function adminUsers() {
+  return database.prepare("SELECT id, name, email, role, status FROM admin_users ORDER BY created_at ASC").all();
+}
+
+async function handleSaveAdminUsers(request, response) {
+  const actor = getSessionUser(request, ["Admin"]);
+  if (!actor) {
+    sendJSON(response, 403, { error: "Admin role required." });
+    return;
+  }
+  const input = await readJSON(request);
+  const users = Array.isArray(input.users) ? input.users.slice(0, 50) : [];
+  const now = new Date().toISOString();
+  database.exec("BEGIN IMMEDIATE");
+  try {
+    for (const user of users) {
+      const email = cleanText(user.email, 254).toLowerCase();
+      const name = cleanText(user.name, 120);
+      const role = ["Admin", "Editor", "Viewer"].includes(user.role) ? user.role : "Viewer";
+      const status = ["Active", "Disabled"].includes(user.status) ? user.status : "Active";
+      if (!email || !name) continue;
+      const existing = database.prepare("SELECT * FROM admin_users WHERE email = ?").get(email);
+      if (existing) {
+        database.prepare("UPDATE admin_users SET name = ?, role = ?, status = ?, updated_at = ? WHERE email = ?")
+          .run(name, role, status, now, email);
+      } else {
+        const password = cleanText(user.password, 120) || crypto.randomBytes(10).toString("base64url");
+        database.prepare(`
+          INSERT INTO admin_users (id, name, email, password_hash, role, status, created_at, updated_at)
+          VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+        `).run(crypto.randomUUID(), name, email, hashPassword(password), role, status, now, now);
+      }
+    }
+    const activeAdmins = database.prepare("SELECT COUNT(*) AS total FROM admin_users WHERE role = 'Admin' AND status = 'Active'").get().total;
+    if (!activeAdmins) throw new Error("At least one active Admin user is required.");
+    database.exec("COMMIT");
+    sendJSON(response, 200, { users: adminUsers() });
+  } catch (error) {
+    database.exec("ROLLBACK");
+    sendJSON(response, 400, { error: error.message || "Could not save users." });
   }
 }
 
@@ -300,7 +859,11 @@ function templeFundSummary() {
     FROM donations
     WHERE status = 'paid' AND donation_category = 'Temple Project'
   `).get();
-  const raisedAmount = total.amount_paise / 100;
+  const siteContent = getSiteContent();
+  const offlineTempleAmount = siteContent.records.donations
+    .filter((donation) => donation.status === "Verified" && ["Temple Project", "Temple by Sq. Ft."].includes(donation.type))
+    .reduce((sum, donation) => sum + (Number(donation.amount) || 0), 0);
+  const raisedAmount = total.amount_paise / 100 + offlineTempleAmount;
   const safeGoal = Number.isFinite(goalAmount) && goalAmount > 0 ? Math.floor(goalAmount) : 500000000;
   const progress = Math.min(100, Math.max(0, (raisedAmount / safeGoal) * 100));
   return {
@@ -538,12 +1101,67 @@ async function handleRequest(request, response) {
       sendJSON(response, 200, getPricingConfig());
       return;
     }
+    if (url.pathname === "/api/admin/login" && request.method === "POST") {
+      await handleAdminLogin(request, response);
+      return;
+    }
+    if (url.pathname === "/api/admin/logout" && request.method === "POST") {
+      handleAdminLogout(request, response);
+      return;
+    }
+    if (url.pathname === "/api/admin/me" && request.method === "GET") {
+      const user = getSessionUser(request);
+      if (!user) {
+        sendJSON(response, 401, { error: "Login required." });
+        return;
+      }
+      sendJSON(response, 200, { user: publicAdminUser(user) });
+      return;
+    }
+    if (url.pathname === "/api/admin/users" && request.method === "GET") {
+      const user = getSessionUser(request, ["Admin"]);
+      if (!user) {
+        sendJSON(response, 403, { error: "Admin role required." });
+        return;
+      }
+      sendJSON(response, 200, { users: adminUsers() });
+      return;
+    }
+    if (url.pathname === "/api/admin/users" && request.method === "PUT") {
+      await handleSaveAdminUsers(request, response);
+      return;
+    }
+    if (url.pathname === "/api/site-content" && request.method === "GET") {
+      sendJSON(response, 200, getSiteContent());
+      return;
+    }
+    const publicSubmissionMatch = url.pathname.match(/^\/api\/public-submissions\/(csr|partner|volunteer|donation)$/);
+    if (publicSubmissionMatch && request.method === "POST") {
+      try {
+        sendJSON(response, 201, { ok: true, record: appendPublicSubmission(publicSubmissionMatch[1], await readJSON(request)) });
+      } catch (error) {
+        sendJSON(response, 400, { error: error.message || "Submission could not be saved." });
+      }
+      return;
+    }
     if (url.pathname === "/api/admin/pricing-config" && request.method === "PUT") {
       if (!isAuthorizedAdmin(request)) {
         sendJSON(response, 401, { error: "Admin key required." });
         return;
       }
       sendJSON(response, 200, savePricingConfig(await readJSON(request)));
+      return;
+    }
+    if (url.pathname === "/api/admin/site-content" && request.method === "PUT") {
+      if (!isAuthorizedAdmin(request)) {
+        sendJSON(response, 401, { error: "Admin key required." });
+        return;
+      }
+      sendJSON(response, 200, saveSiteContent(await readJSON(request)));
+      return;
+    }
+    if (url.pathname === "/api/admin/upload-image" && request.method === "POST") {
+      await handleAdminImageUpload(request, response);
       return;
     }
     if (url.pathname === "/api/donations/order" && request.method === "POST") {
@@ -577,7 +1195,10 @@ async function handleRequest(request, response) {
       "donation.css",
       "donation.js"
     ].includes(relativePath) ||
-      relativePath.startsWith(`images${path.sep}`);
+      relativePath.startsWith(`stories${path.sep}`) ||
+      relativePath.startsWith(`images${path.sep}`) ||
+      relativePath.startsWith(`payment${path.sep}`) ||
+      relativePath.startsWith(`uploads${path.sep}`);
     if (!filePath.startsWith(`${root}${path.sep}`) || !isPublicAsset) {
       response.writeHead(404);
       response.end("Not found");
@@ -589,8 +1210,10 @@ async function handleRequest(request, response) {
       response.end("Not found");
       return;
     }
+    const type = contentType(filePath);
     response.writeHead(200, {
-      "Content-Type": contentType(filePath),
+      "Content-Type": type,
+      "Cache-Control": type.startsWith("text/html") ? "no-store" : "public, max-age=3600",
       "X-Content-Type-Options": "nosniff",
       "Referrer-Policy": "strict-origin-when-cross-origin"
     });
@@ -620,5 +1243,7 @@ module.exports = {
   verifyCheckoutSignature,
   templeFundSummary,
   getPricingConfig,
-  savePricingConfig
+  savePricingConfig,
+  getSiteContent,
+  saveSiteContent
 };

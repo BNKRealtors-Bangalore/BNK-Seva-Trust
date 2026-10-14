@@ -165,16 +165,18 @@
       }
 
       .brand-mark {
-        width: 44px;
-        height: 48px;
+        width: 88px;
+        height: 96px;
         display: grid;
         place-items: center;
         color: var(--saffron);
       }
 
-      .brand-mark svg {
-        width: 42px;
-        height: 46px;
+      .brand-mark img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        display: block;
       }
 
       .brand-copy {
@@ -1659,14 +1661,14 @@
         }
 
         .brand-mark {
-          width: 34px;
-          height: 38px;
-          flex: 0 0 34px;
+          width: 68px;
+          height: 76px;
+          flex: 0 0 68px;
         }
 
-        .brand-mark svg {
-          width: 34px;
-          height: 37px;
+        .brand-mark img {
+          width: 100%;
+          height: 100%;
         }
 
         .brand {
@@ -1793,12 +1795,14 @@
         }
 
         .brand-mark {
-          width: 30px;
-          flex-basis: 30px;
+          width: 60px;
+          height: 66px;
+          flex-basis: 60px;
         }
 
-        .brand-mark svg {
-          width: 30px;
+        .brand-mark img {
+          width: 100%;
+          height: 100%;
         }
 
         .brand {
@@ -4535,6 +4539,67 @@
   box-shadow: 0 6px 20px rgba(174, 127, 54, .12);
 }
 
+.upcoming-all-events {
+  margin-top: 36px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+}
+.upcoming-all-events[hidden] { display: none; }
+.upcoming-all-card {
+  border: 1px solid #eadcc7;
+  background: #fffdf8;
+  display: grid;
+  min-width: 0;
+}
+.upcoming-all-card img {
+  width: 100%;
+  height: 190px;
+  object-fit: cover;
+  display: block;
+  background: #f6eee4;
+}
+.upcoming-all-body {
+  padding: 16px;
+  display: grid;
+  gap: 10px;
+}
+.upcoming-all-body h3 {
+  margin: 0;
+  color: var(--us-maroon);
+  font: 600 25px/1.06 var(--serif);
+}
+.upcoming-all-body p {
+  margin: 0;
+  color: #67584d;
+  font: 500 13px/1.45 var(--sans);
+}
+.upcoming-all-date {
+  color: #a87b2e;
+  font: 700 11px/1 var(--sans);
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+.upcoming-all-card .upcoming-event-button {
+  width: max-content;
+  min-height: 42px;
+  padding: 0 18px;
+  margin-top: 2px;
+}
+.upcoming-all-empty {
+  grid-column: 1 / -1;
+  padding: 22px;
+  border: 1px solid #eadcc7;
+  background: #fffdf8;
+  color: #66584d;
+  font: 500 14px/1.5 var(--sans);
+}
+@media (max-width: 720px) {
+  .upcoming-all-events {
+    grid-template-columns: 1fr;
+  }
+}
+
 /* ========== MAIN GRID ========== */
 
 .upcoming-seva-layout {
@@ -4826,6 +4891,9 @@
   .upcoming-side-event {
     grid-template-columns: 80px minmax(0, 1fr);
     gap: 10px;
+  }
+  .upcoming-all-events {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .upcoming-side-date .upcoming-day {
@@ -6366,6 +6434,17 @@
 .transparency-section a:focus-visible {
   outline: 2px solid #be8434;
   outline-offset: 4px;
+}
+
+.transparency-section .is-disabled-link,
+#temple-updates .is-disabled-link {
+  cursor: default;
+  pointer-events: none;
+}
+
+.transparency-section .is-disabled-link:hover,
+#temple-updates .is-disabled-link:hover {
+  transform: none;
 }
 
 /* ==========================================
@@ -9164,7 +9243,7 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center 28%;
+  object-position: center 16%;
 
   transition: transform 850ms cubic-bezier(.2,.7,.2,1);
 }
@@ -11858,13 +11937,14 @@
 .bnk-footer-contact-list {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 28px;
 }
 
 .bnk-footer-contact-item {
   display: flex;
   align-items: center;
   gap: 12px;
+  padding-block: 2px;
 
   color: #65454a;
   font-family: "DM Sans", Arial, sans-serif;
@@ -14005,12 +14085,7 @@ section[id]:not(#home), #footer-contact {
       <div class="nav-shell">
         <a class="brand" href="#home" aria-label="BNK Seva Trust home">
           <span class="brand-mark" aria-hidden="true">
-            <svg viewBox="0 0 48 54" fill="none">
-              <path d="M24 3C16 12 7 19 7 31c0 10 7.4 18 17 18s17-8 17-18C41 19 32 12 24 3Z" stroke="currentColor" stroke-width="1.2" />
-              <path d="M24 14c-4.5 5.6-10 10.5-10 17a10 10 0 0 0 20 0c0-6.5-5.5-11.4-10-17Z" stroke="currentColor" stroke-width="1" />
-              <path d="M24 25v16M19 32c1.5 2 3.2 3 5 3s3.5-1 5-3" stroke="currentColor" stroke-width="1" />
-              <circle cx="24" cy="45" r="1.2" fill="currentColor" />
-            </svg>
+            <img src="images/logo.PNG" alt="" width="44" height="48" decoding="async" />
           </span>
           <span class="brand-copy">
             <span class="brand-name">BNK Seva Trust</span>
@@ -14461,7 +14536,7 @@ section[id]:not(#home), #footer-contact {
   // ADMIN CONFIGURATION
   // Update these amounts from your backend / admin panel.
 
-  const contributionConfig = [
+  let contributionConfig = [
     { sqft: 1, amount: 2500 },
     { sqft: 2, amount: 5000 },
     { sqft: 5, amount: 12500 },
@@ -14486,6 +14561,20 @@ section[id]:not(#home), #footer-contact {
     "₹" + Number(amount).toLocaleString("en-IN");
 
   let selectedContribution = null;
+
+  async function loadContributionPricing() {
+    try {
+      const response = await fetch("/api/pricing-config", { cache: "no-store" });
+      if (!response.ok) return;
+      const config = await response.json();
+      if (!Array.isArray(config.contributionOptions) || !config.contributionOptions.length) return;
+      contributionConfig = config.contributionOptions;
+      selectedContribution = null;
+      renderContributionCards();
+    } catch {
+      // Keep built-in defaults if admin pricing cannot load.
+    }
+  }
 
   // Generate contribution cards
   function renderContributionCards() {
@@ -14598,6 +14687,7 @@ section[id]:not(#home), #footer-contact {
   });
 
   renderContributionCards();
+  loadContributionPricing();
 
   const contributionSection = document.querySelector(".contribution-section");
 
@@ -14708,7 +14798,7 @@ section[id]:not(#home), #footer-contact {
      amount: null = estimate pending
   ====================================== */
 
-  const sponsorships = [
+  let sponsorships = [
     {
       id: "temple-bell",
       name: "Temple Bell",
@@ -14857,6 +14947,25 @@ section[id]:not(#home), #footer-contact {
 
   // Autoscroll speed in pixels per second.
   const scrollSpeed = 30;
+
+  async function loadSponsorshipPricing() {
+    try {
+      const response = await fetch("/api/pricing-config", { cache: "no-store" });
+      if (!response.ok) return;
+      const config = await response.json();
+      if (!config.sponsorshipAmounts) return;
+      sponsorships = sponsorships.map((item) => ({
+        ...item,
+        amount: Object.prototype.hasOwnProperty.call(config.sponsorshipAmounts, item.id)
+          ? config.sponsorshipAmounts[item.id]
+          : item.amount
+      }));
+      renderCards();
+      calculateWidth();
+    } catch {
+      // Keep built-in defaults if admin pricing cannot load.
+    }
+  }
 
   const escapeHTML = (value) =>
     String(value).replace(/[&<>"']/g, (char) => ({
@@ -15064,6 +15173,7 @@ section[id]:not(#home), #footer-contact {
   });
 
   renderCards();
+  loadSponsorshipPricing();
   requestAnimationFrame(animate);
 })();
 </script>
@@ -15229,7 +15339,7 @@ section[id]:not(#home), #footer-contact {
      Replace null with verified amounts.
   ======================================== */
 
-  const specialSevaConfig = {
+  let specialSevaConfig = {
     chalisa: [
       { copies: 108, amount: 2100 },
       { copies: 216, amount: 4200 },
@@ -15258,6 +15368,20 @@ section[id]:not(#home), #footer-contact {
     amount == null
       ? "₹X"
       : "₹" + amount.toLocaleString("en-IN");
+
+  async function loadSpecialSevaPricing() {
+    try {
+      const response = await fetch("/api/pricing-config", { cache: "no-store" });
+      if (!response.ok) return;
+      const config = await response.json();
+      if (!Array.isArray(config.specialSevaChalisa)) return;
+      specialSevaConfig = { ...specialSevaConfig, chalisa: config.specialSevaChalisa };
+      selectedChalisaIndex = 0;
+      renderChalisaOptions();
+    } catch {
+      // Keep built-in defaults if admin pricing cannot load.
+    }
+  }
 
   function renderChalisaOptions() {
     optionsContainer.innerHTML = "";
@@ -15358,6 +15482,7 @@ section[id]:not(#home), #footer-contact {
   });
 
   renderChalisaOptions();
+  loadSpecialSevaPricing();
 })();
 </script>
 
@@ -15610,6 +15735,35 @@ section[id]:not(#home), #footer-contact {
   let selectedSeva = sevaCategories[0];
   let selectedAmount = "custom";
 
+  const formatChooseAmount = (amount) =>
+    "₹" + Number(amount).toLocaleString("en-IN");
+
+  async function loadChooseDonationPricing() {
+    try {
+      const response = await fetch("/api/pricing-config", { cache: "no-store" });
+      if (!response.ok) return;
+      const config = await response.json();
+      if (!Array.isArray(config.sevaDonationAmounts)) return;
+      const values = config.sevaDonationAmounts
+        .map((amount) => Number(amount))
+        .filter((amount) => Number.isSafeInteger(amount) && amount > 0);
+      amountButtons.forEach((button, index) => {
+        if (button.dataset.amount === "custom") return;
+        const amount = values[index];
+        if (!amount) return;
+        button.dataset.amount = String(amount);
+        button.textContent = formatChooseAmount(amount);
+      });
+      if (selectedAmount !== "custom" && !values.map(String).includes(selectedAmount)) {
+        selectedAmount = "custom";
+        customInput.value = "";
+      }
+      updateAmountSelection();
+    } catch {
+      // Keep built-in defaults if admin pricing cannot load.
+    }
+  }
+
   /* =====================================
      RENDER SEVA CARDS
   ===================================== */
@@ -15738,6 +15892,7 @@ section[id]:not(#home), #footer-contact {
 
   renderSevaCards();
   updateAmountSelection();
+  loadChooseDonationPricing();
 
 })();
 </script>
@@ -15896,34 +16051,172 @@ section[id]:not(#home), #footer-contact {
       </div>
     </div>
 
+    <div class="upcoming-all-events" id="upcomingAllEvents" hidden></div>
+
   </div>
 </section>
 
 <script>
 (() => {
-  const eventLinks = document.querySelectorAll(
-    ".upcoming-seva-section .upcoming-event-button"
-  );
-
-  eventLinks.forEach((link) => {
-    link.addEventListener("click", (event) => {
-      // Remove this handler after real event pages
-      // or registration forms are connected.
-      event.preventDefault();
-
-      const card = link.closest(
-        ".upcoming-featured, .upcoming-side-event"
-      );
-
-      const eventName =
-        card?.querySelector("h3")?.textContent?.trim()
-        || "Seva Event";
-
-      alert(
-        eventName +
-        "\n\nEvent registration is not connected yet."
-      );
+  const section = document.getElementById("upcoming-seva");
+  const viewAll = section?.querySelector(".upcoming-view-all");
+  const inlineList = document.getElementById("upcomingAllEvents");
+  const escapeHTML = value => String(value ?? "").replace(/[&<>"']/g, ch => ({
+    "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+  }[ch]));
+  const defaultEvents = [
+    { campaignName: "Free Medical Camp", location: "Newtown, Kolkata", date: "2026-10-15", image: "images/medical-camp-event.jpg", status: "Active" },
+    { campaignName: "Food Distribution Drive", location: "Siliguri", date: "2026-10-22", image: "images/food-distribution-event.jpg", status: "Active" },
+    { campaignName: "Educational Support Programme", location: "Bengaluru", date: "2026-11-02", image: "images/education-event.jpg", status: "Active" }
+  ];
+  let allEvents = defaultEvents;
+  function formatEventDate(value) {
+    const date = value ? new Date(value + "T12:00:00") : null;
+    return date && !Number.isNaN(date.getTime())
+      ? date.toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" })
+      : "";
+  }
+  function dateParts(value) {
+    const date = value ? new Date(value + "T12:00:00") : null;
+    if (!date || Number.isNaN(date.getTime())) return { day: "--", month: "TBA" };
+    return {
+      day: date.toLocaleDateString("en-IN", { day: "2-digit" }),
+      month: date.toLocaleDateString("en-IN", { month: "short" }).toUpperCase()
+    };
+  }
+  function normaliseEvents(events) {
+    const usable = (events || [])
+      .filter(event => event.status === "Active" || event.status === "Planned")
+      .map(event => ({ ...event, campaignName: event.campaignName || event.name || "" }));
+    return usable.length ? usable : [];
+  }
+  function renderTopEvents() {
+    const featured = allEvents[0];
+    const sideCards = [...section.querySelectorAll(".upcoming-side-event")];
+    const featuredCard = section.querySelector(".upcoming-featured");
+    const topEvents = allEvents.slice(0, 3);
+    if (featured && featuredCard) {
+      const parts = dateParts(featured.date);
+      featuredCard.hidden = false;
+      featuredCard.querySelector("img").src = featured.image || "images/medical-camp-event.jpg";
+      featuredCard.querySelector("img").alt = featured.campaignName || "Seva event";
+      featuredCard.querySelector(".upcoming-day").textContent = parts.day;
+      featuredCard.querySelector(".upcoming-month").textContent = parts.month;
+      featuredCard.querySelector("h3").textContent = featured.campaignName || "Seva Event";
+      const location = featuredCard.querySelector(".upcoming-location");
+      location.lastChild.textContent = ` ${featured.location || ""}`;
+    } else if (featuredCard) {
+      featuredCard.hidden = true;
+    }
+    sideCards.forEach((card, index) => {
+      const event = topEvents[index + 1];
+      if (!event) { card.hidden = true; return; }
+      const parts = dateParts(event.date);
+      card.hidden = false;
+      card.querySelector("img").src = event.image || "images/food-distribution-event.jpg";
+      card.querySelector("img").alt = event.campaignName || "Seva event";
+      card.querySelector(".upcoming-day").textContent = parts.day;
+      card.querySelector(".upcoming-month").textContent = parts.month;
+      card.querySelector("h3").textContent = event.campaignName || "Seva Event";
+      const location = card.querySelector(".upcoming-location");
+      location.lastChild.textContent = ` ${event.location || ""}`;
     });
+  }
+  function renderInlineEvents() {
+    const remainingEvents = allEvents.slice(3);
+    if (!remainingEvents.length) {
+      inlineList.innerHTML = '<p class="upcoming-all-empty">No additional seva events are published right now.</p>';
+      return;
+    }
+    inlineList.innerHTML = remainingEvents.map(event => `
+      <article class="upcoming-all-card">
+        <img src="${escapeHTML(event.image || "images/medical-camp-event.jpg")}" alt="${escapeHTML(event.campaignName || event.name || "Seva event")}" loading="lazy">
+        <div class="upcoming-all-body">
+          <span class="upcoming-all-date">${escapeHTML(formatEventDate(event.date))}</span>
+          <h3>${escapeHTML(event.campaignName || event.name || "Seva Event")}</h3>
+          <p>${escapeHTML(event.location || "")}</p>
+          <a href="#join-seva" class="upcoming-event-button">JOIN <span aria-hidden="true">→</span></a>
+        </div>
+      </article>
+    `).join("");
+  }
+  function setEvents(events) {
+    const normalised = normaliseEvents(events);
+    allEvents = normalised.length ? normalised : [];
+    renderTopEvents();
+    renderInlineEvents();
+  }
+  async function loadAdminEvents() {
+    try {
+      const response = await fetch("/api/site-content", { cache: "no-store" });
+      if (!response.ok) return;
+      const content = await response.json();
+      setEvents(content.records?.initiatives || []);
+    } catch {
+      // Keep default events.
+    }
+  }
+  viewAll?.addEventListener("click", event => {
+    event.preventDefault();
+    const open = inlineList.hidden;
+    inlineList.hidden = !open;
+    viewAll.innerHTML = open
+      ? 'HIDE EVENTS <span aria-hidden="true">→</span>'
+      : 'VIEW ALL EVENTS <span aria-hidden="true">→</span>';
+    if (open) inlineList.scrollIntoView({ behavior: "smooth", block: "start" });
+  });
+  document.addEventListener("bnk:site-content", event => {
+    setEvents(event.detail?.records?.initiatives || []);
+  });
+  setEvents(defaultEvents);
+  loadAdminEvents();
+
+  function volunteerAreaForEvent(eventName) {
+    const text = String(eventName || "").toLowerCase();
+    if (text.includes("medical") || text.includes("health")) return "Medical Volunteer";
+    if (text.includes("food") || text.includes("meal") || text.includes("anna")) return "Food Seva Volunteer";
+    if (text.includes("education") || text.includes("student") || text.includes("school")) return "Education Volunteer";
+    if (text.includes("temple")) return "Temple Project Volunteer";
+    return "Event Volunteer";
+  }
+
+  function goToVolunteerForm(eventName) {
+    const volunteerSection = document.getElementById("join-seva");
+    const formCard = volunteerSection?.querySelector(".bnk-volunteer-form-card");
+    const areaSelect = document.getElementById("volArea");
+    const nameInput = document.getElementById("volName");
+    const area = volunteerAreaForEvent(eventName);
+
+    if (areaSelect) {
+      areaSelect.value = area;
+      areaSelect.dispatchEvent(new Event("change", { bubbles: true }));
+    }
+
+    formCard?.scrollIntoView({
+      behavior: "smooth",
+      block: "start"
+    });
+
+    window.setTimeout(() => {
+      nameInput?.focus({ preventScroll: true });
+    }, 420);
+  }
+
+  section.addEventListener("click", event => {
+    const link = event.target.closest(".upcoming-event-button");
+    if (!link) return;
+
+    event.preventDefault();
+
+    const card = link.closest(
+      ".upcoming-featured, .upcoming-side-event, .upcoming-all-card"
+    );
+
+    const eventName =
+      card?.querySelector("h3")?.textContent?.trim()
+      || "Seva Event";
+
+    goToVolunteerForm(eventName);
   });
 })();
 </script>
@@ -15977,6 +16270,13 @@ section[id]:not(#home), #footer-contact {
     max-width: 210px; margin: 7px auto 0; color: #5f5853;
     font: 400 clamp(11px, .86vw, 13px)/1.45 var(--sans);
   }
+  #temple-journey .jp-status {
+    display: inline-flex; width: max-content; margin-top: 8px; padding: 4px 9px;
+    border-radius: 999px; background: #f7ead8; color: #800b23;
+    font: 700 10px/1 var(--sans); letter-spacing: .08em; text-transform: uppercase;
+  }
+  #temple-journey .jp-stage[data-status="Completed"] .jp-status { background: #800b23; color: #fff; }
+  #temple-journey .jp-stage[data-status="In Progress"] .jp-status { background: #d4aa6d; color: #3d271b; }
   #temple-journey .jp-photo {
     position: relative; height: clamp(158px, 17vw, 250px); overflow: hidden;
     border-radius: 6px; background: #f1e8d7;
@@ -16752,6 +17052,38 @@ section[id]:not(#home), #footer-contact {
 
   </div>
 </section>
+
+<script>
+(() => {
+  const disabledSelectors = [
+    ".transparency-section .transparency-link",
+    ".transparency-section .transparency-main-button",
+    "#temple-updates .temple-update-arrow",
+    "#temple-updates .temple-updates-all",
+    "#temple-updates .temple-update-play"
+  ];
+
+  function disableTemporaryLinks() {
+    document.querySelectorAll(disabledSelectors.join(","))
+      .forEach(element => {
+        if (element.hasAttribute("href")) {
+          element.dataset.disabledHref = element.getAttribute("href");
+          element.removeAttribute("href");
+        }
+
+        element.classList.add("is-disabled-link");
+        element.setAttribute("aria-disabled", "true");
+        element.setAttribute("tabindex", "-1");
+      });
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", disableTemporaryLinks, { once: true });
+  } else {
+    disableTemporaryLinks();
+  }
+})();
+</script>
 
 <script>
 (() => {
@@ -18094,7 +18426,7 @@ section[id]:not(#home), #footer-contact {
      link: published story URL or null
   ===================================== */
 
-  const stories = [
+  const defaultStories = [
     {
       id: "meal-memory",
       title: "A Meal That Became a Memory",
@@ -18207,6 +18539,8 @@ section[id]:not(#home), #footer-contact {
     }
   ];
 
+  let stories = [...defaultStories];
+
   const categoryLabels = {
     temple: "Temple Project",
     food: "Food Seva",
@@ -18228,6 +18562,20 @@ section[id]:not(#home), #footer-contact {
     spiritual: "❀",
     environment: "❧"
   };
+
+  const adminStoryCategory = value => ({
+    Beneficiary: "community",
+    Volunteer: "volunteers",
+    Donor: "community",
+    "Community Member": "community"
+  }[value] || "community");
+
+  const adminStoryLabel = value => ({
+    Beneficiary: "Beneficiary",
+    Volunteer: "Volunteer",
+    Donor: "Donor",
+    "Community Member": "Community Member"
+  }[value] || "Voice of Seva");
 
   const PAGE_SIZE = 6;
   let category = "all";
@@ -18390,6 +18738,29 @@ section[id]:not(#home), #footer-contact {
       : "No stories in this category yet.";
   }
 
+  function applyAdminStories(content) {
+    const records = content?.records?.stories || [];
+    const hasEditableDefaults = records.some(item =>
+      defaultStories.some(story => story.id === item.id)
+    );
+    const published = records.filter(item => item.status === "Published")
+      .map((item, index) => ({
+        id: item.id || `admin-story-${index}`,
+        title: item.name || adminStoryLabel(item.category),
+        description: item.quote || "A published voice from BNK Seva Trust.",
+        category: item.siteCategory || adminStoryCategory(item.category),
+        image: item.image || "images/stories-community.jpg",
+        date: null,
+        link: item.link || null,
+        layout: item.layout || (index === 2 ? "wide" : "standard"),
+        theme: index % 3 === 1 ? "light" : "dark"
+      }));
+    stories = hasEditableDefaults ? published : [...defaultStories, ...published];
+    category = "all";
+    visibleCount = PAGE_SIZE;
+    renderStories();
+  }
+
   filters.forEach(button => {
     button.addEventListener("click", () => {
       category = button.dataset.category;
@@ -18460,7 +18831,23 @@ section[id]:not(#home), #footer-contact {
     }, 400);
   }
 
+  document.addEventListener("bnk:site-content", event => {
+    applyAdminStories(event.detail);
+  });
+  if (window.BNK_SITE_CONTENT) applyAdminStories(window.BNK_SITE_CONTENT);
+
+  async function loadStoriesContent() {
+    try {
+      const response = await fetch("/api/site-content", { cache: "no-store" });
+      if (!response.ok) return;
+      applyAdminStories(await response.json());
+    } catch {
+      // Keep the built-in cards if public content is unavailable.
+    }
+  }
+
   renderStories();
+  loadStoriesContent();
 
   if (
     reduceMotion ||
@@ -18486,6 +18873,67 @@ section[id]:not(#home), #footer-contact {
   );
 
   observer.observe(section);
+})();
+</script>
+
+<script>
+(() => {
+  const escapeHTML = value => String(value ?? "").replace(/[&<>"']/g, ch => ({
+    "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+  }[ch]));
+  const imageOrDefault = (value, fallback) => value ? String(value).trim() : fallback;
+
+  function applyJourney(content) {
+    const stages = content?.milestones || [];
+    document.querySelectorAll("#temple-journey .jp-stage").forEach((stage, index) => {
+      const item = stages[index];
+      if (!item) return;
+      stage.dataset.status = item.status || "Upcoming";
+      let badge = stage.querySelector(".jp-status");
+      if (!badge) {
+        badge = document.createElement("span");
+        badge.className = "jp-status";
+        stage.querySelector(".jp-stage-heading")?.append(badge);
+      }
+      badge.textContent = item.status || "Upcoming";
+    });
+  }
+
+  function applyUpdates(content) {
+    const updates = (content?.records?.updates || content?.records?.initiatives || [])
+      .filter(item => item.status === "Published" || item.status === "Active" || item.status === "Completed")
+      .slice(0, 8);
+    if (!updates.length) return;
+    document.querySelectorAll("#temple-updates .temple-update-card").forEach((card, index) => {
+      const item = updates[index];
+      if (!item) return;
+      const heading = card.querySelector("h3");
+      const text = card.querySelector("p");
+      const img = card.querySelector("img");
+      if (heading) heading.innerHTML = escapeHTML(item.name || "Temple Update");
+      if (text && item.description) text.textContent = item.description;
+      if (img) {
+        img.src = imageOrDefault(item.image, img.getAttribute("src"));
+        img.alt = item.name || img.alt || "Temple update";
+      }
+    });
+  }
+
+  async function loadPublicSiteContent() {
+    try {
+      const response = await fetch("/api/site-content", { cache: "no-store" });
+      if (!response.ok) return;
+      const content = await response.json();
+      applyJourney(content);
+      applyUpdates(content);
+      document.dispatchEvent(new CustomEvent("bnk:site-content", { detail: content }));
+      window.BNK_SITE_CONTENT = content;
+    } catch {
+      // Keep static content if the server is unavailable.
+    }
+  }
+
+  loadPublicSiteContent();
 })();
 </script>
 
@@ -18546,6 +18994,47 @@ let cart=safeRead('bnk-demo-cart',{}),favs=safeRead('bnk-demo-favs',[]);
 const persist=()=>{try{localStorage.setItem('bnk-demo-cart',JSON.stringify(cart));localStorage.setItem('bnk-demo-favs',JSON.stringify(favs))}catch{}};
 let toastTimer;
 function toast(message){const t=$('#toast');t.textContent=message;t.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.remove('show'),2600)}
+async function loadStorePricing(){
+ try{
+  const response=await fetch('/api/pricing-config',{cache:'no-store'});
+  if(!response.ok)return;
+  const config=await response.json();
+  if(!config.storePrices)return;
+  products.forEach(p=>{const price=Number(config.storePrices[p.id]);if(Number.isSafeInteger(price)&&price>0)p.price=price});
+  renderCategories();renderProducts();renderCart();renderDetail();
+ }catch{
+  // Keep built-in defaults if admin pricing cannot load.
+ }
+}
+function applyStoreContent(content){
+ const items=(content?.records?.store||[]).filter(item=>item.status==='Active');
+ if(!items.length)return;
+ items.forEach((item,index)=>{
+  const id=item.id||('admin-store-'+index);
+  const existing=products.find(p=>p.id===id);
+  const product={
+   id,
+   name:item.name||'Seva Store Product',
+   category:item.category||'Devotional Items',
+   price:Number(item.price)||0,
+   image:item.image||'images/baba-blessings-box.png',
+   desc:item.description||'A seva store offering published by BNK Seva Trust.',
+   inside:[item.name||'Seva Store Product']
+  };
+  if(existing)Object.assign(existing,product);else products.push(product);
+  if(!categories.includes(product.category))categories.push(product.category);
+ });
+ renderCategories();renderProducts();renderCart();renderDetail();
+}
+async function loadStoreContent(){
+ try{
+  const response=await fetch('/api/site-content',{cache:'no-store'});
+  if(!response.ok)return;
+  applyStoreContent(await response.json());
+ }catch{}
+}
+document.addEventListener('bnk:site-content',event=>applyStoreContent(event.detail));
+if(window.BNK_SITE_CONTENT)applyStoreContent(window.BNK_SITE_CONTENT);
 function urlForProduct(id){const url=new URL(window.location.href);url.searchParams.set('product',id);url.hash='#store';return url.pathname+url.search+url.hash}
 function urlForStore(){const url=new URL(window.location.href);url.searchParams.delete('product');url.hash='#store';return url.pathname+url.search+url.hash}
 function renderRoute(animate=true, scrollToStore=false){
@@ -18605,6 +19094,20 @@ function renderCart(){
  $('#cartTotal').textContent=money(entries.reduce((sum,[id,n])=>sum+productById(id).price*n,0));
  $('#cartItems').innerHTML=entries.length?entries.map(([id,n])=>{const p=productById(id);return `<div class="cart-line"><img src="${p.image}" alt=""><div><b>${p.name}</b><div class="muted">${money(p.price)} × ${n}</div><button type="button" data-remove="${id}">Remove</button></div><div><button type="button" data-change="${id}" data-delta="-1" aria-label="Reduce ${p.name}">−</button> ${n} <button type="button" data-change="${id}" data-delta="1" aria-label="Increase ${p.name}">+</button></div></div>`}).join(''):'<p>Your cart is empty.</p>';
 }
+function checkoutCart(){
+ const entries=Object.entries(cart).filter(([id,n])=>n>0&&productById(id));
+ if(!entries.length){toast('Your cart is empty.');return}
+ const total=entries.reduce((sum,[id,n])=>sum+productById(id).price*n,0);
+ const items=entries.map(([id,n])=>`${productById(id).name} x ${n}`).join(', ');
+ drawer(false);
+ document.dispatchEvent(new CustomEvent('bnk:donation-selected',{
+  detail:{
+   category:'Seva Store',
+   amount:total,
+   sevaName:`Seva Store purchase: ${items}`
+  }
+ }));
+}
 function drawer(open){
  $('#shade').classList.toggle('open',open);$('#drawer').classList.toggle('open',open);$('#drawer').setAttribute('aria-hidden',String(!open));document.body.style.overflow=open?'hidden':'';
  if(open){cartReturnFocus=document.activeElement;$('#closeDrawer').focus()}else if(cartReturnFocus?.isConnected){cartReturnFocus.focus()}
@@ -18635,7 +19138,7 @@ $('#shade').addEventListener('click',()=>drawer(false));
 $('#drawer').addEventListener('keydown',e=>{if(e.key!=='Tab')return;const focusable=[...$('#drawer').querySelectorAll('button:not([disabled])')];const first=focusable[0],last=focusable[focusable.length-1];if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus()}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus()}});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&$('#drawer').classList.contains('open'))drawer(false)});
 $('#favsButton').addEventListener('click',()=>{const already=favouriteOnly;favouriteOnly=!already;category='All Products';renderCategories();renderProducts();if(!$('#productPage').hidden)navigateStore();$('#catalog').scrollIntoView({behavior:'smooth',block:'start'});toast(favouriteOnly?'Showing saved favourites':'Showing all products')});
-$('#checkoutButton').addEventListener('click',()=>toast('Checkout disabled: connect a verified payment and fulfilment backend.'));
+$('#checkoutButton').addEventListener('click',checkoutCart);
 $('#impactBtn').addEventListener('click',()=>{tab='impact';renderTab();$('#detailTabs').scrollIntoView({behavior:'smooth',block:'nearest'})});
 $('#taxBtn').addEventListener('click',()=>toast('Add the verified tax policy page URL.'));
 $('#transparencyBtn').addEventListener('click',()=>{location.href='/transparency'});
@@ -18644,7 +19147,7 @@ window.addEventListener('popstate', () => {
   const product = new URL(window.location.href).searchParams.get('product');
   renderRoute(false, Boolean(product));
 });
-renderCategories();renderProducts();renderCart();renderRoute(false,Boolean(new URL(location.href).searchParams.get('product')));
+renderCategories();renderProducts();renderCart();renderRoute(false,Boolean(new URL(location.href).searchParams.get('product')));loadStorePricing();loadStoreContent();
 // Smooth entrance animations, without hiding non-JavaScript content.
 if('IntersectionObserver'in window&&!matchMedia('(prefers-reduced-motion: reduce)').matches){const observer=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');observer.unobserve(e.target)}})},{threshold:.06});root.querySelectorAll('.bnk-store-reveal').forEach((el,i)=>{el.style.transitionDelay=`${Math.min(i,6)*80}ms`;observer.observe(el)})}
 else root.querySelectorAll('.bnk-store-reveal').forEach(el=>el.classList.add('visible'));
@@ -18707,8 +19210,16 @@ else root.querySelectorAll('.bnk-store-reveal').forEach(el=>el.classList.add('vi
 
         <button class="voices-tab active"
           type="button"
-          data-voice-category="beneficiary"
+          data-voice-category="all"
           aria-pressed="true">
+          <span class="voices-tab-icon" aria-hidden="true">❀</span>
+          All
+        </button>
+
+        <button class="voices-tab"
+          type="button"
+          data-voice-category="beneficiary"
+          aria-pressed="false">
           <span class="voices-tab-icon" aria-hidden="true">♧</span>
           Beneficiaries
         </button>
@@ -18833,7 +19344,7 @@ else root.querySelectorAll('.bnk-store-reveal').forEach(el=>el.classList.add('vi
      Replace with approved, genuine testimonials.
   ========================================= */
 
-  const testimonials = [
+  const defaultTestimonials = [
     {
       id: "savitri",
       name: "Savitri Devi",
@@ -18915,6 +19426,9 @@ else root.querySelectorAll('.bnk-store-reveal').forEach(el=>el.classList.add('vi
     },
   ];
 
+  let testimonials = [...defaultTestimonials];
+  let activeCategory = "all";
+
   const categoryNames = {
     beneficiary: "Beneficiary",
     volunteer: "Volunteer",
@@ -18928,6 +19442,13 @@ else root.querySelectorAll('.bnk-store-reveal').forEach(el=>el.classList.add('vi
     donor: "♡",
     community: "♧"
   };
+
+  const adminVoiceCategory = value => ({
+    Beneficiary: "beneficiary",
+    Volunteer: "volunteer",
+    Donor: "donor",
+    "Community Member": "community"
+  }[value] || "community");
 
   /* =========================================
      DOM ELEMENTS
@@ -19091,7 +19612,7 @@ else root.querySelectorAll('.bnk-store-reveal').forEach(el=>el.classList.add('vi
   function renderCards() {
     const fragment = document.createDocumentFragment();
 
-    testimonials.forEach((item, index) => {
+    getFilteredTestimonials().forEach((item, index) => {
       fragment.appendChild(createCard(item, index));
     });
 
@@ -19114,7 +19635,7 @@ else root.querySelectorAll('.bnk-store-reveal').forEach(el=>el.classList.add('vi
   function getMaxIndex() {
     return Math.max(
       0,
-      testimonials.length - getVisibleCount()
+      getFilteredTestimonials().length - getVisibleCount()
     );
   }
 
@@ -19166,8 +19687,8 @@ else root.querySelectorAll('.bnk-store-reveal').forEach(el=>el.classList.add('vi
       `Showing testimonials ${currentIndex + 1} to ` +
       `${Math.min(
         currentIndex + visibleCount,
-        testimonials.length
-      )} of ${testimonials.length}`;
+        getFilteredTestimonials().length
+      )} of ${getFilteredTestimonials().length}`;
   }
 
   /* =========================================
@@ -19225,12 +19746,9 @@ else root.querySelectorAll('.bnk-store-reveal').forEach(el=>el.classList.add('vi
   ========================================= */
 
   function syncTabs() {
-    const category =
-      testimonials[currentIndex]?.category;
-
     tabs.forEach(tab => {
       const active =
-        tab.dataset.voiceCategory === category;
+        tab.dataset.voiceCategory === activeCategory;
 
       tab.classList.toggle("active", active);
       tab.setAttribute(
@@ -19242,15 +19760,10 @@ else root.querySelectorAll('.bnk-store-reveal').forEach(el=>el.classList.add('vi
 
   tabs.forEach(tab => {
     tab.addEventListener("click", () => {
-      const category = tab.dataset.voiceCategory;
-
-      const index = testimonials.findIndex(
-        item => item.category === category
-      );
-
-      if (index >= 0) {
-        goTo(index);
-      }
+      activeCategory = tab.dataset.voiceCategory;
+      renderCards();
+      renderDots();
+      goTo(0);
 
       restartAutoplay();
     });
@@ -19449,9 +19962,55 @@ else root.querySelectorAll('.bnk-store-reveal').forEach(el=>el.classList.add('vi
     section.classList.add("voices-in-view");
   }
 
+  function getFilteredTestimonials() {
+    return activeCategory === "all"
+      ? testimonials
+      : testimonials.filter(
+      item => item.category === activeCategory
+    );
+  }
+
+  function applyAdminVoices(content) {
+    const published = (content?.records?.stories || [])
+      .filter(item => item.status === "Published")
+      .map((item, index) => {
+        const category = adminVoiceCategory(item.category);
+        return {
+          id: item.id || `admin-voice-${index}`,
+          name: item.name || categoryNames[category],
+          role: categoryNames[category],
+          category,
+          quote: item.quote || "A published voice from BNK Seva Trust.",
+          image: item.image || "",
+          video: null
+        };
+      });
+
+    testimonials = [...defaultTestimonials, ...published];
+    renderCards();
+    renderDots();
+    goTo(0);
+    restartAutoplay();
+  }
+
+  document.addEventListener("bnk:site-content", event => {
+    applyAdminVoices(event.detail);
+  });
+
+  async function loadAdminVoices() {
+    try {
+      const response = await fetch("/api/site-content", { cache: "no-store" });
+      if (!response.ok) return;
+      applyAdminVoices(await response.json());
+    } catch {
+      // Keep the built-in voices if public content is unavailable.
+    }
+  }
+
   renderCards();
   renderDots();
   goTo(0);
+  loadAdminVoices();
 
   if (
     !reduceMotion &&
@@ -19531,7 +20090,7 @@ else root.querySelectorAll('.bnk-store-reveal').forEach(el=>el.classList.add('vi
 
 <section class="bnk-volunteer" id="join-seva"
   aria-labelledby="volunteer-heading"
-  data-submit-url="">
+  data-submit-url="/api/public-submissions/volunteer">
 
   <!-- SVG ICON LIBRARY -->
   <svg xmlns="http://www.w3.org/2000/svg"
@@ -19988,7 +20547,9 @@ else root.querySelectorAll('.bnk-store-reveal').forEach(el=>el.classList.add('vi
   ];
 
   const form = document.getElementById("bnkVolunteerForm");
+  const formCard = section.querySelector(".bnk-volunteer-form-card");
   const areaSelect = document.getElementById("volArea");
+  const nameInput = document.getElementById("volName");
   const phoneInput = document.getElementById("volPhone");
   const submitButton =
     document.getElementById("bnkVolunteerSubmit");
@@ -20019,6 +20580,15 @@ else root.querySelectorAll('.bnk-store-reveal').forEach(el=>el.classList.add('vi
       areaSelect.value = card.dataset.area;
 
       syncSelectedCard();
+
+      formCard?.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+      });
+
+      window.setTimeout(() => {
+        nameInput?.focus({ preventScroll: true });
+      }, 420);
 
       // Light interaction when selected.
       if (
@@ -20226,7 +20796,12 @@ else root.querySelectorAll('.bnk-store-reveal').forEach(el=>el.classList.add('vi
     form.setAttribute("aria-busy", "true");
 
     try {
-      const response = await fetch(endpoint, {
+      const submitUrl =
+        window.location.protocol === "file:"
+          ? `http://127.0.0.1:3000${endpoint}`
+          : endpoint;
+
+      const response = await fetch(submitUrl, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -20236,11 +20811,8 @@ else root.querySelectorAll('.bnk-store-reveal').forEach(el=>el.classList.add('vi
         body: JSON.stringify(application)
       });
 
-      if (!response.ok) {
-        throw new Error(
-          "Registration request failed."
-        );
-      }
+      const result = await response.json().catch(() => ({}));
+      if (!response.ok) throw new Error(result.error || "Registration request failed.");
 
       showFeedback(
         "Thank you for your interest in volunteering. " +
@@ -20253,8 +20825,8 @@ else root.querySelectorAll('.bnk-store-reveal').forEach(el=>el.classList.add('vi
 
     } catch (error) {
       showFeedback(
-        "We couldn't submit your registration. " +
-        "Please try again later.",
+        error.message ||
+        "We couldn't submit your registration. Please try again later.",
         "error"
       );
 
@@ -20319,6 +20891,26 @@ else root.querySelectorAll('.bnk-store-reveal').forEach(el=>el.classList.add('vi
     </div>
   </div>
 </section>
+<div class="csr-modal" id="sevaPartnerModal" role="dialog" aria-modal="true" aria-labelledby="sevaPartnerFormTitle" hidden>
+  <div class="csr-modal-dialog">
+    <button class="csr-modal-close" type="button" id="closeSevaPartnerForm" aria-label="Close Seva Partner form">×</button>
+    <h3 id="sevaPartnerFormTitle">Seva Partner Details</h3>
+    <p class="csr-modal-intro">Share your details so the BNK Seva Trust team can confirm your monthly seva support.</p>
+    <form class="csr-partner-form" id="sevaPartnerForm">
+      <div class="csr-form-grid">
+        <label class="csr-form-field">Name<input type="text" name="name" autocomplete="name" required></label>
+        <label class="csr-form-field">Email<input type="email" name="email" autocomplete="email" required></label>
+        <label class="csr-form-field">Phone<input type="tel" name="phone" autocomplete="tel" required></label>
+        <label class="csr-form-field">City<input type="text" name="city" autocomplete="address-level2"></label>
+      </div>
+      <input type="hidden" name="amount" id="sevaPartnerFormAmount">
+      <div class="csr-form-actions">
+        <button class="csr-form-submit" type="submit">Submit Details</button>
+      </div>
+      <p class="csr-form-status" id="sevaPartnerFormStatus" role="status" hidden></p>
+    </form>
+  </div>
+</div>
 <script>
 (() => {
   const section = document.getElementById('seva-partner');
@@ -20328,7 +20920,34 @@ else root.querySelectorAll('.bnk-store-reveal').forEach(el=>el.classList.add('vi
   const customInput = section.querySelector('#bnkPartnerCustomAmount');
   const button = section.querySelector('#bnkPartnerJoin');
   const status = section.querySelector('#bnkPartnerStatus');
+  const modal = document.getElementById('sevaPartnerModal');
+  const partnerForm = document.getElementById('sevaPartnerForm');
+  const closePartnerForm = document.getElementById('closeSevaPartnerForm');
+  const partnerAmountInput = document.getElementById('sevaPartnerFormAmount');
+  const partnerFormStatus = document.getElementById('sevaPartnerFormStatus');
   let selected = '501';
+  let lastFocused = null;
+  const formatPartnerAmount = (amount) => '₹' + Number(amount).toLocaleString('en-IN');
+
+  async function loadPartnerPricing() {
+    try {
+      const response = await fetch('/api/pricing-config', { cache: 'no-store' });
+      if (!response.ok) return;
+      const config = await response.json();
+      if (!Array.isArray(config.sevaPartnerAmounts)) return;
+      const amounts = config.sevaPartnerAmounts.filter((amount) => Number.isSafeInteger(Number(amount)) && Number(amount) > 0);
+      options.filter((option) => option.dataset.monthly !== 'custom').forEach((option, index) => {
+        const amount = amounts[index];
+        if (!amount) return;
+        option.dataset.monthly = String(amount);
+        option.querySelector('strong').textContent = formatPartnerAmount(amount);
+      });
+      const active = options.find((option) => option.classList.contains('is-active') && option.dataset.monthly !== 'custom');
+      if (active) selected = active.dataset.monthly;
+    } catch {
+      // Keep built-in defaults if admin pricing cannot load.
+    }
+  }
 
   options.forEach(option => option.addEventListener('click', () => {
     selected = option.dataset.monthly;
@@ -20342,6 +20961,13 @@ else root.querySelectorAll('.bnk-store-reveal').forEach(el=>el.classList.add('vi
     if (selected === 'custom') customInput.focus();
   }));
 
+  const closeModal = () => {
+    modal.hidden = true;
+    modal.classList.remove('is-open');
+    document.body.style.overflow = '';
+    lastFocused?.focus?.();
+  };
+
   button.addEventListener('click', () => {
     const amount = selected === 'custom' ? Number(customInput.value) : Number(selected);
     if (!Number.isSafeInteger(amount) || amount < 1) {
@@ -20351,16 +20977,55 @@ else root.querySelectorAll('.bnk-store-reveal').forEach(el=>el.classList.add('vi
       return;
     }
     customInput.setCustomValidity('');
-    document.dispatchEvent(new CustomEvent('bnk:donation-selected', {
-      detail: {
-        category: 'General Donation',
-        amount,
-        sevaName: `Seva Partner monthly support - ₹${amount.toLocaleString('en-IN')}/month`
-      }
-    }));
+    partnerAmountInput.value = String(amount);
+    partnerFormStatus.hidden = true;
+    partnerFormStatus.textContent = '';
+    lastFocused = document.activeElement;
+    modal.hidden = false;
+    modal.classList.add('is-open');
+    document.body.style.overflow = 'hidden';
+    partnerForm.querySelector('input')?.focus();
     status.hidden = true;
   });
+  closePartnerForm?.addEventListener('click', closeModal);
+  modal?.addEventListener('click', event => { if (event.target === modal) closeModal(); });
+  partnerForm?.addEventListener('submit', async event => {
+    event.preventDefault();
+    if (!partnerForm.reportValidity()) return;
+    const payload = Object.fromEntries(new FormData(partnerForm).entries());
+    payload.amount = Number(payload.amount);
+    const submit = partnerForm.querySelector('.csr-form-submit');
+    submit.disabled = true;
+    submit.textContent = 'Submitting...';
+    try {
+      const endpoint = '/api/public-submissions/partner';
+      const response = await fetch(window.location.protocol === 'file:' ? `http://127.0.0.1:3000${endpoint}` : endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      const result = await response.json().catch(() => ({}));
+      if (!response.ok) throw new Error(result.error || 'Could not submit partner details.');
+      const paymentDetails = {
+        category: 'Seva Partner',
+        amount: payload.amount,
+        sevaName: `Monthly Seva Partner contribution (${formatPartnerAmount(payload.amount)})`
+      };
+      partnerForm.reset();
+      partnerFormStatus.textContent = 'Thank you. Your Seva Partner details have been received.';
+      partnerFormStatus.hidden = false;
+      closeModal();
+      document.dispatchEvent(new CustomEvent('bnk:donation-selected', { detail: paymentDetails }));
+    } catch (error) {
+      partnerFormStatus.textContent = error.message;
+      partnerFormStatus.hidden = false;
+    } finally {
+      submit.disabled = false;
+      submit.textContent = 'Submit Details';
+    }
+  });
   customInput.addEventListener('input', () => { customInput.setCustomValidity(''); status.hidden = true; });
+  loadPartnerPricing();
 })();
 </script>
 
@@ -20403,10 +21068,10 @@ else root.querySelectorAll('.bnk-store-reveal').forEach(el=>el.classList.add('vi
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 12h6l2.1 2.1a2 2 0 0 0 2.8 0L16.5 12h4a1.5 1.5 0 0 0 1.5-1.5V6a1.5 1.5 0 0 0-1.5-1.5h-4.4l-2.2-2.2a2 2 0 0 0-2.8 0L8.9 4.5H3.5A1.5 1.5 0 0 0 2 6v4.5A1.5 1.5 0 0 0 3.5 12Zm0 2.5h6.6l2.1 2.1a2 2 0 0 0 2.8 0l2.1-2.1h3.4a1.5 1.5 0 0 1 1.5 1.5V18a1.5 1.5 0 0 1-1.5 1.5H17l-2.2 2.2a2 2 0 0 1-2.8 0L9.8 19.5H3.5A1.5 1.5 0 0 1 2 18v-2a1.5 1.5 0 0 1 1.5-1.5Z" fill="currentColor"/></svg>
           Become a CSR Partner
         </button>
-        <a class="csr-button csr-button-secondary" href="downloads/bnk-csr-proposal-outline.html" download>
+        <button class="csr-button csr-button-secondary" type="button" id="downloadCsrProposal">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3.5h5.8L19 8.7V20a1.5 1.5 0 0 1-1.5 1.5h-11A1.5 1.5 0 0 1 5 20V5A1.5 1.5 0 0 1 6.5 3.5H8Zm5.5.8V9h4.7" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M12 11v6m0 0-2.4-2.4M12 17l2.4-2.4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
           Download CSR Proposal
-        </a>
+        </button>
       </div>
     </div>
   </div>
@@ -20486,6 +21151,7 @@ else root.querySelectorAll('.bnk-store-reveal').forEach(el=>el.classList.add('vi
   }
 
   const openButton = document.getElementById("openCsrPartnerForm");
+  const proposalButton = document.getElementById("downloadCsrProposal");
   const modal = document.getElementById("csrPartnerModal");
   const closeButton = document.getElementById("closeCsrPartnerForm");
   const form = document.getElementById("csrPartnerForm");
@@ -20512,6 +21178,7 @@ else root.querySelectorAll('.bnk-store-reveal').forEach(el=>el.classList.add('vi
   };
 
   openButton?.addEventListener("click", openModal);
+  proposalButton?.addEventListener("click", openModal);
   closeButton?.addEventListener("click", closeModal);
   modal?.addEventListener("click", event => {
     if (event.target === modal) closeModal();
@@ -20521,18 +21188,33 @@ else root.querySelectorAll('.bnk-store-reveal').forEach(el=>el.classList.add('vi
     if (event.key === "Escape" && modal && !modal.hidden) closeModal();
   });
 
-  form?.addEventListener("submit", event => {
+  form?.addEventListener("submit", async event => {
     event.preventDefault();
     if (!form.reportValidity()) return;
 
     const data = Object.fromEntries(new FormData(form).entries());
-    const submissions = JSON.parse(localStorage.getItem("bnk-csr-partner-requests") || "[]");
-    submissions.push({ ...data, submittedAt: new Date().toISOString() });
-    localStorage.setItem("bnk-csr-partner-requests", JSON.stringify(submissions));
-
-    form.reset();
-    status.textContent = "Thank you. Your CSR partnership details have been recorded.";
-    status.hidden = false;
+    const submit = form.querySelector(".csr-form-submit");
+    submit.disabled = true;
+    submit.textContent = "Submitting...";
+    try {
+      const endpoint = "/api/public-submissions/csr";
+      const response = await fetch(window.location.protocol === "file:" ? `http://127.0.0.1:3000${endpoint}` : endpoint, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "Accept": "application/json" },
+        body: JSON.stringify(data)
+      });
+      const result = await response.json().catch(() => ({}));
+      if (!response.ok) throw new Error(result.error || "Could not submit CSR details.");
+      form.reset();
+      status.textContent = "Thank you. Your CSR partnership details have been received.";
+      status.hidden = false;
+    } catch (error) {
+      status.textContent = error.message;
+      status.hidden = false;
+    } finally {
+      submit.disabled = false;
+      submit.textContent = "Submit Details";
+    }
   });
 })();
 </script>
@@ -21004,7 +21686,7 @@ else root.querySelectorAll('.bnk-store-reveal').forEach(el=>el.classList.add('vi
           <div class="bnk-footer-socials">
 
             <!-- INSTAGRAM -->
-            <a href="https://www.instagram.com/"
+            <a href="https://www.instagram.com/bnksevatrust/"
               target="_blank"
               rel="noopener noreferrer"
               aria-label="Instagram"
@@ -21026,7 +21708,7 @@ else root.querySelectorAll('.bnk-store-reveal').forEach(el=>el.classList.add('vi
             </a>
 
             <!-- FACEBOOK -->
-            <a href="https://www.facebook.com/"
+            <a href="https://www.facebook.com/people/BNK-Seva-Trust/61586156206775/"
               target="_blank"
               rel="noopener noreferrer"
               aria-label="Facebook"
@@ -21040,29 +21722,8 @@ else root.querySelectorAll('.bnk-store-reveal').forEach(el=>el.classList.add('vi
               </svg>
             </a>
 
-            <!-- YOUTUBE -->
-            <a href="https://www.youtube.com/"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="YouTube"
-              class="bnk-footer-social">
-
-              <svg viewBox="0 0 24 24"
-                fill="none"
-                aria-hidden="true">
-
-                <rect x="2" y="5"
-                  width="20" height="14"
-                  rx="4"/>
-
-                <path d="M10 8.5 16 12l-6 3.5Z"
-                  fill="currentColor"
-                  stroke="none"/>
-              </svg>
-            </a>
-
             <!-- WHATSAPP -->
-            <a href="https://www.whatsapp.com/"
+            <a href="https://wa.me/918910638382"
               target="_blank"
               rel="noopener noreferrer"
               aria-label="WhatsApp"
@@ -21075,21 +21736,6 @@ else root.querySelectorAll('.bnk-store-reveal').forEach(el=>el.classList.add('vi
                 <path d="M20 11.5a8 8 0 0 1-11.7 7.1L4 20l1.4-4.1A8 8 0 1 1 20 11.5Z"/>
 
                 <path d="M9 8c-.5 0-1 .8-1 1.5 0 2.7 3.7 6.3 6.5 6.3.9 0 1.8-.7 1.8-1.2 0-.3-1.7-1.2-2-1.2-.4 0-.7 1-1.2 1-.8 0-3.4-2.5-3.4-3.3 0-.4.9-.8.9-1.2 0-.3-1-1.9-1.6-1.9Z"/>
-              </svg>
-            </a>
-
-            <!-- LINKEDIN -->
-            <a href="https://www.linkedin.com/"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="LinkedIn"
-              class="bnk-footer-social">
-
-              <svg viewBox="0 0 24 24"
-                fill="currentColor"
-                aria-hidden="true">
-
-                <path d="M5.1 8.5H2.3V21h2.8V8.5ZM3.7 3a1.6 1.6 0 1 0 0 3.2 1.6 1.6 0 0 0 0-3.2ZM21 13.8c0-3.4-1.8-5-4.2-5-2 0-2.9 1.1-3.4 1.9V8.5h-2.8V21h2.8v-6.9c0-1.8.4-3 2.3-3 1.8 0 2.4 1.3 2.4 3.1V21H21v-7.2Z"/>
               </svg>
             </a>
 
@@ -21116,25 +21762,10 @@ else root.querySelectorAll('.bnk-store-reveal').forEach(el=>el.classList.add('vi
                 </svg>
               </span>
 
-              <span>Trust Office</span>
+              <span>BNK Seva Trust</span>
             </div>
 
-            <!-- EMAIL -->
-            <div class="bnk-footer-contact-item">
-
-              <span class="bnk-footer-contact-icon">
-                <svg viewBox="0 0 24 24"
-                  fill="none" aria-hidden="true">
-                  <rect x="3" y="5" width="18"
-                    height="14" rx="2"/>
-                  <path d="m4 7 8 6 8-6"/>
-                </svg>
-              </span>
-
-              <!-- Replace with verified email -->
-              <a href="mailto:info@bnkseva.org">
-                info@bnkseva.org
-              </a>
+     
             </div>
 
             <!-- PHONE -->
@@ -21149,8 +21780,8 @@ else root.querySelectorAll('.bnk-store-reveal').forEach(el=>el.classList.add('vi
               </span>
 
               <!-- Replace with verified phone -->
-              <a href="tel:+919876543210">
-                +91 98765 43210
+              <a href="tel:+918910638382">
+                +91 89106 38382
               </a>
             </div>
 

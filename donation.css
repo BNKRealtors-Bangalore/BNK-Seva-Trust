@@ -1,5 +1,6 @@
 .bnk-donation-dialog[hidden],
-.bnk-donation-receipt[hidden] {
+.bnk-donation-receipt[hidden],
+.bnk-donation-qr[hidden] {
   display: none;
 }
 
@@ -132,7 +133,8 @@
 
 .bnk-donation-submit,
 .bnk-donation-print,
-.bnk-certificate-download {
+.bnk-certificate-download,
+.bnk-donation-paid {
   min-height: 40px;
   padding: 0 16px;
   border: 1px solid #884b34;
@@ -154,11 +156,78 @@
   opacity: 0.62;
 }
 
+.bnk-donation-paid:disabled {
+  cursor: wait;
+  opacity: 0.62;
+}
+
 .bnk-donation-legal {
   margin: 10px 0 0;
   color: #756b60;
   font-size: 9px;
   line-height: 1.4;
+}
+
+.bnk-donation-qr {
+  margin-top: 16px;
+  padding: 15px;
+  border: 1px solid #e5d7c5;
+  background: #fff8ee;
+  text-align: center;
+}
+
+.bnk-donation-qr h3 {
+  margin: 0 0 6px;
+  color: #800b23;
+  font: 600 24px/1.1 var(--serif, Georgia, serif);
+}
+
+.bnk-donation-qr-summary {
+  margin: 0 0 12px;
+  color: #5e5148;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.bnk-donation-qr img {
+  width: min(100%, 310px);
+  height: auto;
+  display: block;
+  margin: 0 auto;
+  border: 1px solid #eadcc9;
+  background: #fff;
+}
+
+.bnk-donation-qr-note {
+  max-width: 430px;
+  margin: 12px auto 10px;
+  color: #756b60;
+  font-size: 11px;
+  line-height: 1.45;
+}
+
+.bnk-donation-qr-open {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 36px;
+  padding: 0 14px;
+  border: 1px solid #884b34;
+  color: #884b34;
+  font: 700 10px var(--sans, Arial, sans-serif);
+  letter-spacing: 0.08em;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+.bnk-donation-reference {
+  max-width: 430px;
+  margin: 12px auto 0;
+  text-align: left;
+}
+
+.bnk-donation-qr-actions {
+  justify-content: center;
 }
 
 .bnk-receipt-heading {
