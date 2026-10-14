@@ -18956,8 +18956,10 @@ section[id]:not(#home), #footer-contact {
 </div>
 <div class="product-page" hidden="" id="productPage"><nav aria-label="Store navigation" class="product-navigation"><button class="btn outline store-back" id="backToStore" type="button">← BACK TO STORE</button><span class="product-route-name" id="productRouteName">BNK Seva Store / Product</span></nav>
 <section class="panel detail bnk-store-reveal" id="productDetail"><div class="detail-media"><div class="thumbs" id="detailThumbs"></div><div class="main-photo"><img alt="Product preview" id="detailMainImage"/></div></div><div class="detail-copy"><div class="crumb">Home › BNK Seva Store › <span id="detailCrumb">Gift Boxes</span></div><h2 class="detail-title" id="detailTitle"></h2><p id="detailDescription"></p><div class="rating">✦ Devotional essentials · Curated gifting</div><div class="detail-price" id="detailPrice"></div><div class="muted">Illustrative price. Tax and shipping calculated at checkout.</div><div class="qty-row"><span class="muted">Quantity</span><div class="qty"><button aria-label="Decrease quantity" id="quantityMinus">−</button><span id="quantityValue">1</span><button aria-label="Increase quantity" id="quantityPlus">+</button></div></div><button class="btn detail-add" id="addSelected">ADD TO CART →</button><div class="trust-icons"><span>♡ Purpose-led</span><span>♢ Transparent reporting</span><span>↗ Delivery information</span></div></div></section>
+<!-- Store product detail tabs and disclosure panels are kept here for later work.
 <section class="panel info-tabs bnk-store-reveal"><div class="tabs" id="detailTabs"><button class="tab" data-tab="overview">Overview</button><button class="tab active" data-tab="inside">What's Inside</button><button class="tab" data-tab="impact">Impact &amp; Utilisation</button><button class="tab" data-tab="shipping">Shipping &amp; Returns</button></div><div class="tab-content" id="tabContent"></div></section>
 <div class="right-bottom"><section class="panel text-panel side-banner bnk-store-reveal"><h3>How Your Purchase Supports Seva</h3><p>Each product should disclose how sale proceeds are handled, including any operational costs and the amount, if any, allocated to charitable work.</p><div class="label-row"><span class="dot">♧</span><b>Temple Project</b> — construction activities</div><div class="label-row"><span class="dot">♡</span><b>Food Seva</b> — meals and support</div><div class="label-row"><span class="dot">✚</span><b>Healthcare</b> — medical assistance</div><button class="btn outline" id="impactBtn">IMPACT INFORMATION →</button></section><section class="panel text-panel bnk-store-reveal"><h3>Transparency You Can Trust</h3><p>Make financial disclosures, published reports and donation-utilisation information available in your Transparency Centre.</p><button class="btn outline" id="transparencyBtn">VIEW TRANSPARENCY CENTRE →</button><h3 style="margin-top:20px">Tax Information</h3><p>Product purchases and charitable donations may be treated differently for tax purposes. Display the verified GST, invoicing and exemption position here.</p><button class="btn outline" id="taxBtn">VIEW TAX DETAILS →</button></section></div>
+-->
 </div>
 </div>
   <div class="shade" id="shade"></div>
@@ -19079,13 +19081,15 @@ function renderDetail(){
 }
 function renderTab(){
  const p=productById(selected);
+ const tabContent=$('#tabContent');
+ if(!p||!tabContent)return;
  root.querySelectorAll('.tab').forEach(b=>{const active=b.dataset.tab===tab;b.classList.toggle('active',active);b.setAttribute('aria-selected',String(active))});
  let html='';
  if(tab==='inside')html=`<div class="inside-grid">${p.inside.map((x,i)=>`<div class="inside-item"><span class="item-symbol" aria-hidden="true">${['✦','❀','☼','♧','♡','✧'][i%6]}</span><span>${x}</span></div>`).join('')}</div>`;
  else if(tab==='overview')html=`<p>${p.desc}</p><p>Product details, dimensions, materials and origin must be confirmed before publication.</p>`;
  else if(tab==='impact')html='<p><strong>How sale proceeds are handled:</strong> The allocation of proceeds, related operational costs and any charitable transfer amounts have not yet been verified or configured. Publish accurate information here before accepting orders. A product purchase is not automatically a charitable donation.</p>';
  else html='<p>Shipping charges, dispatch timelines, cancellation, returns, refund policy and store contact information must be added before real checkout is enabled.</p>';
- $('#tabContent').innerHTML=html;
+ tabContent.innerHTML=html;
 }
 function addCart(id,qty=1){cart[id]=(cart[id]||0)+qty;persist();renderCart();toast('Added to cart')}
 function renderCart(){
@@ -19139,9 +19143,9 @@ $('#drawer').addEventListener('keydown',e=>{if(e.key!=='Tab')return;const focusa
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&$('#drawer').classList.contains('open'))drawer(false)});
 $('#favsButton').addEventListener('click',()=>{const already=favouriteOnly;favouriteOnly=!already;category='All Products';renderCategories();renderProducts();if(!$('#productPage').hidden)navigateStore();$('#catalog').scrollIntoView({behavior:'smooth',block:'start'});toast(favouriteOnly?'Showing saved favourites':'Showing all products')});
 $('#checkoutButton').addEventListener('click',checkoutCart);
-$('#impactBtn').addEventListener('click',()=>{tab='impact';renderTab();$('#detailTabs').scrollIntoView({behavior:'smooth',block:'nearest'})});
-$('#taxBtn').addEventListener('click',()=>toast('Add the verified tax policy page URL.'));
-$('#transparencyBtn').addEventListener('click',()=>{location.href='/transparency'});
+$('#impactBtn')?.addEventListener('click',()=>{tab='impact';renderTab();$('#detailTabs')?.scrollIntoView({behavior:'smooth',block:'nearest'})});
+$('#taxBtn')?.addEventListener('click',()=>toast('Add the verified tax policy page URL.'));
+$('#transparencyBtn')?.addEventListener('click',()=>{location.href='/transparency'});
 window.BNKStoreSyncSection = () => renderRoute(false, false);
 window.addEventListener('popstate', () => {
   const product = new URL(window.location.href).searchParams.get('product');
