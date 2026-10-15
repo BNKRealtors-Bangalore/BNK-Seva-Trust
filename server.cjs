@@ -6,6 +6,9 @@ const http = require("node:http");
 const path = require("node:path");
 const { createDatabase } = require("./database.cjs");
 const nodemailer = require("nodemailer");
+const {publicContent,securitySchema,createSecurity,securityHeaders}=require("./security.cjs");
+const { purchaseSchema, createPurchaseService } = require("./purchases.cjs");
+const { certificateSchema, createCertificateService } = require("./certificates.cjs");
 
 const root = __dirname;
 
@@ -384,7 +387,8 @@ function sanitizeSiteRecord(record = {}) {
       clean[key] = cleanText(value, key === "quote" || key === "description" || key === "notes" ? 1000 : 220);
     }
   }
-  clean.id = clean.id || `rec_${crypto.randomUUID()}`;
+  if(clean.image&&!/^(?:https:\/\/|\/?(?:images|uploads)\/)/i.test(clean.image))clean.image="";
+  clean.id = /^[A-Za-z0-9_-]{1,100}$/.test(clean.id||"")?clean.id:`rec_${crypto.randomUUID()}`;
   return clean;
 }
 
@@ -395,6 +399,7 @@ function sanitizeSiteContent(input = {}) {
       ? input.records[key].slice(0, 200).map(sanitizeSiteRecord)
       : [];
   }
+  records.users=[];
   records.csr = records.csr.map((record) => ({
     ...record,
     organisation: record.organisation || record.name || "",
@@ -540,14 +545,12 @@ async function appendPublicSubmission(type, input = {}) {
 }
 
 async function isAuthorizedAdmin(request) {
-  const expected = process.env.ADMIN_KEY;
-  if (expected && (request.headers.authorization === `Bearer ${expected}` || request.headers["x-admin-key"] === expected)) return true;
   return Boolean(await getSessionUser(request, ["Admin", "Editor"]));
 }
 
 function hashPassword(password, salt = crypto.randomBytes(16).toString("hex")) {
-  const hash = crypto.pbkdf2Sync(String(password), salt, 120000, 32, "sha256").toString("hex");
-  return `pbkdf2_sha256$120000$${salt}$${hash}`;
+  const hash = crypto.pbkdf2Sync(String(password), salt, 600000, 32, "sha256").toString("hex");
+  return ["pbkdf2_sha256",600000,salt,hash].join("$");
 }
 
 function verifyPassword(password, encoded) {
@@ -592,6 +595,9 @@ let initialization;
 function initialize() {
   if (!initialization) initialization = (async () => {
     await database.exec(schema);
+    await database.exec(purchaseSchema);
+    await database.exec(certificateSchema);
+    await database.exec(securitySchema);
     await database.transaction(() => ensureInitialAdminUser());
   })().catch(error => { initialization = null; throw error; });
   return initialization;
@@ -600,7 +606,7 @@ function initialize() {
 function getCookie(request, name) {
   const cookies = String(request.headers.cookie || "").split(";").map((entry) => entry.trim());
   const pair = cookies.find((entry) => entry.startsWith(`${name}=`));
-  return pair ? decodeURIComponent(pair.slice(name.length + 1)) : "";
+  try{return pair ? decodeURIComponent(pair.slice(name.length + 1)) : "";}catch{return "";}
 }
 
 function sessionCookie(token, expires) {
@@ -638,7 +644,7 @@ const uploadTypes = new Map([
   ["image/jpeg", ".jpg"],
   ["image/png", ".png"],
   ["image/webp", ".webp"],
-  ["image/svg+xml", ".svg"]
+
 ]);
 
 function validateDonation(input) {
@@ -714,7 +720,7 @@ async function readBody(request) {
 }
 
 async function readJSON(request) {
-  if (request.body && typeof request.body === "object" && !Buffer.isBuffer(request.body)) return request.body;
+  if (request.body && typeof request.body === "object" && !Buffer.isBuffer(request.body)){if(Buffer.byteLength(JSON.stringify(request.body))>maxBodyBytes)throw new Error("Request is too large.");return request.body;}
   const body = await readBody(request);
   try {
     return JSON.parse(body.toString("utf8"));
@@ -758,8 +764,10 @@ async function handleAdminImageUpload(request, response) {
   try {
     const file = parseMultipartFile(await readBody(request), request.headers["content-type"]);
     const extension = uploadTypes.get(file.contentType);
-    if (!extension) throw new Error("Upload a JPG, PNG, WebP or SVG image.");
+    if (!extension) throw new Error("Upload a JPG, PNG or WebP image.");
     if (!file.data.length || file.data.length > 5 * 1024 * 1024) throw new Error("Image must be 5 MB or smaller.");
+    const validImage=file.contentType==="image/png"?file.data.subarray(0,8).equals(Buffer.from("89504e470d0a1a0a","hex")):file.contentType==="image/jpeg"?file.data.subarray(0,3).equals(Buffer.from("ffd8ff","hex")):file.data.subarray(0,4).toString()==="RIFF"&&file.data.subarray(8,12).toString()==="WEBP";
+    if(!validImage)throw new Error("The file contents do not match the selected image type.");
     const filename = `${Date.now()}-${crypto.randomUUID()}${extension}`;
     if (process.env.VERCEL || process.env.BLOB_READ_WRITE_TOKEN || process.env.BLOB_STORE_ID) {
       if (!process.env.BLOB_READ_WRITE_TOKEN && !(process.env.BLOB_STORE_ID && process.env.VERCEL_OIDC_TOKEN)) throw new Error("Connect a public Vercel Blob store to this project and redeploy to enable image uploads.");
@@ -781,10 +789,12 @@ async function handleAdminLogin(request, response) {
   const email = cleanText(input.email, 254).toLowerCase();
   const password = String(input.password || "");
   const user = (await database.prepare("SELECT * FROM admin_users WHERE email = ? AND status = 'Active'").get(email));
-  if (!user || !verifyPassword(password, user.password_hash)) {
+  const passwordValid=verifyPassword(password,user?.password_hash||"pbkdf2_sha256$600000$00000000000000000000000000000000$"+"0".repeat(64));
+  if (!user || !passwordValid) {
     sendJSON(response, 401, { error: "Invalid email or password." });
     return;
   }
+  if(Number(user.password_hash.split("$")[1])<600000)await database.prepare("UPDATE admin_users SET password_hash=? WHERE id=?").run(hashPassword(password),user.id);
   const token = crypto.randomBytes(32).toString("base64url");
   const expires = new Date(Date.now() + 1000 * 60 * 60 * 8);
   (await database.prepare(`
@@ -1115,10 +1125,18 @@ function contentType(filePath) {
   })[path.extname(filePath).toLowerCase()] || "application/octet-stream";
 }
 
+const security=createSecurity({database});
+const certificateService=createCertificateService({database,getSiteContent,getSessionUser,sendJSON});
+const purchaseService=createPurchaseService({database,getSiteContent,getPricingConfig,getSessionUser,readJSON,sendJSON});
+
 async function handleRequest(request, response) {
   const url = new URL(request.url, "http://localhost");
   try {
+    for(const [name,value]of Object.entries(securityHeaders))response.setHeader(name,value);
     await initialize();
+    if(!await security.guard(request,response,url))return;
+    if(await purchaseService.handle(request,response,url)) return;
+    if(await certificateService.handle(request,response,url)) return;
     if (url.pathname === "/api/health" && request.method === "GET") {
       sendJSON(response, 200, { ok: true });
       return;
@@ -1190,7 +1208,7 @@ async function handleRequest(request, response) {
       return;
     }
     if (url.pathname === "/api/site-content" && request.method === "GET") {
-      sendJSON(response, 200, await getSiteContent());
+      sendJSON(response, 200, publicContent(await getSiteContent()));
       return;
     }
     const publicSubmissionMatch = url.pathname.match(/^\/api\/public-submissions\/(csr|partner|volunteer|donation)$/);
@@ -1210,12 +1228,20 @@ async function handleRequest(request, response) {
       sendJSON(response, 200, await savePricingConfig(await readJSON(request)));
       return;
     }
+    if(url.pathname==="/api/admin/site-content"&&request.method==="GET"){
+      if(!await getSessionUser(request)){sendJSON(response,401,{error:"Login required."});return;}
+      sendJSON(response,200,await getSiteContent());return;
+    }
     if (url.pathname === "/api/admin/site-content" && request.method === "PUT") {
       if (!await isAuthorizedAdmin(request)) {
         sendJSON(response, 401, { error: "Admin key required." });
         return;
       }
-      sendJSON(response, 200, await saveSiteContent(await readJSON(request)));
+      const previousContent=await getSiteContent();
+      const savedContent=await saveSiteContent(await readJSON(request));
+      try { await certificateService.sync(savedContent.records.donations,previousContent.records.donations); }
+      catch { savedContent.certificateNotice="Donation changes were saved, but certificate processing needs review in Certificates."; }
+      sendJSON(response, 200, savedContent);
       return;
     }
     if (url.pathname === "/api/admin/upload-image" && request.method === "POST") {
@@ -1254,12 +1280,13 @@ async function handleRequest(request, response) {
       "navbar-logo.css",
       "teachings.html",
       "support-story.html",
-      "donation.js"
+      "donation.js",
+      "purchase.js",
+      "purchase.css"
     ].includes(relativePath) ||
-      relativePath.startsWith(`stories${path.sep}`) ||
-      relativePath.startsWith(`images${path.sep}`) ||
-      relativePath.startsWith(`payment${path.sep}`) ||
-      relativePath.startsWith(`uploads${path.sep}`);
+      (relativePath.startsWith(`stories${path.sep}`) && path.extname(relativePath)===".html") ||
+      (["images","payment","uploads"].some(directory=>relativePath.startsWith(directory+path.sep)) && /\.(?:png|jpe?g|webp|svg|gif|ico|avif)$/i.test(relativePath)) ||
+      (relativePath.startsWith(`audio${path.sep}`) && /\.(?:mp3|ogg|wav)$/i.test(relativePath));
     if (!filePath.startsWith(`${root}${path.sep}`) || !isPublicAsset) {
       response.writeHead(404);
       response.end("Not found");
@@ -1282,7 +1309,8 @@ async function handleRequest(request, response) {
     else fs.createReadStream(filePath).pipe(response);
   } catch (error) {
     const statusCode = error.statusCode || (error.message === "Request is too large." ? 413 : 400);
-    sendJSON(response, statusCode, { error: error.message || "The request could not be completed." });
+    const operational=error.code||/SQLITE|LIBSQL|fetch failed|ECONN|database/i.test(error.message||"");
+    sendJSON(response, operational?503:statusCode, { error: operational?"The service is temporarily unavailable. Please try again.":error.message || "The request could not be completed." });
   }
 }
 

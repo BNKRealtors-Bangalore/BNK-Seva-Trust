@@ -345,20 +345,9 @@
         headers: { "Content-Type": "application/json", "Accept": "application/json" },
         body: JSON.stringify({ ...pendingDonation, reference })
       });
-      const record = result.record;
-      displayReceipt({
-        receiptNumber: record.id,
-        date: record.submittedAt || new Date().toISOString(),
-        donorName: pendingDonation.donorName,
-        mobile: pendingDonation.mobile,
-        email: pendingDonation.email,
-        donationCategory: pendingDonation.donationCategory,
-        purpose: pendingDonation.purpose,
-        amount: pendingDonation.amount,
-        paymentMethod: "UPI QR",
-        paymentReference: reference + " (pending verification)",
-        anonymous: pendingDonation.anonymous
-      });
+      qrView.hidden = true;
+      setStatus("Your donation details have been submitted. Payment is pending verification by the Trust. After verification, your Certificate of Seva will be emailed to the address you provided.");
+      pendingDonation = null;
     } catch (error) {
       setStatus(error.message);
     } finally {

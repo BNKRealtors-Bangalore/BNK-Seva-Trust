@@ -5,3 +5,11 @@ data
 uploads
 *.test.cjs
 public
+
+**/*.sqlite*
+**/*.db
+**/*.pem
+**/*.key
+.aws
+.codex
+.agents

@@ -122,7 +122,11 @@ test("newsletter subscriptions validate, deduplicate, and stay private to author
     assert.equal(data.subscribers.length, 1);
     assert.equal(data.subscribers[0].email, 'subscriber@example.org');
     assert.ok(data.subscribers[0].subscribedAt);
-    const publicContent = await (await fetch(base + '/api/site-content')).json();
+    assert.equal((await fetch(base+'/api/admin/site-content')).status,401);
+    const privateContent=await fetch(base+'/api/admin/site-content',{headers:{Cookie:cookie}});assert.equal(privateContent.status,200);
+    const publicResponse=await fetch(base+'/api/site-content');assert.equal(publicResponse.headers.get('x-frame-options'),'DENY');
+    const publicContent = await publicResponse.json();
+    for(const key of ['donations','csr','partners','volunteers','beneficiaries','users'])assert.equal(publicContent.records[key],undefined);
     assert.ok(!JSON.stringify(publicContent).includes('subscriber@example.org'));
     for (const route of ['/navbar-logo.css', '/teachings.html', '/support-story.html']) assert.equal((await fetch(base + route)).status, 200);
   } finally {

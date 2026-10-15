@@ -400,3 +400,5 @@
     display: none !important;
   }
 }
+
+.bnk-donation-field input[type="checkbox"] {width:18px;min-height:18px;height:18px;padding:0;margin:0 7px 0 0;vertical-align:middle;accent-color:#800b23;}
