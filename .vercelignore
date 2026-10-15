@@ -1,0 +1,6 @@
+.env
+.env.*
+.git
+data
+uploads
+*.test.cjs

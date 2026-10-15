@@ -4,13 +4,16 @@
   "private": true,
   "description": "BNK Seva Trust donation website and verified payment backend",
   "engines": {
-    "node": ">=22.5.0"
+    "node": "24.x"
   },
   "scripts": {
     "start": "node server.cjs",
-    "test": "node --test"
+    "test": "node --test",
+    "build": "node scripts/build-static.cjs"
   },
   "dependencies": {
+    "@libsql/client": "^0.18.0",
+    "@vercel/blob": "^2.8.2",
     "nodemailer": "^10.1.0"
   }
 }

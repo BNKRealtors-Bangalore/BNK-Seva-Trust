@@ -4,7 +4,7 @@ const crypto = require("node:crypto");
 const fs = require("node:fs");
 const http = require("node:http");
 const path = require("node:path");
-const { DatabaseSync } = require("node:sqlite");
+const { createDatabase } = require("./database.cjs");
 const nodemailer = require("nodemailer");
 
 const root = __dirname;
@@ -25,13 +25,11 @@ loadEnvironment();
 const keyId = process.env.RAZORPAY_KEY_ID || "";
 const keySecret = process.env.RAZORPAY_KEY_SECRET || "";
 const webhookSecret = process.env.RAZORPAY_WEBHOOK_SECRET || "";
-const databasePath = path.resolve(root, process.env.DATABASE_PATH || "./data/donations.sqlite");
-fs.mkdirSync(path.dirname(databasePath), { recursive: true });
+const database = createDatabase({ root });
 const uploadDir = path.join(root, "uploads");
-fs.mkdirSync(uploadDir, { recursive: true });
+if (!process.env.VERCEL) fs.mkdirSync(uploadDir, { recursive: true });
 
-const database = new DatabaseSync(databasePath);
-database.exec(`
+const schema = `
   PRAGMA foreign_keys = ON;
   CREATE TABLE IF NOT EXISTS donations (
     id TEXT PRIMARY KEY,
@@ -82,7 +80,7 @@ database.exec(`
     expires_at TEXT NOT NULL,
     created_at TEXT NOT NULL
   );
-`);
+`;
 
 const defaultPricingConfig = {
   contributionOptions: [
@@ -190,8 +188,8 @@ function sanitizePricingConfig(input = {}) {
   };
 }
 
-function getPricingConfig() {
-  const row = database.prepare("SELECT value FROM app_config WHERE key = ?").get("pricing");
+async function getPricingConfig() {
+  const row = (await database.prepare("SELECT value FROM app_config WHERE key = ?").get("pricing"));
   if (!row) return defaultPricingConfig;
   try {
     return sanitizePricingConfig(JSON.parse(row.value));
@@ -200,12 +198,12 @@ function getPricingConfig() {
   }
 }
 
-function savePricingConfig(input) {
+async function savePricingConfig(input) {
   const config = sanitizePricingConfig(input);
-  database.prepare(`
+  (await database.prepare(`
     INSERT INTO app_config (key, value, updated_at) VALUES ('pricing', ?, ?)
     ON CONFLICT(key) DO UPDATE SET value = excluded.value, updated_at = excluded.updated_at
-  `).run(JSON.stringify(config), new Date().toISOString());
+  `).run(JSON.stringify(config), new Date().toISOString()));
   return config;
 }
 
@@ -437,8 +435,8 @@ function sanitizeSiteContent(input = {}) {
   };
 }
 
-function getSiteContent() {
-  const row = database.prepare("SELECT value FROM app_config WHERE key = ?").get("site_content");
+async function getSiteContent() {
+  const row = (await database.prepare("SELECT value FROM app_config WHERE key = ?").get("site_content"));
   if (!row) return defaultSiteContent;
   try {
     return sanitizeSiteContent(JSON.parse(row.value));
@@ -447,12 +445,12 @@ function getSiteContent() {
   }
 }
 
-function saveSiteContent(input) {
+async function saveSiteContent(input) {
   const content = sanitizeSiteContent(input);
-  database.prepare(`
+  (await database.prepare(`
     INSERT INTO app_config (key, value, updated_at) VALUES ('site_content', ?, ?)
     ON CONFLICT(key) DO UPDATE SET value = excluded.value, updated_at = excluded.updated_at
-  `).run(JSON.stringify(content), new Date().toISOString());
+  `).run(JSON.stringify(content), new Date().toISOString()));
   return content;
 }
 
@@ -460,8 +458,9 @@ function todayISODate() {
   return new Date().toISOString().slice(0, 10);
 }
 
-function appendPublicSubmission(type, input = {}) {
-  const content = getSiteContent();
+async function appendPublicSubmission(type, input = {}) {
+  return database.transaction(async () => {
+  const content = await getSiteContent();
   const now = new Date().toISOString();
   let record;
   if (type === "csr") {
@@ -535,14 +534,15 @@ function appendPublicSubmission(type, input = {}) {
   } else {
     throw new Error("Unsupported submission type.");
   }
-  saveSiteContent(content);
+  await saveSiteContent(content);
   return record;
+  });
 }
 
-function isAuthorizedAdmin(request) {
-  const expected = process.env.ADMIN_KEY || "admin";
-  if (request.headers.authorization === `Bearer ${expected}` || request.headers["x-admin-key"] === expected) return true;
-  return Boolean(getSessionUser(request, ["Admin", "Editor"]));
+async function isAuthorizedAdmin(request) {
+  const expected = process.env.ADMIN_KEY;
+  if (expected && (request.headers.authorization === `Bearer ${expected}` || request.headers["x-admin-key"] === expected)) return true;
+  return Boolean(await getSessionUser(request, ["Admin", "Editor"]));
 }
 
 function hashPassword(password, salt = crypto.randomBytes(16).toString("hex")) {
@@ -563,18 +563,19 @@ function publicAdminUser(row) {
   return { id: row.id, name: row.name, email: row.email, role: row.role, status: row.status };
 }
 
-function ensureInitialAdminUser() {
-  const count = database.prepare("SELECT COUNT(*) AS total FROM admin_users").get().total;
+async function ensureInitialAdminUser() {
+  const count = (await database.prepare("SELECT COUNT(*) AS total FROM admin_users").get()).total;
   if (count) {
     // Upgrade the original placeholder account without changing its password or role.
     if (!process.env.ADMIN_EMAIL) {
-      database.prepare("UPDATE admin_users SET email = ?, updated_at = ? WHERE email = 'admin@bnk.local' AND NOT EXISTS (SELECT 1 FROM admin_users WHERE email = ?)")
-        .run("bnksevatrust@gmail.com", new Date().toISOString(), "bnksevatrust@gmail.com");
+      (await database.prepare("UPDATE admin_users SET email = ?, updated_at = ? WHERE email = 'admin@bnk.local' AND NOT EXISTS (SELECT 1 FROM admin_users WHERE email = ?)")
+        .run("bnksevatrust@gmail.com", new Date().toISOString(), "bnksevatrust@gmail.com"));
     }
     return;
   }
+  if (process.env.VERCEL && !process.env.ADMIN_PASSWORD) throw new Error("Set ADMIN_PASSWORD in Vercel environment variables before first deployment.");
   const now = new Date().toISOString();
-  database.prepare(`
+  (await database.prepare(`
     INSERT INTO admin_users (id, name, email, password_hash, role, status, created_at, updated_at)
     VALUES (?, ?, ?, ?, 'Admin', 'Active', ?, ?)
   `).run(
@@ -584,10 +585,17 @@ function ensureInitialAdminUser() {
     hashPassword(process.env.ADMIN_PASSWORD || process.env.ADMIN_KEY || "admin"),
     now,
     now
-  );
+  ));
 }
 
-ensureInitialAdminUser();
+let initialization;
+function initialize() {
+  if (!initialization) initialization = (async () => {
+    await database.exec(schema);
+    await database.transaction(() => ensureInitialAdminUser());
+  })().catch(error => { initialization = null; throw error; });
+  return initialization;
+}
 
 function getCookie(request, name) {
   const cookies = String(request.headers.cookie || "").split(";").map((entry) => entry.trim());
@@ -596,22 +604,22 @@ function getCookie(request, name) {
 }
 
 function sessionCookie(token, expires) {
-  return `bnk_admin_session=${encodeURIComponent(token)}; Path=/; HttpOnly; SameSite=Strict; Expires=${expires.toUTCString()}`;
+  return `bnk_admin_session=${encodeURIComponent(token)}; Path=/; HttpOnly; SameSite=Strict; Expires=${expires.toUTCString()}${process.env.VERCEL ? '; Secure' : ''}`;
 }
 
 function clearSessionCookie() {
   return "bnk_admin_session=; Path=/; HttpOnly; SameSite=Strict; Expires=Thu, 01 Jan 1970 00:00:00 GMT";
 }
 
-function getSessionUser(request, roles) {
+async function getSessionUser(request, roles) {
   const token = getCookie(request, "bnk_admin_session");
   if (!token) return null;
   const tokenHash = crypto.createHash("sha256").update(token).digest("hex");
-  const row = database.prepare(`
+  const row = (await database.prepare(`
     SELECT u.* FROM admin_sessions s
     JOIN admin_users u ON u.id = s.user_id
     WHERE s.token_hash = ? AND s.expires_at > ? AND u.status = 'Active'
-  `).get(tokenHash, new Date().toISOString());
+  `).get(tokenHash, new Date().toISOString()));
   if (!row || (roles && !roles.includes(row.role))) return null;
   return row;
 }
@@ -693,6 +701,8 @@ function sendJSON(response, statusCode, body, headers = {}) {
 }
 
 async function readBody(request) {
+  if (Buffer.isBuffer(request.body)) return request.body;
+  if (typeof request.body === "string") return Buffer.from(request.body);
   const chunks = [];
   let length = 0;
   for await (const chunk of request) {
@@ -704,6 +714,7 @@ async function readBody(request) {
 }
 
 async function readJSON(request) {
+  if (request.body && typeof request.body === "object" && !Buffer.isBuffer(request.body)) return request.body;
   const body = await readBody(request);
   try {
     return JSON.parse(body.toString("utf8"));
@@ -740,7 +751,7 @@ function parseMultipartFile(body, contentTypeHeader) {
 }
 
 async function handleAdminImageUpload(request, response) {
-  if (!isAuthorizedAdmin(request)) {
+  if (!await isAuthorizedAdmin(request)) {
     sendJSON(response, 401, { error: "Admin key required." });
     return;
   }
@@ -750,9 +761,16 @@ async function handleAdminImageUpload(request, response) {
     if (!extension) throw new Error("Upload a JPG, PNG, WebP or SVG image.");
     if (!file.data.length || file.data.length > 5 * 1024 * 1024) throw new Error("Image must be 5 MB or smaller.");
     const filename = `${Date.now()}-${crypto.randomUUID()}${extension}`;
-    const filePath = path.join(uploadDir, filename);
-    await fs.promises.writeFile(filePath, file.data, { flag: "wx" });
-    sendJSON(response, 200, { url: `/uploads/${filename}` });
+    if (process.env.VERCEL || process.env.BLOB_READ_WRITE_TOKEN) {
+      if (!process.env.BLOB_READ_WRITE_TOKEN) throw new Error("Connect a public Vercel Blob store to enable image uploads.");
+      const { put } = require("@vercel/blob");
+      const blob = await put('uploads/' + filename, file.data, { access: "public", contentType: file.contentType });
+      sendJSON(response, 200, { url: blob.url });
+    } else {
+      const filePath = path.join(uploadDir, filename);
+      await fs.promises.writeFile(filePath, file.data, { flag: "wx" });
+      sendJSON(response, 200, { url: '/uploads/' + filename });
+    }
   } catch (error) {
     sendJSON(response, 400, { error: error.message || "Upload failed." });
   }
@@ -762,34 +780,34 @@ async function handleAdminLogin(request, response) {
   const input = await readJSON(request);
   const email = cleanText(input.email, 254).toLowerCase();
   const password = String(input.password || "");
-  const user = database.prepare("SELECT * FROM admin_users WHERE email = ? AND status = 'Active'").get(email);
+  const user = (await database.prepare("SELECT * FROM admin_users WHERE email = ? AND status = 'Active'").get(email));
   if (!user || !verifyPassword(password, user.password_hash)) {
     sendJSON(response, 401, { error: "Invalid email or password." });
     return;
   }
   const token = crypto.randomBytes(32).toString("base64url");
   const expires = new Date(Date.now() + 1000 * 60 * 60 * 8);
-  database.prepare(`
+  (await database.prepare(`
     INSERT INTO admin_sessions (token_hash, user_id, expires_at, created_at)
     VALUES (?, ?, ?, ?)
-  `).run(crypto.createHash("sha256").update(token).digest("hex"), user.id, expires.toISOString(), new Date().toISOString());
+  `).run(crypto.createHash("sha256").update(token).digest("hex"), user.id, expires.toISOString(), new Date().toISOString()));
   sendJSON(response, 200, { user: publicAdminUser(user) }, { "Set-Cookie": sessionCookie(token, expires) });
 }
 
-function handleAdminLogout(request, response) {
+async function handleAdminLogout(request, response) {
   const token = getCookie(request, "bnk_admin_session");
   if (token) {
-    database.prepare("DELETE FROM admin_sessions WHERE token_hash = ?").run(crypto.createHash("sha256").update(token).digest("hex"));
+    (await database.prepare("DELETE FROM admin_sessions WHERE token_hash = ?").run(crypto.createHash("sha256").update(token).digest("hex")));
   }
   sendJSON(response, 200, { ok: true }, { "Set-Cookie": clearSessionCookie() });
 }
 
-function adminUsers() {
-  return database.prepare("SELECT id, name, email, role, status FROM admin_users ORDER BY created_at ASC").all();
+async function adminUsers() {
+  return (await database.prepare("SELECT id, name, email, role, status FROM admin_users ORDER BY created_at ASC").all());
 }
 
 async function handleSaveAdminUsers(request, response) {
-  const actor = getSessionUser(request, ["Admin"]);
+  const actor = await getSessionUser(request, ["Admin"]);
   if (!actor) {
     sendJSON(response, 403, { error: "Admin role required." });
     return;
@@ -797,32 +815,37 @@ async function handleSaveAdminUsers(request, response) {
   const input = await readJSON(request);
   const users = Array.isArray(input.users) ? input.users.slice(0, 50) : [];
   const now = new Date().toISOString();
-  database.exec("BEGIN IMMEDIATE");
   try {
+    const savedUsers = await database.transaction(async () => {
     for (const user of users) {
       const email = cleanText(user.email, 254).toLowerCase();
       const name = cleanText(user.name, 120);
       const role = ["Admin", "Editor", "Viewer"].includes(user.role) ? user.role : "Viewer";
       const status = ["Active", "Disabled"].includes(user.status) ? user.status : "Active";
       if (!email || !name) continue;
-      const existing = database.prepare("SELECT * FROM admin_users WHERE email = ?").get(email);
+      const existing = (await database.prepare("SELECT * FROM admin_users WHERE email = ?").get(email));
       if (existing) {
-        database.prepare("UPDATE admin_users SET name = ?, role = ?, status = ?, updated_at = ? WHERE email = ?")
-          .run(name, role, status, now, email);
+        (await database.prepare("UPDATE admin_users SET name = ?, role = ?, status = ?, updated_at = ? WHERE email = ?")
+          .run(name, role, status, now, email));
+        if (user.password) {
+          if (typeof user.password !== "string" || user.password.length < 12 || user.password.length > 256) throw new Error("Use a password between 12 and 256 characters.");
+          await database.prepare("UPDATE admin_users SET password_hash = ? WHERE email = ?").run(hashPassword(user.password), email);
+          await database.prepare("DELETE FROM admin_sessions WHERE user_id = ?").run(existing.id);
+        }
       } else {
         const password = cleanText(user.password, 120) || crypto.randomBytes(10).toString("base64url");
-        database.prepare(`
+        (await database.prepare(`
           INSERT INTO admin_users (id, name, email, password_hash, role, status, created_at, updated_at)
           VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-        `).run(crypto.randomUUID(), name, email, hashPassword(password), role, status, now, now);
+        `).run(crypto.randomUUID(), name, email, hashPassword(password), role, status, now, now));
       }
     }
-    const activeAdmins = database.prepare("SELECT COUNT(*) AS total FROM admin_users WHERE role = 'Admin' AND status = 'Active'").get().total;
+    const activeAdmins = (await database.prepare("SELECT COUNT(*) AS total FROM admin_users WHERE role = 'Admin' AND status = 'Active'").get()).total;
     if (!activeAdmins) throw new Error("At least one active Admin user is required.");
-    database.exec("COMMIT");
-    sendJSON(response, 200, { users: adminUsers() });
+    return await adminUsers();
+    });
+    sendJSON(response, 200, { users: savedUsers });
   } catch (error) {
-    database.exec("ROLLBACK");
     sendJSON(response, 400, { error: error.message || "Could not save users." });
   }
 }
@@ -863,14 +886,14 @@ function publicReceipt(row) {
   };
 }
 
-function templeFundSummary() {
+async function templeFundSummary() {
   const goalAmount = Number(process.env.TEMPLE_FUND_GOAL_AMOUNT || 500000000);
-  const total = database.prepare(`
+  const total = (await database.prepare(`
     SELECT COALESCE(SUM(amount_paise), 0) AS amount_paise
     FROM donations
     WHERE status = 'paid' AND donation_category = 'Temple Project'
-  `).get();
-  const siteContent = getSiteContent();
+  `).get());
+  const siteContent = await getSiteContent();
   const offlineTempleAmount = siteContent.records.donations
     .filter((donation) => donation.status === "Verified" && ["Temple Project", "Temple by Sq. Ft."].includes(donation.type))
     .reduce((sum, donation) => sum + (Number(donation.amount) || 0), 0);
@@ -885,35 +908,34 @@ function templeFundSummary() {
   };
 }
 
-function captureDonation(orderId, paymentId, paymentMethod, amountPaise) {
-  database.exec("BEGIN IMMEDIATE");
+async function captureDonation(orderId, paymentId, paymentMethod, amountPaise) {
   try {
-    const donation = database.prepare("SELECT * FROM donations WHERE order_id = ?").get(orderId);
+    return await database.transaction(async () => {
+    const donation = (await database.prepare("SELECT * FROM donations WHERE order_id = ?").get(orderId));
     if (!donation) throw new Error("Donation order was not found.");
     if (donation.amount_paise !== amountPaise) throw new Error("The captured amount does not match the donation order.");
     if (donation.payment_reference && donation.payment_reference !== paymentId) throw new Error("A different payment has already been recorded for this donation.");
 
     if (donation.status !== "paid") {
       const year = new Date().getUTCFullYear();
-      const counter = database.prepare(`
+      const counter = (await database.prepare(`
         INSERT INTO receipt_counters (year, value) VALUES (?, 1)
         ON CONFLICT (year) DO UPDATE SET value = value + 1
         RETURNING value
-      `).get(year);
+      `).get(year));
       const receiptNumber = `BNK/${year}/${String(counter.value).padStart(6, "0")}`;
-      database.prepare(`
+      (await database.prepare(`
         UPDATE donations
         SET status = 'paid', payment_reference = ?, payment_method = ?,
             donation_date = ?, receipt_number = ?
         WHERE order_id = ?
-      `).run(paymentId, paymentMethod || "Other", new Date().toISOString(), receiptNumber, orderId);
+      `).run(paymentId, paymentMethod || "Other", new Date().toISOString(), receiptNumber, orderId));
     }
 
-    const paidDonation = database.prepare("SELECT * FROM donations WHERE order_id = ?").get(orderId);
-    database.exec("COMMIT");
+    const paidDonation = (await database.prepare("SELECT * FROM donations WHERE order_id = ?").get(orderId));
     return paidDonation;
+    });
   } catch (error) {
-    database.exec("ROLLBACK");
     throw error;
   }
 }
@@ -964,7 +986,7 @@ async function emailReceipt(row) {
     text: `Your Seva has been received.\nThank you for becoming a part of this sacred journey.\n\n${rows.map(([label, value]) => `${label}: ${value}`).join("\n")}\n\n${note}`,
     html: `<h1>Your Seva has been received.</h1><p>Thank you for becoming a part of this sacred journey.</p><table>${rows.map(([label, value]) => `<tr><th align="left">${escapeHTML(label)}</th><td>${escapeHTML(value)}</td></tr>`).join("")}</table><p>${escapeHTML(note)}</p>`
   });
-  database.prepare("UPDATE donations SET receipt_email_sent_at = ? WHERE id = ?").run(new Date().toISOString(), row.id);
+  (await database.prepare("UPDATE donations SET receipt_email_sent_at = ? WHERE id = ?").run(new Date().toISOString(), row.id));
 }
 
 async function handleCreateOrder(request, response) {
@@ -988,7 +1010,7 @@ async function handleCreateOrder(request, response) {
       }
     })
   });
-  database.prepare(`
+  (await database.prepare(`
     INSERT INTO donations (
       id, order_id, donor_name, mobile, email, donation_category,
       temple_seva, amount_paise, created_at, purpose, anonymous, status
@@ -1005,7 +1027,7 @@ async function handleCreateOrder(request, response) {
     new Date().toISOString(),
     donation.purpose,
     donation.anonymous
-  );
+  ));
   sendJSON(response, 201, { id: providerOrder.id, amount: providerOrder.amount, currency: providerOrder.currency });
 }
 
@@ -1019,7 +1041,7 @@ async function handleVerifyPayment(request, response) {
     return;
   }
 
-  const donation = database.prepare("SELECT * FROM donations WHERE order_id = ?").get(orderId);
+  const donation = (await database.prepare("SELECT * FROM donations WHERE order_id = ?").get(orderId));
   if (!donation) {
     sendJSON(response, 404, { error: "Donation order was not found." });
     return;
@@ -1034,7 +1056,7 @@ async function handleVerifyPayment(request, response) {
     return;
   }
 
-  const paidDonation = captureDonation(orderId, paymentId, payment.method, payment.amount);
+  const paidDonation = await captureDonation(orderId, paymentId, payment.method, payment.amount);
   try {
     await emailReceipt(paidDonation);
   } catch (error) {
@@ -1069,8 +1091,8 @@ async function handleWebhook(request, response) {
       return;
     }
     try {
-      const donation = captureDonation(payment.order_id, payment.id, payment.method, payment.amount);
-      emailReceipt(donation).catch((error) => console.error("Receipt email delivery failed:", error.message));
+      const donation = await captureDonation(payment.order_id, payment.id, payment.method, payment.amount);
+      await emailReceipt(donation).catch((error) => console.error("Receipt email delivery failed:", error.message));
     } catch (error) {
       console.error("Captured payment could not be recorded:", error.message);
       sendJSON(response, 500, { error: "Captured payment could not be recorded." });
@@ -1096,6 +1118,11 @@ function contentType(filePath) {
 async function handleRequest(request, response) {
   const url = new URL(request.url, "http://localhost");
   try {
+    await initialize();
+    if (url.pathname === "/api/health" && request.method === "GET") {
+      sendJSON(response, 200, { ok: true });
+      return;
+    }
     if (url.pathname === "/api/newsletter/subscribe" && request.method === "POST") {
       const input = await readJSON(request);
       const email = typeof input?.email === "string" ? input.email.trim().toLowerCase() : "";
@@ -1103,17 +1130,17 @@ async function handleRequest(request, response) {
         sendJSON(response, 400, { error: "Enter a valid email address." });
         return;
       }
-      database.prepare("INSERT INTO newsletter_subscribers (email, subscribed_at) VALUES (?, ?) ON CONFLICT(email) DO NOTHING")
-        .run(email, new Date().toISOString());
+      (await database.prepare("INSERT INTO newsletter_subscribers (email, subscribed_at) VALUES (?, ?) ON CONFLICT(email) DO NOTHING")
+        .run(email, new Date().toISOString()));
       sendJSON(response, 200, { ok: true, message: "Thank you for subscribing to BNK Seva updates." });
       return;
     }
     if (url.pathname === "/api/admin/newsletter" && request.method === "GET") {
-      if (!getSessionUser(request, ["Admin", "Editor"])) {
+      if (!await getSessionUser(request, ["Admin", "Editor"])) {
         sendJSON(response, 403, { error: "Admin or Editor role required." });
         return;
       }
-      sendJSON(response, 200, { subscribers: database.prepare("SELECT email, subscribed_at AS subscribedAt FROM newsletter_subscribers ORDER BY subscribed_at DESC").all() });
+      sendJSON(response, 200, { subscribers: (await database.prepare("SELECT email, subscribed_at AS subscribedAt FROM newsletter_subscribers ORDER BY subscribed_at DESC").all()) });
       return;
     }
     if (url.pathname === "/api/payment-config" && request.method === "GET") {
@@ -1125,11 +1152,11 @@ async function handleRequest(request, response) {
       return;
     }
     if (url.pathname === "/api/temple-fund" && request.method === "GET") {
-      sendJSON(response, 200, templeFundSummary());
+      sendJSON(response, 200, await templeFundSummary());
       return;
     }
     if (url.pathname === "/api/pricing-config" && request.method === "GET") {
-      sendJSON(response, 200, getPricingConfig());
+      sendJSON(response, 200, await getPricingConfig());
       return;
     }
     if (url.pathname === "/api/admin/login" && request.method === "POST") {
@@ -1137,11 +1164,11 @@ async function handleRequest(request, response) {
       return;
     }
     if (url.pathname === "/api/admin/logout" && request.method === "POST") {
-      handleAdminLogout(request, response);
+      await handleAdminLogout(request, response);
       return;
     }
     if (url.pathname === "/api/admin/me" && request.method === "GET") {
-      const user = getSessionUser(request);
+      const user = await getSessionUser(request);
       if (!user) {
         sendJSON(response, 401, { error: "Login required." });
         return;
@@ -1150,12 +1177,12 @@ async function handleRequest(request, response) {
       return;
     }
     if (url.pathname === "/api/admin/users" && request.method === "GET") {
-      const user = getSessionUser(request, ["Admin"]);
+      const user = await getSessionUser(request, ["Admin"]);
       if (!user) {
         sendJSON(response, 403, { error: "Admin role required." });
         return;
       }
-      sendJSON(response, 200, { users: adminUsers() });
+      sendJSON(response, 200, { users: await adminUsers() });
       return;
     }
     if (url.pathname === "/api/admin/users" && request.method === "PUT") {
@@ -1163,32 +1190,32 @@ async function handleRequest(request, response) {
       return;
     }
     if (url.pathname === "/api/site-content" && request.method === "GET") {
-      sendJSON(response, 200, getSiteContent());
+      sendJSON(response, 200, await getSiteContent());
       return;
     }
     const publicSubmissionMatch = url.pathname.match(/^\/api\/public-submissions\/(csr|partner|volunteer|donation)$/);
     if (publicSubmissionMatch && request.method === "POST") {
       try {
-        sendJSON(response, 201, { ok: true, record: appendPublicSubmission(publicSubmissionMatch[1], await readJSON(request)) });
+        sendJSON(response, 201, { ok: true, record: await appendPublicSubmission(publicSubmissionMatch[1], await readJSON(request)) });
       } catch (error) {
         sendJSON(response, 400, { error: error.message || "Submission could not be saved." });
       }
       return;
     }
     if (url.pathname === "/api/admin/pricing-config" && request.method === "PUT") {
-      if (!isAuthorizedAdmin(request)) {
+      if (!await isAuthorizedAdmin(request)) {
         sendJSON(response, 401, { error: "Admin key required." });
         return;
       }
-      sendJSON(response, 200, savePricingConfig(await readJSON(request)));
+      sendJSON(response, 200, await savePricingConfig(await readJSON(request)));
       return;
     }
     if (url.pathname === "/api/admin/site-content" && request.method === "PUT") {
-      if (!isAuthorizedAdmin(request)) {
+      if (!await isAuthorizedAdmin(request)) {
         sendJSON(response, 401, { error: "Admin key required." });
         return;
       }
-      sendJSON(response, 200, saveSiteContent(await readJSON(request)));
+      sendJSON(response, 200, await saveSiteContent(await readJSON(request)));
       return;
     }
     if (url.pathname === "/api/admin/upload-image" && request.method === "POST") {
@@ -1272,6 +1299,9 @@ if (require.main === module) {
 
 module.exports = {
   server,
+  handleRequest,
+  initialize,
+  captureDonation,
   closeDatabase: () => database.close(),
   validateDonation,
   verifyCheckoutSignature,

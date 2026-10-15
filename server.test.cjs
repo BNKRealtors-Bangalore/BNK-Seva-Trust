@@ -9,8 +9,13 @@ const test = require("node:test");
 
 const databasePath = path.join(os.tmpdir(), `bnk-donations-${crypto.randomUUID()}.sqlite`);
 process.env.DATABASE_PATH = databasePath;
+delete process.env.TURSO_DATABASE_URL;
+delete process.env.TURSO_AUTH_TOKEN;
+delete process.env.VERCEL;
 process.env.RAZORPAY_KEY_SECRET = "test-secret";
 const {
+  captureDonation,
+  initialize,
   server,
   closeDatabase,
   getPricingConfig,
@@ -21,6 +26,8 @@ const {
   validateDonation,
   verifyCheckoutSignature
 } = require("./server.cjs");
+
+test.before(async () => { await initialize(); });
 
 const validDonation = {
   donorName: "A Donor",
@@ -33,19 +40,19 @@ const validDonation = {
   paymentMethod: "upi"
 };
 
-test("validates and normalizes the complete donation record", () => {
+test("validates and normalizes the complete donation record", async () => {
   const donation = validateDonation(validDonation);
   assert.equal(donation.amountPaise, 250000);
   assert.equal(donation.email, "donor@example.org");
   assert.equal(donation.anonymous, 1);
 });
 
-test("rejects invalid amounts and unsupported categories", () => {
+test("rejects invalid amounts and unsupported categories", async () => {
   assert.throws(() => validateDonation({ ...validDonation, amount: 1.5 }), /Donation amount/);
   assert.throws(() => validateDonation({ ...validDonation, donationCategory: "Unknown" }), /category/);
 });
 
-test("accepts a matching checkout signature and rejects a forged one", () => {
+test("accepts a matching checkout signature and rejects a forged one", async () => {
   const orderId = "order_test123";
   const paymentId = "pay_test123";
   const signature = crypto.createHmac("sha256", "test-secret").update(`${orderId}|${paymentId}`).digest("hex");
@@ -53,8 +60,8 @@ test("accepts a matching checkout signature and rejects a forged one", () => {
   assert.equal(verifyCheckoutSignature(orderId, paymentId, "f".repeat(64)), false);
 });
 
-test("reports zero temple fund progress before confirmed temple donations", () => {
-  assert.deepEqual(templeFundSummary(), {
+test("reports zero temple fund progress before confirmed temple donations", async () => {
+  assert.deepEqual(await templeFundSummary(), {
     raisedAmount: 0,
     goalAmount: 500000000,
     remainingAmount: 500000000,
@@ -62,8 +69,8 @@ test("reports zero temple fund progress before confirmed temple donations", () =
   });
 });
 
-test("saves sanitized pricing configuration for admin-managed amounts", () => {
-  const saved = savePricingConfig({
+test("saves sanitized pricing configuration for admin-managed amounts", async () => {
+  const saved = await savePricingConfig({
     contributionOptions: [{ sqft: 12, amount: 34567 }],
     sevaDonationAmounts: [101, 202, 303, 404, 505],
     specialSevaChalisa: [{ copies: 108, amount: "" }, { copies: 216, amount: 4200 }],
@@ -77,11 +84,11 @@ test("saves sanitized pricing configuration for admin-managed amounts", () => {
   assert.equal(saved.storePrices.box, 7777);
   assert.deepEqual(saved.specialSevaChalisa, [{ copies: 108, amount: null }, { copies: 216, amount: 4200 }]);
   assert.deepEqual(saved.sevaPartnerAmounts, [777, 888, 999]);
-  assert.deepEqual(getPricingConfig().sevaDonationAmounts, [101, 202, 303, 404, 505]);
+  assert.deepEqual((await getPricingConfig()).sevaDonationAmounts, [101, 202, 303, 404, 505]);
 });
 
-test("saves admin site content and includes verified offline temple donations in fund totals", () => {
-  const saved = saveSiteContent({
+test("saves admin site content and includes verified offline temple donations in fund totals", async () => {
+  const saved = await saveSiteContent({
     records: {
       donations: [{ name: "Temple Donor", amount: 1200, type: "Temple Project", status: "Verified" }],
       stories: [{ name: "Published Story", status: "Published", quote: "Seva update" }],
@@ -93,8 +100,8 @@ test("saves admin site content and includes verified offline temple donations in
   });
   assert.equal(saved.records.donations[0].amount, 1200);
   assert.equal(saved.records.store[0].price, 501);
-  assert.equal(getSiteContent().milestones[1].status, "In Progress");
-  assert.equal(templeFundSummary().raisedAmount, 1200);
+  assert.equal((await getSiteContent()).milestones[1].status, "In Progress");
+  assert.equal((await templeFundSummary()).raisedAmount, 1200);
 });
 
 test("newsletter subscriptions validate, deduplicate, and stay private to authorized admins", async () => {
@@ -121,6 +128,19 @@ test("newsletter subscriptions validate, deduplicate, and stay private to author
   } finally {
     await new Promise(resolve => server.close(resolve));
   }
+});
+
+test("payment capture remains idempotent with asynchronous database transactions", async () => {
+  const { DatabaseSync } = require('node:sqlite');
+  const db = new DatabaseSync(databasePath);
+  db.prepare("INSERT INTO donations (id, order_id, donor_name, mobile, email, donation_category, temple_seva, amount_paise, created_at, purpose, anonymous, status) VALUES ('capture-test', 'order_capture', 'Donor', '9999999999', 'donor@example.org', 'Seva', '', 50100, ?, 'Test', 0, 'pending')").run(new Date().toISOString());
+  db.close();
+  const first = await captureDonation('order_capture', 'pay_capture', 'upi', 50100);
+  const second = await captureDonation('order_capture', 'pay_capture', 'upi', 50100);
+  assert.equal(first.status, 'paid');
+  assert.equal(second.receipt_number, first.receipt_number);
+  await assert.rejects(captureDonation('order_capture', 'pay_other', 'upi', 50100), /different payment/);
+  await assert.rejects(captureDonation('order_capture', 'pay_capture', 'upi', 100), /amount/);
 });
 
 test.after(() => {

@@ -4,3 +4,8 @@ data/
 uploads/*
 !uploads/.gitkeep
 npm-debug.log*
+
+public/
+.vercel/
+.env.*
+!.env.example
