@@ -12,6 +12,10 @@ function publicContent(content){
   for(const [key,fields]of Object.entries(publicFields)){
     records[key]=(content.records?.[key]||[]).filter(row=>statuses[key].includes(row.status)).map(row=>Object.fromEntries(fields.filter(field=>row[field]!==undefined).map(field=>[field,row[field]])));
   }
+  records.store=records.store.map(row=>{
+    const source=content.records.store.find(product=>product.id===row.id);
+    return {...row,available:source.stock===""||source.stock===undefined||source.stock===null||Number(source.stock)>0};
+  });
   return{records,milestones:(content.milestones||[]).map(({name,status})=>({name,status})),goal:content.goal,templeNote:content.templeNote};
 }
 const securitySchema="CREATE TABLE IF NOT EXISTS request_limits (key TEXT NOT NULL, bucket INTEGER NOT NULL, hits INTEGER NOT NULL, expires INTEGER NOT NULL, PRIMARY KEY(key,bucket))";
@@ -37,6 +41,8 @@ function createSecurity({database,env=process.env}){
     else if(url.pathname==="/api/newsletter/subscribe"){limit=20;windowSeconds=3600;group="newsletter";}
     else if(url.pathname.startsWith("/api/public-submissions/")&&request.method==="POST"){limit=30;windowSeconds=3600;group="submissions";}
     else if(url.pathname.startsWith("/api/purchases")&&request.method==="POST"){limit=40;windowSeconds=3600;group="purchases";}
+    else if(url.pathname==="/api/donations/order"&&request.method==="POST"){limit=20;windowSeconds=3600;group="donation-orders";}
+    else if(url.pathname==="/api/payments/verify"&&request.method==="POST"){limit=60;windowSeconds=3600;group="payment-verification";}
     if(!limit)return true;
     const ip=env.VERCEL?String(request.headers["x-forwarded-for"]||request.socket?.remoteAddress||"unknown").split(",")[0].trim():request.socket?.remoteAddress||"local";
     const key=crypto.createHash("sha256").update(group+":"+ip).digest("hex");

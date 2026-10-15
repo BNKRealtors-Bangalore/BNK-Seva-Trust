@@ -1,4 +1,8 @@
 .env
+.npm-cache
+backups
+artifacts
+**/*.bnkbackup
 .env.*
 .git
 data

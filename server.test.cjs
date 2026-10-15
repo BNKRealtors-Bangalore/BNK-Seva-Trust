@@ -140,7 +140,7 @@ test("published store items are returned by the public API after authenticated s
   try {
     const login=await fetch(base+'/api/admin/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:process.env.ADMIN_EMAIL||'bnksevatrust@gmail.com',password:process.env.ADMIN_PASSWORD||process.env.ADMIN_KEY||'admin'})});
     assert.equal(login.status,200);const cookie=login.headers.get('set-cookie').split(';')[0];
-    const existing=await (await fetch(base+'/api/site-content')).json();
+    const existing=await (await fetch(base+'/api/admin/site-content',{headers:{Cookie:cookie}})).json();
     existing.records.store.push({id:'camphor-test',name:'Camphor',price:101,status:'Active',image:'images/logo.PNG'});
     const saved=await fetch(base+'/api/admin/site-content',{method:'PUT',headers:{'Content-Type':'application/json',Cookie:cookie},body:JSON.stringify(existing)});
     assert.equal(saved.status,200);assert.ok((await saved.json()).records.store.some(item=>item.name==='Camphor'));

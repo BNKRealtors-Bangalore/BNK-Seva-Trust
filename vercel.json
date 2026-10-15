@@ -6,7 +6,7 @@
   "functions": {
     "api/index.js": {
       "maxDuration": 60,
-      "excludeFiles": "{data/**,.env*,*.test.cjs}"
+      "excludeFiles": "{data/**,backups/**,.npm-cache/**,.env*,*.test.cjs}"
     }
   },
   "rewrites": [
@@ -74,6 +74,21 @@
           "value": "no-cache"
         }
       ]
+    },
+    {
+      "source": "/assets/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=0, must-revalidate"
+        }
+      ]
+    }
+  ],
+  "crons": [
+    {
+      "path": "/api/cron/maintenance",
+      "schedule": "0 4 * * *"
     }
   ]
 }

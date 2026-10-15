@@ -1,0 +1,26 @@
+/* Website pricing editor — uses the existing admin visual system */
+.pricing-access{margin-bottom:16px}
+.pricing-actions{display:flex;align-items:end;gap:10px;flex-wrap:wrap}
+.pricing-key{flex:1 1 210px;max-width:310px}
+.pricing-actions .btn{min-height:39px;display:inline-flex;align-items:center}
+.pricing-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px}
+.pricing-rows{display:grid;gap:10px}
+.pricing-row{display:grid;grid-template-columns:minmax(0,1fr) minmax(115px,1fr);align-items:end;gap:10px}
+.pricing-row.three{grid-template-columns:minmax(0,1fr) minmax(0,1fr) auto}
+.pricing-row .field{min-width:0}
+.pricing-row .btn{min-height:38px}
+.pricing-row-title{font-size:12px;color:#665449;padding:0 0 10px}
+.pricing-status{color:var(--muted);margin:10px 0 0;font-size:12px}
+.pricing-status.error{color:#ac2235}
+.pricing-status.success{color:#39754c}
+.upload-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.upload-row input[type="text"]{flex:1 1 220px}
+.upload-preview{display:block;width:82px;height:58px;margin-top:7px;border-radius:7px;border:1px solid var(--line);object-fit:cover;background:#f3eadf}
+.auth-screen{position:fixed;inset:0;z-index:200;display:grid;place-items:center;background:linear-gradient(140deg,#fff8ec,#f3e2cc)}
+.auth-screen[hidden]{display:none}
+.auth-card{width:min(420px,calc(100vw - 32px));background:#fffdf8;border:1px solid var(--line);border-radius:14px;box-shadow:0 24px 80px #5d3d2530;padding:26px}
+.auth-card h1{margin:0 0 8px;color:var(--wine);font:600 38px/1 var(--serif)}
+.auth-card .field{margin-top:12px}
+.auth-error{min-height:18px;color:#ac2235;margin:10px 0 0;font-size:12px}
+@media(max-width:980px){.pricing-grid{grid-template-columns:1fr}}
+@media(max-width:510px){.pricing-row.three{grid-template-columns:1fr 1fr}.pricing-row.three .btn{grid-column:1/-1}}

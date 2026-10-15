@@ -51,3 +51,10 @@ No WhatsApp sending is used. Submitted to email server means SMTP acceptance; in
 ## Data protection
 
 The public content API returns only allowlisted public fields and published records. Full administrative records require a session at GET /api/admin/site-content. Admin browser storage retains only public content drafts; private records and password edits are not persisted there. Admin writes use session cookies, origin/content-type checks, and persistent request limits. Uploads accept signature-checked PNG/JPEG/WebP images; SVG uploads are rejected. Private responses and certificate links use no-store and no-referrer. Vercel adds anti-framing, HSTS, and browser security headers. Back up the private database separately with restricted access; do not publish backups in asset folders.
+
+
+## Reliability and operations update
+
+See OPERATIONS.md for migration, stock, encrypted backups, restore testing, certificate workers, and deployment configuration. Public submissions still appear in the same admin sections. Admin records now live in individual database rows with version checks and pagination.
+
+Frontend source is in assets/index and assets/admin; edit those files directly. The HTML pages retain the same script execution order. Run npm run optimize:images after adding large photos, npm test, npm run test:browser (Chrome on Windows), and npm run build before deployment.

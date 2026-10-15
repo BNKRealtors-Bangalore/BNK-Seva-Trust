@@ -1,0 +1,2902 @@
+[
+  {
+    "original": "images/01_temple_construction.jpg",
+    "path": "images/optimized/01_temple_construction-1280.webp",
+    "width": 1280,
+    "height": 1600,
+    "variants": [
+      {
+        "width": 480,
+        "path": "images/optimized/01_temple_construction-480.webp"
+      },
+      {
+        "width": 960,
+        "path": "images/optimized/01_temple_construction-960.webp"
+      },
+      {
+        "width": 1280,
+        "path": "images/optimized/01_temple_construction-1280.webp"
+      }
+    ],
+    "originalBytes": 691243,
+    "optimizedBytes": 219912
+  },
+  {
+    "original": "images/02_babas_blessings.jpg",
+    "path": "images/optimized/02_babas_blessings-1600.webp",
+    "width": 1600,
+    "height": 533,
+    "variants": [
+      {
+        "width": 480,
+        "path": "images/optimized/02_babas_blessings-480.webp"
+      },
+      {
+        "width": 960,
+        "path": "images/optimized/02_babas_blessings-960.webp"
+      },
+      {
+        "width": 1600,
+        "path": "images/optimized/02_babas_blessings-1600.webp"
+      }
+    ],
+    "originalBytes": 2249147,
+    "optimizedBytes": 70872
+  },
+  {
+    "original": "images/03_food_seva.jpg",
+    "path": "images/optimized/03_food_seva-1448.webp",
+    "width": 1448,
+    "height": 1086,
+    "variants": [
+      {
+        "width": 480,
+        "path": "images/optimized/03_food_seva-480.webp"
+      },
+      {
+        "width": 960,
+        "path": "images/optimized/03_food_seva-960.webp"
+      },
+      {
+        "width": 1448,
+        "path": "images/optimized/03_food_seva-1448.webp"
+      }
+    ],
+    "originalBytes": 2315132,
+    "optimizedBytes": 156590
+  },
+  {
+    "original": "images/04_education_seva.jpg",
+    "path": "images/optimized/04_education_seva-1448.webp",
+    "width": 1448,
+    "height": 1086,
+    "variants": [
+      {
+        "width": 480,
+        "path": "images/optimized/04_education_seva-480.webp"
+      },
+      {
+        "width": 960,
+        "path": "images/optimized/04_education_seva-960.webp"
+      },
+      {
+        "width": 1448,
+        "path": "images/optimized/04_education_seva-1448.webp"
+      }
+    ],
+    "originalBytes": 2082529,
+    "optimizedBytes": 104000
+  },
+  {
+    "original": "images/05_healthcare_seva.jpg",
+    "path": "images/optimized/05_healthcare_seva-1448.webp",
+    "width": 1448,
+    "height": 1086,
+    "variants": [
+      {
+        "width": 480,
+        "path": "images/optimized/05_healthcare_seva-480.webp"
+      },
+      {
+        "width": 960,
+        "path": "images/optimized/05_healthcare_seva-960.webp"
+      },
+      {
+        "width": 1448,
+        "path": "images/optimized/05_healthcare_seva-1448.webp"
+      }
+    ],
+    "originalBytes": 2273146,
+    "optimizedBytes": 132196
+  },
+  {
+    "original": "images/06_temple_celebration.jpg",
+    "path": "images/optimized/06_temple_celebration-1448.webp",
+    "width": 1448,
+    "height": 1086,
+    "variants": [
+      {
+        "width": 480,
+        "path": "images/optimized/06_temple_celebration-480.webp"
+      },
+      {
+        "width": 960,
+        "path": "images/optimized/06_temple_celebration-960.webp"
+      },
+      {
+        "width": 1448,
+        "path": "images/optimized/06_temple_celebration-1448.webp"
+      }
+    ],
+    "originalBytes": 2683819,
+    "optimizedBytes": 273380
+  },
+  {
+    "original": "images/07_plantation_drive.jpg",
+    "path": "images/optimized/07_plantation_drive-1448.webp",
+    "width": 1448,
+    "height": 1086,
+    "variants": [
+      {
+        "width": 480,
+        "path": "images/optimized/07_plantation_drive-480.webp"
+      },
+      {
+        "width": 960,
+        "path": "images/optimized/07_plantation_drive-960.webp"
+      },
+      {
+        "width": 1448,
+        "path": "images/optimized/07_plantation_drive-1448.webp"
+      }
+    ],
+    "originalBytes": 2476278,
+    "optimizedBytes": 180818
+  },
+  {
+    "original": "images/08_volunteer_activities.jpg",
+    "path": "images/optimized/08_volunteer_activities-1122.webp",
+    "width": 1122,
+    "height": 1402,
+    "variants": [
+      {
+        "width": 480,
+        "path": "images/optimized/08_volunteer_activities-480.webp"
+      },
+      {
+        "width": 960,
+        "path": "images/optimized/08_volunteer_activities-960.webp"
+      },
+      {
+        "width": 1122,
+        "path": "images/optimized/08_volunteer_activities-1122.webp"
+      }
+    ],
+    "originalBytes": 2264994,
+    "optimizedBytes": 147534
+  },
+  {
+    "original": "images/09_gau_seva.jpg",
+    "path": "images/optimized/09_gau_seva-1448.webp",
+    "width": 1448,
+    "height": 1086,
+    "variants": [
+      {
+        "width": 480,
+        "path": "images/optimized/09_gau_seva-480.webp"
+      },
+      {
+        "width": 960,
+        "path": "images/optimized/09_gau_seva-960.webp"
+      },
+      {
+        "width": 1448,
+        "path": "images/optimized/09_gau_seva-1448.webp"
+      }
+    ],
+    "originalBytes": 2355135,
+    "optimizedBytes": 154118
+  },
+  {
+    "original": "images/1.png",
+    "path": "images/optimized/1-1254.webp",
+    "width": 1254,
+    "height": 1254,
+    "variants": [
+      {
+        "width": 480,
+        "path": "images/optimized/1-480.webp"
+      },
+      {
+        "width": 960,
+        "path": "images/optimized/1-960.webp"
+      },
+      {
+        "width": 1254,
+        "path": "images/optimized/1-1254.webp"
+      }
+    ],
+    "originalBytes": 1275419,
+    "optimizedBytes": 164796
+  },
+  {
+    "original": "images/10_community_seva.jpg",
+    "path": "images/optimized/10_community_seva-1448.webp",
+    "width": 1448,
+    "height": 1086,
+    "variants": [
+      {
+        "width": 480,
+        "path": "images/optimized/10_community_seva-480.webp"
+      },
+      {
+        "width": 960,
+        "path": "images/optimized/10_community_seva-960.webp"
+      },
+      {
+        "width": 1448,
+        "path": "images/optimized/10_community_seva-1448.webp"
+      }
+    ],
+    "originalBytes": 2388881,
+    "optimizedBytes": 155618
+  },
+  {
+    "original": "images/11_tree_plantation.png",
+    "path": "images/optimized/11_tree_plantation-1600.webp",
+    "width": 1600,
+    "height": 900,
+    "variants": [
+      {
+        "width": 480,
+        "path": "images/optimized/11_tree_plantation-480.webp"
+      },
+      {
+        "width": 960,
+        "path": "images/optimized/11_tree_plantation-960.webp"
+      },
+      {
+        "width": 1600,
+        "path": "images/optimized/11_tree_plantation-1600.webp"
+      }
+    ],
+    "originalBytes": 2427976,
+    "optimizedBytes": 155456
+  },
+  {
+    "original": "images/12_temple_moments.png",
+    "path": "images/optimized/12_temple_moments-1600.webp",
+    "width": 1600,
+    "height": 900,
+    "variants": [
+      {
+        "width": 480,
+        "path": "images/optimized/12_temple_moments-480.webp"
+      },
+      {
+        "width": 960,
+        "path": "images/optimized/12_temple_moments-960.webp"
+      },
+      {
+        "width": 1600,
+        "path": "images/optimized/12_temple_moments-1600.webp"
+      }
+    ],
+    "originalBytes": 2337572,
+    "optimizedBytes": 158754
+  },
+  {
+    "original": "images/2.png",
+    "path": "images/optimized/2-1254.webp",
+    "width": 1254,
+    "height": 1254,
+    "variants": [
+      {
+        "width": 480,
+        "path": "images/optimized/2-480.webp"
+      },
+      {
+        "width": 960,
+        "path": "images/optimized/2-960.webp"
+      },
+      {
+        "width": 1254,
+        "path": "images/optimized/2-1254.webp"
+      }
+    ],
+    "originalBytes": 1413038,
+    "optimizedBytes": 168042
+  },
+  {
+    "original": "images/3.png",
+    "path": "images/optimized/3-1254.webp",
+    "width": 1254,
+    "height": 1254,
+    "variants": [
+      {
+        "width": 480,
+        "path": "images/optimized/3-480.webp"
+      },
+      {
+        "width": 960,
+        "path": "images/optimized/3-960.webp"
+      },
+      {
+        "width": 1254,
+        "path": "images/optimized/3-1254.webp"
+      }
+    ],
+    "originalBytes": 1700714,
+    "optimizedBytes": 190938
+  },
+  {
+    "original": "images/4.png",
+    "path": "images/optimized/4-1254.webp",
+    "width": 1254,
+    "height": 1254,
+    "variants": [
+      {
+        "width": 480,
+        "path": "images/optimized/4-480.webp"
+      },
+      {
+        "width": 960,
+        "path": "images/optimized/4-960.webp"
+      },
+      {
+        "width": 1254,
+        "path": "images/optimized/4-1254.webp"
+      }
+    ],
+    "originalBytes": 1507794,
+    "optimizedBytes": 160528
+  },
+  {
+    "original": "images/5.png",
+    "path": "images/optimized/5-1254.webp",
+    "width": 1254,
+    "height": 1254,
+    "variants": [
+      {
+        "width": 480,
+        "path": "images/optimized/5-480.webp"
+      },
+      {
+        "width": 960,
+        "path": "images/optimized/5-960.webp"
+      },
+      {
+        "width": 1254,
+        "path": "images/optimized/5-1254.webp"
+      }
+    ],
+    "originalBytes": 1608307,
+    "optimizedBytes": 215902
+  },
+  {
+    "original": "images/6.png",
+    "path": "images/optimized/6-1254.webp",
+    "width": 1254,
+    "height": 1254,
+    "variants": [
+      {
+        "width": 480,
+        "path": "images/optimized/6-480.webp"
+      },
+      {
+        "width": 960,
+        "path": "images/optimized/6-960.webp"
+      },
+      {
+        "width": 1254,
+        "path": "images/optimized/6-1254.webp"
+      }
+    ],
+    "originalBytes": 1577363,
+    "optimizedBytes": 233914
+  },
+  {
+    "original": "images/7.png",
+    "path": "images/optimized/7-1254.webp",
+    "width": 1254,
+    "height": 1254,
+    "variants": [
+      {
+        "width": 480,
+        "path": "images/optimized/7-480.webp"
+      },
+      {
+        "width": 960,
+        "path": "images/optimized/7-960.webp"
+      },
+      {
+        "width": 1254,
+        "path": "images/optimized/7-1254.webp"
+      }
+    ],
+    "originalBytes": 1427137,
+    "optimizedBytes": 185980
+  },
+  {
+    "original": "images/8.png",
+    "path": "images/optimized/8-1254.webp",
+    "width": 1254,
+    "height": 1254,
+    "variants": [
+      {
+        "width": 480,
+        "path": "images/optimized/8-480.webp"
+      },
+      {
+        "width": 960,
+        "path": "images/optimized/8-960.webp"
+      },
+      {
+        "width": 1254,
+        "path": "images/optimized/8-1254.webp"
+      }
+    ],
+    "originalBytes": 1500913,
+    "optimizedBytes": 194282
+  },
+  {
+    "original": "images/about.png",
+    "path": "images/optimized/about-1600.webp",
+    "width": 1600,
+    "height": 900,
+    "variants": [
+      {
+        "width": 480,
+        "path": "images/optimized/about-480.webp"
+      },
+      {
+        "width": 960,
+        "path": "images/optimized/about-960.webp"
+      },
+      {
+        "width": 1600,
+        "path": "images/optimized/about-1600.webp"
+      }
+    ],
+    "originalBytes": 1765672,
+    "optimizedBytes": 51262
+  },
+  {
+    "original": "images/animal-seva.png",
+    "path": "images/optimized/animal-seva-1448.webp",
+    "width": 1448,
+    "height": 1086,
+    "variants": [
+      {
+        "width": 480,
+        "path": "images/optimized/animal-seva-480.webp"
+      },
+      {
+        "width": 960,
+        "path": "images/optimized/animal-seva-960.webp"
+      },
+      {
+        "width": 1448,
+        "path": "images/optimized/animal-seva-1448.webp"
+      }
+    ],
+    "originalBytes": 2079565,
+    "optimizedBytes": 94962
+  },
+  {
+    "original": "images/animal.png",
+    "path": "images/optimized/animal-1254.webp",
+    "width": 1254,
+    "height": 1254,
+    "variants": [
+      {
+        "width": 480,
+        "path": "images/optimized/animal-480.webp"
+      },
+      {
+        "width": 960,
+        "path": "images/optimized/animal-960.webp"
+      },
+      {
+        "width": 1254,
+        "path": "images/optimized/animal-1254.webp"
+      }
+    ],
+    "originalBytes": 229966,
+    "optimizedBytes": 89150
+  },
+  {
+    "original": "images/approvals.png",
+    "path": "images/optimized/approvals-1600.webp",
+    "width": 1600,
+    "height": 900,
+    "variants": [
+      {
+        "width": 480,
+        "path": "images/optimized/approvals-480.webp"
+      },
+      {
+        "width": 960,
+        "path": "images/optimized/approvals-960.webp"
+      },
+      {
+        "width": 1600,
+        "path": "images/optimized/approvals-1600.webp"
+      }
+    ],
+    "originalBytes": 1854831,
+    "optimizedBytes": 71710
+  },
+  {
+    "original": "images/architectural design.png",
+    "path": "images/optimized/architectural design-1600.webp",
+    "width": 1600,
+    "height": 900,
+    "variants": [
+      {
+        "width": 480,
+        "path": "images/optimized/architectural design-480.webp"
+      },
+      {
+        "width": 960,
+        "path": "images/optimized/architectural design-960.webp"
+      },
+      {
+        "width": 1600,
+        "path": "images/optimized/architectural design-1600.webp"
+      }
+    ],
+    "originalBytes": 1841892,
+    "optimizedBytes": 80790
+  },
+  {
+    "original": "images/baba-blessings-box.png",
+    "path": "images/optimized/baba-blessings-box-1448.webp",
+    "width": 1448,
+    "height": 1086,
+    "variants": [
+      {
+        "width": 480,
+        "path": "images/optimized/baba-blessings-box-480.webp"
+      },
+      {
+        "width": 960,
+        "path": "images/optimized/baba-blessings-box-960.webp"
+      },
+      {
+        "width": 1448,
+        "path": "images/optimized/baba-blessings-box-1448.webp"
+      }
+    ],
+    "originalBytes": 2261906,
+    "optimizedBytes": 139444
+  },
+  {
+    "original": "images/baba-neem-karoli-homebanner.png",
+    "path": "images/optimized/baba-neem-karoli-homebanner-1600.webp",
+    "width": 1600,
+    "height": 900,
+    "variants": [
+      {
+        "width": 480,
+        "path": "images/optimized/baba-neem-karoli-homebanner-480.webp"
+      },
+      {
+        "width": 960,
+        "path": "images/optimized/baba-neem-karoli-homebanner-960.webp"
+      },
+      {
+        "width": 1600,
+        "path": "images/optimized/baba-neem-karoli-homebanner-1600.webp"
+      }
+    ],
+    "originalBytes": 1853833,
+    "optimizedBytes": 49594
+  },
+  {
+    "original": "images/baba-photo-frame.png",
+    "path": "images/optimized/baba-photo-frame-1448.webp",
+    "width": 1448,
+    "height": 1086,
+    "variants": [
+      {
+        "width": 480,
+        "path": "images/optimized/baba-photo-frame-480.webp"
+      },
+      {
+        "width": 960,
+        "path": "images/optimized/baba-photo-frame-960.webp"
+      },
+      {
+        "width": 1448,
+        "path": "images/optimized/baba-photo-frame-1448.webp"
+      }
+    ],
+    "originalBytes": 2315496,
+    "optimizedBytes": 163126
+  },
+  {
+    "original": "images/bell.png",
+    "path": "images/optimized/bell-1254.webp",
+    "width": 1254,
+    "height": 1254,
+    "variants": [
+      {
+        "width": 480,
+        "path": "images/optimized/bell-480.webp"
+      },
+      {
+        "width": 960,
+        "path": "images/optimized/bell-960.webp"
+      },
+      {
+        "width": 1254,
+        "path": "images/optimized/bell-1254.webp"
+      }
+    ],
+    "originalBytes": 2205677,
+    "optimizedBytes": 139326
+  },
+  {
+    "original": "images/beneficiary_1.png",
+    "path": "images/optimized/beneficiary_1-1122.webp",
+    "width": 1122,
+    "height": 1402,
+    "variants": [
+      {
+        "width": 480,
+        "path": "images/optimized/beneficiary_1-480.webp"
+      },
+      {
+        "width": 960,
+        "path": "images/optimized/beneficiary_1-960.webp"
+      },
+      {
+        "width": 1122,
+        "path": "images/optimized/beneficiary_1-1122.webp"
+      }
+    ],
+    "originalBytes": 2229723,
+    "optimizedBytes": 98160
+  },
+  {
+    "original": "images/beneficiary_2.png",
+    "path": "images/optimized/beneficiary_2-1122.webp",
+    "width": 1122,
+    "height": 1402,
+    "variants": [
+      {
+        "width": 480,
+        "path": "images/optimized/beneficiary_2-480.webp"
+      },
+      {
+        "width": 960,
+        "path": "images/optimized/beneficiary_2-960.webp"
+      },
+      {
+        "width": 1122,
+        "path": "images/optimized/beneficiary_2-1122.webp"
+      }
+    ],
+    "originalBytes": 2366235,
+    "optimizedBytes": 105952
+  },
+  {
+    "original": "images/bnk-tshirts.png",
+    "path": "images/optimized/bnk-tshirts-1448.webp",
+    "width": 1448,
+    "height": 1086,
+    "variants": [
+      {
+        "width": 480,
+        "path": "images/optimized/bnk-tshirts-480.webp"
+      },
+      {
+        "width": 960,
+        "path": "images/optimized/bnk-tshirts-960.webp"
+      },
+      {
+        "width": 1448,
+        "path": "images/optimized/bnk-tshirts-1448.webp"
+      }
+    ],
+    "originalBytes": 2228123,
+    "optimizedBytes": 106814
+  },
+  {
+    "original": "images/book.png",
+    "path": "images/optimized/book-1254.webp",
+    "width": 1254,
+    "height": 1254,
+    "variants": [
+      {
+        "width": 480,
+        "path": "images/optimized/book-480.webp"
+      },
+      {
+        "width": 960,
+        "path": "images/optimized/book-960.webp"
+      },
+      {
+        "width": 1254,
+        "path": "images/optimized/book-1254.webp"
+      }
+    ],
+    "originalBytes": 220335,
+    "optimizedBytes": 77158
+  },
+  {
+    "original": "images/cart.png",
+    "path": "images/optimized/cart-1254.webp",
+    "width": 1254,
+    "height": 1254,
+    "variants": [
+      {
+        "width": 480,
+        "path": "images/optimized/cart-480.webp"
+      },
+      {
+        "width": 960,
+        "path": "images/optimized/cart-960.webp"
+      },
+      {
+        "width": 1254,
+        "path": "images/optimized/cart-1254.webp"
+      }
+    ],
+    "originalBytes": 715312,
+    "optimizedBytes": 123352
+  },
+  {
+    "original": "images/community-seva.png",
+    "path": "images/optimized/community-seva-1448.webp",
+    "width": 1448,
+    "height": 1086,
+    "variants": [
+      {
+        "width": 480,
+        "path": "images/optimized/community-seva-480.webp"
+      },
+      {
+        "width": 960,
+        "path": "images/optimized/community-seva-960.webp"
+      },
+      {
+        "width": 1448,
+        "path": "images/optimized/community-seva-1448.webp"
+      }
+    ],
+    "originalBytes": 1951907,
+    "optimizedBytes": 86128
+  },
+  {
+    "original": "images/community.png",
+    "path": "images/optimized/community-1254.webp",
+    "width": 1254,
+    "height": 1254,
+    "variants": [
+      {
+        "width": 480,
+        "path": "images/optimized/community-480.webp"
+      },
+      {
+        "width": 960,
+        "path": "images/optimized/community-960.webp"
+      },
+      {
+        "width": 1254,
+        "path": "images/optimized/community-1254.webp"
+      }
+    ],
+    "originalBytes": 242630,
+    "optimizedBytes": 76336
+  },
+  {
+    "original": "images/community_member_1.png",
+    "path": "images/optimized/community_member_1-1122.webp",
+    "width": 1122,
+    "height": 1402,
+    "variants": [
+      {
+        "width": 480,
+        "path": "images/optimized/community_member_1-480.webp"
+      },
+      {
+        "width": 960,
+        "path": "images/optimized/community_member_1-960.webp"
+      },
+      {
+        "width": 1122,
+        "path": "images/optimized/community_member_1-1122.webp"
+      }
+    ],
+    "originalBytes": 2069314,
+    "optimizedBytes": 73162
+  },
+  {
+    "original": "images/community_member_2.png",
+    "path": "images/optimized/community_member_2-1122.webp",
+    "width": 1122,
+    "height": 1402,
+    "variants": [
+      {
+        "width": 480,
+        "path": "images/optimized/community_member_2-480.webp"
+      },
+      {
+        "width": 960,
+        "path": "images/optimized/community_member_2-960.webp"
+      },
+      {
+        "width": 1122,
+        "path": "images/optimized/community_member_2-1122.webp"
+      }
+    ],
+    "originalBytes": 2432567,
+    "optimizedBytes": 124884
+  },
+  {
+    "original": "images/construction.png",
+    "path": "images/optimized/construction-1600.webp",
+    "width": 1600,
+    "height": 900,
+    "variants": [
+      {
+        "width": 480,
+        "path": "images/optimized/construction-480.webp"
+      },
+      {
+        "width": 960,
+        "path": "images/optimized/construction-960.webp"
+      },
+      {
+        "width": 1600,
+        "path": "images/optimized/construction-1600.webp"
+      }
+    ],
+    "originalBytes": 2064433,
+    "optimizedBytes": 125064
+  },
+  {
+    "original": "images/contribution-bg-mobile.png",
+    "path": "images/optimized/contribution-bg-mobile-941.webp",
+    "width": 941,
+    "height": 1672,
+    "variants": [
+      {
+        "width": 480,
+        "path": "images/optimized/contribution-bg-mobile-480.webp"
+      },
+      {
+        "width": 941,
+        "path": "images/optimized/contribution-bg-mobile-941.webp"
+      }
+    ],
+    "originalBytes": 1570331,
+    "optimizedBytes": 25066
+  },
+  {
+    "original": "images/contribution-bg.png",
+    "path": "images/optimized/contribution-bg-1600.webp",
+    "width": 1600,
+    "height": 640,
+    "variants": [
+      {
+        "width": 480,
+        "path": "images/optimized/contribution-bg-480.webp"
+      },
+      {
+        "width": 960,
+        "path": "images/optimized/contribution-bg-960.webp"
+      },
+      {
+        "width": 1600,
+        "path": "images/optimized/contribution-bg-1600.webp"
+      }
+    ],
+    "originalBytes": 1754743,
+    "optimizedBytes": 41664
+  },
+  {
+    "original": "images/corporate-volunteer.png",
+    "path": "images/optimized/corporate-volunteer-1254.webp",
+    "width": 1254,
+    "height": 1254,
+    "variants": [
+      {
+        "width": 480,
+        "path": "images/optimized/corporate-volunteer-480.webp"
+      },
+      {
+        "width": 960,
+        "path": "images/optimized/corporate-volunteer-960.webp"
+      },
+      {
+        "width": 1254,
+        "path": "images/optimized/corporate-volunteer-1254.webp"
+      }
+    ],
+    "originalBytes": 1285045,
+    "optimizedBytes": 98204
+  },
+  {
+    "original": "images/csr-bg.png",
+    "path": "images/optimized/csr-bg-1254.webp",
+    "width": 1254,
+    "height": 1254,
+    "variants": [
+      {
+        "width": 480,
+        "path": "images/optimized/csr-bg-480.webp"
+      },
+      {
+        "width": 960,
+        "path": "images/optimized/csr-bg-960.webp"
+      },
+      {
+        "width": 1254,
+        "path": "images/optimized/csr-bg-1254.webp"
+      }
+    ],
+    "originalBytes": 2113427,
+    "optimizedBytes": 114088
+  },
+  {
+    "original": "images/csr.png",
+    "path": "images/optimized/csr-1254.webp",
+    "width": 1254,
+    "height": 1254,
+    "variants": [
+      {
+        "width": 480,
+        "path": "images/optimized/csr-480.webp"
+      },
+      {
+        "width": 960,
+        "path": "images/optimized/csr-960.webp"
+      },
+      {
+        "width": 1254,
+        "path": "images/optimized/csr-1254.webp"
+      }
+    ],
+    "originalBytes": 2113427,
+    "optimizedBytes": 114088
+  },
+  {
+    "original": "images/devotional-idol.png",
+    "path": "images/optimized/devotional-idol-1448.webp",
+    "width": 1448,
+    "height": 1086,
+    "variants": [
+      {
+        "width": 480,
+        "path": "images/optimized/devotional-idol-480.webp"
+      },
+      {
+        "width": 960,
+        "path": "images/optimized/devotional-idol-960.webp"
+      },
+      {
+        "width": 1448,
+        "path": "images/optimized/devotional-idol-1448.webp"
+      }
+    ],
+    "originalBytes": 2198340,
+    "optimizedBytes": 136462
+  },
+  {
+    "original": "images/digital-volunteer.png",
+    "path": "images/optimized/digital-volunteer-1254.webp",
+    "width": 1254,
+    "height": 1254,
+    "variants": [
+      {
+        "width": 480,
+        "path": "images/optimized/digital-volunteer-480.webp"
+      },
+      {
+        "width": 960,
+        "path": "images/optimized/digital-volunteer-960.webp"
+      },
+      {
+        "width": 1254,
+        "path": "images/optimized/digital-volunteer-1254.webp"
+      }
+    ],
+    "originalBytes": 991054,
+    "optimizedBytes": 69940
+  },
+  {
+    "original": "images/donation 1.png",
+    "path": "images/optimized/donation 1-1536.webp",
+    "width": 1536,
+    "height": 1024,
+    "variants": [
+      {
+        "width": 480,
+        "path": "images/optimized/donation 1-480.webp"
+      },
+      {
+        "width": 960,
+        "path": "images/optimized/donation 1-960.webp"
+      },
+      {
+        "width": 1536,
+        "path": "images/optimized/donation 1-1536.webp"
+      }
+    ],
+    "originalBytes": 1420854,
+    "optimizedBytes": 84218
+  },
+  {
+    "original": "images/donation 10.png",
+    "path": "images/optimized/donation 10-1254.webp",
+    "width": 1254,
+    "height": 1254,
+    "variants": [
+      {
+        "width": 480,
+        "path": "images/optimized/donation 10-480.webp"
+      },
+      {
+        "width": 960,
+        "path": "images/optimized/donation 10-960.webp"
+      },
+      {
+        "width": 1254,
+        "path": "images/optimized/donation 10-1254.webp"
+      }
+    ],
+    "originalBytes": 990627,
+    "optimizedBytes": 125636
+  },
+  {
+    "original": "images/donation 11.png",
+    "path": "images/optimized/donation 11-1254.webp",
+    "width": 1254,
+    "height": 1254,
+    "variants": [
+      {
+        "width": 480,
+        "path": "images/optimized/donation 11-480.webp"
+      },
+      {
+        "width": 960,
+        "path": "images/optimized/donation 11-960.webp"
+      },
+      {
+        "width": 1254,
+        "path": "images/optimized/donation 11-1254.webp"
+      }
+    ],
+    "originalBytes": 1024427,
+    "optimizedBytes": 145190
+  },
+  {
+    "original": "images/donation 2.png",
+    "path": "images/optimized/donation 2-1536.webp",
+    "width": 1536,
+    "height": 1024,
+    "variants": [
+      {
+        "width": 480,
+        "path": "images/optimized/donation 2-480.webp"
+      },
+      {
+        "width": 960,
+        "path": "images/optimized/donation 2-960.webp"
+      },
+      {
+        "width": 1536,
+        "path": "images/optimized/donation 2-1536.webp"
+      }
+    ],
+    "originalBytes": 1544538,
+    "optimizedBytes": 69696
+  },
+  {
+    "original": "images/donation 3.png",
+    "path": "images/optimized/donation 3-1536.webp",
+    "width": 1536,
+    "height": 1024,
+    "variants": [
+      {
+        "width": 480,
+        "path": "images/optimized/donation 3-480.webp"
+      },
+      {
+        "width": 960,
+        "path": "images/optimized/donation 3-960.webp"
+      },
+      {
+        "width": 1536,
+        "path": "images/optimized/donation 3-1536.webp"
+      }
+    ],
+    "originalBytes": 1919877,
+    "optimizedBytes": 144730
+  },
+  {
+    "original": "images/donation 4.png",
+    "path": "images/optimized/donation 4-1536.webp",
+    "width": 1536,
+    "height": 1024,
+    "variants": [
+      {
+        "width": 480,
+        "path": "images/optimized/donation 4-480.webp"
+      },
+      {
+        "width": 960,
+        "path": "images/optimized/donation 4-960.webp"
+      },
+      {
+        "width": 1536,
+        "path": "images/optimized/donation 4-1536.webp"
+      }
+    ],
+    "originalBytes": 2155551,
+    "optimizedBytes": 289002
+  },
+  {
+    "original": "images/donation 5.png",
+    "path": "images/optimized/donation 5-1536.webp",
+    "width": 1536,
+    "height": 1024,
+    "variants": [
+      {
+        "width": 480,
+        "path": "images/optimized/donation 5-480.webp"
+      },
+      {
+        "width": 960,
+        "path": "images/optimized/donation 5-960.webp"
+      },
+      {
+        "width": 1536,
+        "path": "images/optimized/donation 5-1536.webp"
+      }
+    ],
+    "originalBytes": 2076044,
+    "optimizedBytes": 197982
+  },
+  {
+    "original": "images/donation 6.png",
+    "path": "images/optimized/donation 6-1536.webp",
+    "width": 1536,
+    "height": 1024,
+    "variants": [
+      {
+        "width": 480,
+        "path": "images/optimized/donation 6-480.webp"
+      },
+      {
+        "width": 960,
+        "path": "images/optimized/donation 6-960.webp"
+      },
+      {
+        "width": 1536,
+        "path": "images/optimized/donation 6-1536.webp"
+      }
+    ],
+    "originalBytes": 2248403,
+    "optimizedBytes": 268894
+  },
+  {
+    "original": "images/donation 7.png",
+    "path": "images/optimized/donation 7-1536.webp",
+    "width": 1536,
+    "height": 1024,
+    "variants": [
+      {
+        "width": 480,
+        "path": "images/optimized/donation 7-480.webp"
+      },
+      {
+        "width": 960,
+        "path": "images/optimized/donation 7-960.webp"
+      },
+      {
+        "width": 1536,
+        "path": "images/optimized/donation 7-1536.webp"
+      }
+    ],
+    "originalBytes": 1825680,
+    "optimizedBytes": 206070
+  },
+  {
+    "original": "images/donation 8.png",
+    "path": "images/optimized/donation 8-1536.webp",
+    "width": 1536,
+    "height": 1024,
+    "variants": [
+      {
+        "width": 480,
+        "path": "images/optimized/donation 8-480.webp"
+      },
+      {
+        "width": 960,
+        "path": "images/optimized/donation 8-960.webp"
+      },
+      {
+        "width": 1536,
+        "path": "images/optimized/donation 8-1536.webp"
+      }
+    ],
+    "originalBytes": 2107776,
+    "optimizedBytes": 268092
+  },
+  {
+    "original": "images/donation 9.png",
+    "path": "images/optimized/donation 9-1536.webp",
+    "width": 1536,
+    "height": 1024,
+    "variants": [
+      {
+        "width": 480,
+        "path": "images/optimized/donation 9-480.webp"
+      },
+      {
+        "width": 960,
+        "path": "images/optimized/donation 9-960.webp"
+      },
+      {
+        "width": 1536,
+        "path": "images/optimized/donation 9-1536.webp"
+      }
+    ],
+    "originalBytes": 2060670,
+    "optimizedBytes": 318026
+  },
+  {
+    "original": "images/donation-bg.png",
+    "path": "images/optimized/donation-bg-1600.webp",
+    "width": 1600,
+    "height": 900,
+    "variants": [
+      {
+        "width": 480,
+        "path": "images/optimized/donation-bg-480.webp"
+      },
+      {
+        "width": 960,
+        "path": "images/optimized/donation-bg-960.webp"
+      },
+      {
+        "width": 1600,
+        "path": "images/optimized/donation-bg-1600.webp"
+      }
+    ],
+    "originalBytes": 1653261,
+    "optimizedBytes": 47840
+  },
+  {
+    "original": "images/donor_1.png",
+    "path": "images/optimized/donor_1-1122.webp",
+    "width": 1122,
+    "height": 1402,
+    "variants": [
+      {
+        "width": 480,
+        "path": "images/optimized/donor_1-480.webp"
+      },
+      {
+        "width": 960,
+        "path": "images/optimized/donor_1-960.webp"
+      },
+      {
+        "width": 1122,
+        "path": "images/optimized/donor_1-1122.webp"
+      }
+    ],
+    "originalBytes": 2206326,
+    "optimizedBytes": 99572
+  },
+  {
+    "original": "images/donor_2.png",
+    "path": "images/optimized/donor_2-1122.webp",
+    "width": 1122,
+    "height": 1402,
+    "variants": [
+      {
+        "width": 480,
+        "path": "images/optimized/donor_2-480.webp"
+      },
+      {
+        "width": 960,
+        "path": "images/optimized/donor_2-960.webp"
+      },
+      {
+        "width": 1122,
+        "path": "images/optimized/donor_2-1122.webp"
+      }
+    ],
+    "originalBytes": 2083530,
+    "optimizedBytes": 73792
+  },
+  {
+    "original": "images/education-event.jpg",
+    "path": "images/optimized/education-event-822.webp",
+    "width": 822,
+    "height": 417,
+    "variants": [
+      {
+        "width": 480,
+        "path": "images/optimized/education-event-480.webp"
+      },
+      {
+        "width": 822,
+        "path": "images/optimized/education-event-822.webp"
+      }
+    ],
+    "originalBytes": 152373,
+    "optimizedBytes": 40364
+  },
+  {
+    "original": "images/education-seva-volunteer.png",
+    "path": "images/optimized/education-seva-volunteer-1254.webp",
+    "width": 1254,
+    "height": 1254,
+    "variants": [
+      {
+        "width": 480,
+        "path": "images/optimized/education-seva-volunteer-480.webp"
+      },
+      {
+        "width": 960,
+        "path": "images/optimized/education-seva-volunteer-960.webp"
+      },
+      {
+        "width": 1254,
+        "path": "images/optimized/education-seva-volunteer-1254.webp"
+      }
+    ],
+    "originalBytes": 1081443,
+    "optimizedBytes": 86630
+  },
+  {
+    "original": "images/education-seva.png",
+    "path": "images/optimized/education-seva-1448.webp",
+    "width": 1448,
+    "height": 1086,
+    "variants": [
+      {
+        "width": 480,
+        "path": "images/optimized/education-seva-480.webp"
+      },
+      {
+        "width": 960,
+        "path": "images/optimized/education-seva-960.webp"
+      },
+      {
+        "width": 1448,
+        "path": "images/optimized/education-seva-1448.webp"
+      }
+    ],
+    "originalBytes": 1860967,
+    "optimizedBytes": 60982
+  },
+  {
+    "original": "images/education.png",
+    "path": "images/optimized/education-1254.webp",
+    "width": 1254,
+    "height": 1254,
+    "variants": [
+      {
+        "width": 480,
+        "path": "images/optimized/education-480.webp"
+      },
+      {
+        "width": 960,
+        "path": "images/optimized/education-960.webp"
+      },
+      {
+        "width": 1254,
+        "path": "images/optimized/education-1254.webp"
+      }
+    ],
+    "originalBytes": 220335,
+    "optimizedBytes": 77158
+  },
+  {
+    "original": "images/entrance.png",
+    "path": "images/optimized/entrance-1086.webp",
+    "width": 1086,
+    "height": 1448,
+    "variants": [
+      {
+        "width": 480,
+        "path": "images/optimized/entrance-480.webp"
+      },
+      {
+        "width": 960,
+        "path": "images/optimized/entrance-960.webp"
+      },
+      {
+        "width": 1086,
+        "path": "images/optimized/entrance-1086.webp"
+      }
+    ],
+    "originalBytes": 3149559,
+    "optimizedBytes": 344614
+  },
+  {
+    "original": "images/environment-seva.png",
+    "path": "images/optimized/environment-seva-1448.webp",
+    "width": 1448,
+    "height": 1086,
+    "variants": [
+      {
+        "width": 480,
+        "path": "images/optimized/environment-seva-480.webp"
+      },
+      {
+        "width": 960,
+        "path": "images/optimized/environment-seva-960.webp"
+      },
+      {
+        "width": 1448,
+        "path": "images/optimized/environment-seva-1448.webp"
+      }
+    ],
+    "originalBytes": 2078856,
+    "optimizedBytes": 108448
+  },
+  {
+    "original": "images/environment.png",
+    "path": "images/optimized/environment-1254.webp",
+    "width": 1254,
+    "height": 1254,
+    "variants": [
+      {
+        "width": 480,
+        "path": "images/optimized/environment-480.webp"
+      },
+      {
+        "width": 960,
+        "path": "images/optimized/environment-960.webp"
+      },
+      {
+        "width": 1254,
+        "path": "images/optimized/environment-1254.webp"
+      }
+    ],
+    "originalBytes": 207189,
+    "optimizedBytes": 77082
+  },
+  {
+    "original": "images/event-volunteer.png",
+    "path": "images/optimized/event-volunteer-1254.webp",
+    "width": 1254,
+    "height": 1254,
+    "variants": [
+      {
+        "width": 480,
+        "path": "images/optimized/event-volunteer-480.webp"
+      },
+      {
+        "width": 960,
+        "path": "images/optimized/event-volunteer-960.webp"
+      },
+      {
+        "width": 1254,
+        "path": "images/optimized/event-volunteer-1254.webp"
+      }
+    ],
+    "originalBytes": 1110807,
+    "optimizedBytes": 92884
+  },
+  {
+    "original": "images/flooring.png",
+    "path": "images/optimized/flooring-1254.webp",
+    "width": 1254,
+    "height": 1254,
+    "variants": [
+      {
+        "width": 480,
+        "path": "images/optimized/flooring-480.webp"
+      },
+      {
+        "width": 960,
+        "path": "images/optimized/flooring-960.webp"
+      },
+      {
+        "width": 1254,
+        "path": "images/optimized/flooring-1254.webp"
+      }
+    ],
+    "originalBytes": 2286593,
+    "optimizedBytes": 150548
+  },
+  {
+    "original": "images/food-distribution-event.jpg",
+    "path": "images/optimized/food-distribution-event-822.webp",
+    "width": 822,
+    "height": 382,
+    "variants": [
+      {
+        "width": 480,
+        "path": "images/optimized/food-distribution-event-480.webp"
+      },
+      {
+        "width": 822,
+        "path": "images/optimized/food-distribution-event-822.webp"
+      }
+    ],
+    "originalBytes": 158809,
+    "optimizedBytes": 44946
+  },
+  {
+    "original": "images/food-seva-volunteer.png",
+    "path": "images/optimized/food-seva-volunteer-1254.webp",
+    "width": 1254,
+    "height": 1254,
+    "variants": [
+      {
+        "width": 480,
+        "path": "images/optimized/food-seva-volunteer-480.webp"
+      },
+      {
+        "width": 960,
+        "path": "images/optimized/food-seva-volunteer-960.webp"
+      },
+      {
+        "width": 1254,
+        "path": "images/optimized/food-seva-volunteer-1254.webp"
+      }
+    ],
+    "originalBytes": 1099587,
+    "optimizedBytes": 89866
+  },
+  {
+    "original": "images/food-seva.png",
+    "path": "images/optimized/food-seva-1448.webp",
+    "width": 1448,
+    "height": 1086,
+    "variants": [
+      {
+        "width": 480,
+        "path": "images/optimized/food-seva-480.webp"
+      },
+      {
+        "width": 960,
+        "path": "images/optimized/food-seva-960.webp"
+      },
+      {
+        "width": 1448,
+        "path": "images/optimized/food-seva-1448.webp"
+      }
+    ],
+    "originalBytes": 1885075,
+    "optimizedBytes": 80394
+  },
+  {
+    "original": "images/food.png",
+    "path": "images/optimized/food-1254.webp",
+    "width": 1254,
+    "height": 1254,
+    "variants": [
+      {
+        "width": 480,
+        "path": "images/optimized/food-480.webp"
+      },
+      {
+        "width": 960,
+        "path": "images/optimized/food-960.webp"
+      },
+      {
+        "width": 1254,
+        "path": "images/optimized/food-1254.webp"
+      }
+    ],
+    "originalBytes": 207139,
+    "optimizedBytes": 68562
+  },
+  {
+    "original": "images/footer-bg.png",
+    "path": "images/optimized/footer-bg-1600.webp",
+    "width": 1600,
+    "height": 900,
+    "variants": [
+      {
+        "width": 480,
+        "path": "images/optimized/footer-bg-480.webp"
+      },
+      {
+        "width": 960,
+        "path": "images/optimized/footer-bg-960.webp"
+      },
+      {
+        "width": 1600,
+        "path": "images/optimized/footer-bg-1600.webp"
+      }
+    ],
+    "originalBytes": 1897281,
+    "optimizedBytes": 63814
+  },
+  {
+    "original": "images/foundation.png",
+    "path": "images/optimized/foundation-1600.webp",
+    "width": 1600,
+    "height": 900,
+    "variants": [
+      {
+        "width": 480,
+        "path": "images/optimized/foundation-480.webp"
+      },
+      {
+        "width": 960,
+        "path": "images/optimized/foundation-960.webp"
+      },
+      {
+        "width": 1600,
+        "path": "images/optimized/foundation-1600.webp"
+      }
+    ],
+    "originalBytes": 2095272,
+    "optimizedBytes": 109358
+  },
+  {
+    "original": "images/fund-tracker-temple.png",
+    "path": "images/optimized/fund-tracker-temple-1122.webp",
+    "width": 1122,
+    "height": 1402,
+    "variants": [
+      {
+        "width": 480,
+        "path": "images/optimized/fund-tracker-temple-480.webp"
+      },
+      {
+        "width": 960,
+        "path": "images/optimized/fund-tracker-temple-960.webp"
+      },
+      {
+        "width": 1122,
+        "path": "images/optimized/fund-tracker-temple-1122.webp"
+      }
+    ],
+    "originalBytes": 2471684,
+    "optimizedBytes": 210372
+  },
+  {
+    "original": "images/garden.png",
+    "path": "images/optimized/garden-1086.webp",
+    "width": 1086,
+    "height": 1448,
+    "variants": [
+      {
+        "width": 480,
+        "path": "images/optimized/garden-480.webp"
+      },
+      {
+        "width": 960,
+        "path": "images/optimized/garden-960.webp"
+      },
+      {
+        "width": 1086,
+        "path": "images/optimized/garden-1086.webp"
+      }
+    ],
+    "originalBytes": 3286059,
+    "optimizedBytes": 361358
+  },
+  {
+    "original": "images/groundbreaking.png",
+    "path": "images/optimized/groundbreaking-1600.webp",
+    "width": 1600,
+    "height": 900,
+    "variants": [
+      {
+        "width": 480,
+        "path": "images/optimized/groundbreaking-480.webp"
+      },
+      {
+        "width": 960,
+        "path": "images/optimized/groundbreaking-960.webp"
+      },
+      {
+        "width": 1600,
+        "path": "images/optimized/groundbreaking-1600.webp"
+      }
+    ],
+    "originalBytes": 1965755,
+    "optimizedBytes": 89556
+  },
+  {
+    "original": "images/hall.png",
+    "path": "images/optimized/hall-1254.webp",
+    "width": 1254,
+    "height": 1254,
+    "variants": [
+      {
+        "width": 480,
+        "path": "images/optimized/hall-480.webp"
+      },
+      {
+        "width": 960,
+        "path": "images/optimized/hall-960.webp"
+      },
+      {
+        "width": 1254,
+        "path": "images/optimized/hall-1254.webp"
+      }
+    ],
+    "originalBytes": 2761731,
+    "optimizedBytes": 232030
+  },
+  {
+    "original": "images/hanuan-chalisa-vitaran.png",
+    "path": "images/optimized/hanuan-chalisa-vitaran-1122.webp",
+    "width": 1122,
+    "height": 1402,
+    "variants": [
+      {
+        "width": 480,
+        "path": "images/optimized/hanuan-chalisa-vitaran-480.webp"
+      },
+      {
+        "width": 960,
+        "path": "images/optimized/hanuan-chalisa-vitaran-960.webp"
+      },
+      {
+        "width": 1122,
+        "path": "images/optimized/hanuan-chalisa-vitaran-1122.webp"
+      }
+    ],
+    "originalBytes": 2325115,
+    "optimizedBytes": 191816
+  },
+  {
+    "original": "images/hanuman-chalisa.png",
+    "path": "images/optimized/hanuman-chalisa-1448.webp",
+    "width": 1448,
+    "height": 1086,
+    "variants": [
+      {
+        "width": 480,
+        "path": "images/optimized/hanuman-chalisa-480.webp"
+      },
+      {
+        "width": 960,
+        "path": "images/optimized/hanuman-chalisa-960.webp"
+      },
+      {
+        "width": 1448,
+        "path": "images/optimized/hanuman-chalisa-1448.webp"
+      }
+    ],
+    "originalBytes": 2439568,
+    "optimizedBytes": 181668
+  },
+  {
+    "original": "images/health.png",
+    "path": "images/optimized/health-1254.webp",
+    "width": 1254,
+    "height": 1254,
+    "variants": [
+      {
+        "width": 480,
+        "path": "images/optimized/health-480.webp"
+      },
+      {
+        "width": 960,
+        "path": "images/optimized/health-960.webp"
+      },
+      {
+        "width": 1254,
+        "path": "images/optimized/health-1254.webp"
+      }
+    ],
+    "originalBytes": 221495,
+    "optimizedBytes": 80794
+  },
+  {
+    "original": "images/healthcare-seva.png",
+    "path": "images/optimized/healthcare-seva-1448.webp",
+    "width": 1448,
+    "height": 1086,
+    "variants": [
+      {
+        "width": 480,
+        "path": "images/optimized/healthcare-seva-480.webp"
+      },
+      {
+        "width": 960,
+        "path": "images/optimized/healthcare-seva-960.webp"
+      },
+      {
+        "width": 1448,
+        "path": "images/optimized/healthcare-seva-1448.webp"
+      }
+    ],
+    "originalBytes": 1974985,
+    "optimizedBytes": 78932
+  },
+  {
+    "original": "images/impact-bg.png",
+    "path": "images/optimized/impact-bg-1600.webp",
+    "width": 1600,
+    "height": 900,
+    "variants": [
+      {
+        "width": 480,
+        "path": "images/optimized/impact-bg-480.webp"
+      },
+      {
+        "width": 960,
+        "path": "images/optimized/impact-bg-960.webp"
+      },
+      {
+        "width": 1600,
+        "path": "images/optimized/impact-bg-1600.webp"
+      }
+    ],
+    "originalBytes": 1398628,
+    "optimizedBytes": 10796
+  },
+  {
+    "original": "images/impact-image.png",
+    "path": "images/optimized/impact-image-959.webp",
+    "width": 959,
+    "height": 959,
+    "variants": [
+      {
+        "width": 480,
+        "path": "images/optimized/impact-image-480.webp"
+      },
+      {
+        "width": 959,
+        "path": "images/optimized/impact-image-959.webp"
+      }
+    ],
+    "originalBytes": 206128,
+    "optimizedBytes": 90998
+  },
+  {
+    "original": "images/inspiration.png",
+    "path": "images/optimized/inspiration-1600.webp",
+    "width": 1600,
+    "height": 900,
+    "variants": [
+      {
+        "width": 480,
+        "path": "images/optimized/inspiration-480.webp"
+      },
+      {
+        "width": 960,
+        "path": "images/optimized/inspiration-960.webp"
+      },
+      {
+        "width": 1600,
+        "path": "images/optimized/inspiration-1600.webp"
+      }
+    ],
+    "originalBytes": 1859231,
+    "optimizedBytes": 61618
+  },
+  {
+    "original": "images/kitchen.png",
+    "path": "images/optimized/kitchen-1254.webp",
+    "width": 1254,
+    "height": 1254,
+    "variants": [
+      {
+        "width": 480,
+        "path": "images/optimized/kitchen-480.webp"
+      },
+      {
+        "width": 960,
+        "path": "images/optimized/kitchen-960.webp"
+      },
+      {
+        "width": 1254,
+        "path": "images/optimized/kitchen-1254.webp"
+      }
+    ],
+    "originalBytes": 2556933,
+    "optimizedBytes": 210978
+  },
+  {
+    "original": "images/land and site.png",
+    "path": "images/optimized/land and site-1600.webp",
+    "width": 1600,
+    "height": 900,
+    "variants": [
+      {
+        "width": 480,
+        "path": "images/optimized/land and site-480.webp"
+      },
+      {
+        "width": 960,
+        "path": "images/optimized/land and site-960.webp"
+      },
+      {
+        "width": 1600,
+        "path": "images/optimized/land and site-1600.webp"
+      }
+    ],
+    "originalBytes": 2444833,
+    "optimizedBytes": 160806
+  },
+  {
+    "original": "images/library.png",
+    "path": "images/optimized/library-1086.webp",
+    "width": 1086,
+    "height": 1448,
+    "variants": [
+      {
+        "width": 480,
+        "path": "images/optimized/library-480.webp"
+      },
+      {
+        "width": 960,
+        "path": "images/optimized/library-960.webp"
+      },
+      {
+        "width": 1086,
+        "path": "images/optimized/library-1086.webp"
+      }
+    ],
+    "originalBytes": 2275987,
+    "optimizedBytes": 199312
+  },
+  {
+    "original": "images/lightings.png",
+    "path": "images/optimized/lightings-1254.webp",
+    "width": 1254,
+    "height": 1254,
+    "variants": [
+      {
+        "width": 480,
+        "path": "images/optimized/lightings-480.webp"
+      },
+      {
+        "width": 960,
+        "path": "images/optimized/lightings-960.webp"
+      },
+      {
+        "width": 1254,
+        "path": "images/optimized/lightings-1254.webp"
+      }
+    ],
+    "originalBytes": 1971262,
+    "optimizedBytes": 93774
+  },
+  {
+    "original": "images/lotus-icon.png",
+    "path": "images/optimized/lotus-icon-1254.webp",
+    "width": 1254,
+    "height": 1254,
+    "variants": [
+      {
+        "width": 480,
+        "path": "images/optimized/lotus-icon-480.webp"
+      },
+      {
+        "width": 960,
+        "path": "images/optimized/lotus-icon-960.webp"
+      },
+      {
+        "width": 1254,
+        "path": "images/optimized/lotus-icon-1254.webp"
+      }
+    ],
+    "originalBytes": 382425,
+    "optimizedBytes": 137446
+  },
+  {
+    "original": "images/medical-camp-event.jpg",
+    "path": "images/optimized/medical-camp-event-1095.webp",
+    "width": 1095,
+    "height": 814,
+    "variants": [
+      {
+        "width": 480,
+        "path": "images/optimized/medical-camp-event-480.webp"
+      },
+      {
+        "width": 960,
+        "path": "images/optimized/medical-camp-event-960.webp"
+      },
+      {
+        "width": 1095,
+        "path": "images/optimized/medical-camp-event-1095.webp"
+      }
+    ],
+    "originalBytes": 301403,
+    "optimizedBytes": 73896
+  },
+  {
+    "original": "images/medical-seva-volunteer.png",
+    "path": "images/optimized/medical-seva-volunteer-1254.webp",
+    "width": 1254,
+    "height": 1254,
+    "variants": [
+      {
+        "width": 480,
+        "path": "images/optimized/medical-seva-volunteer-480.webp"
+      },
+      {
+        "width": 960,
+        "path": "images/optimized/medical-seva-volunteer-960.webp"
+      },
+      {
+        "width": 1254,
+        "path": "images/optimized/medical-seva-volunteer-1254.webp"
+      }
+    ],
+    "originalBytes": 1342327,
+    "optimizedBytes": 30360
+  },
+  {
+    "original": "images/moorthy.png",
+    "path": "images/optimized/moorthy-1254.webp",
+    "width": 1254,
+    "height": 1254,
+    "variants": [
+      {
+        "width": 480,
+        "path": "images/optimized/moorthy-480.webp"
+      },
+      {
+        "width": 960,
+        "path": "images/optimized/moorthy-960.webp"
+      },
+      {
+        "width": 1254,
+        "path": "images/optimized/moorthy-1254.webp"
+      }
+    ],
+    "originalBytes": 2548763,
+    "optimizedBytes": 188044
+  },
+  {
+    "original": "images/murty stapana.png",
+    "path": "images/optimized/murty stapana-1600.webp",
+    "width": 1600,
+    "height": 900,
+    "variants": [
+      {
+        "width": 480,
+        "path": "images/optimized/murty stapana-480.webp"
+      },
+      {
+        "width": 960,
+        "path": "images/optimized/murty stapana-960.webp"
+      },
+      {
+        "width": 1600,
+        "path": "images/optimized/murty stapana-1600.webp"
+      }
+    ],
+    "originalBytes": 1870003,
+    "optimizedBytes": 74646
+  },
+  {
+    "original": "images/other.png",
+    "path": "images/optimized/other-1254.webp",
+    "width": 1254,
+    "height": 1254,
+    "variants": [
+      {
+        "width": 480,
+        "path": "images/optimized/other-480.webp"
+      },
+      {
+        "width": 960,
+        "path": "images/optimized/other-960.webp"
+      },
+      {
+        "width": 1254,
+        "path": "images/optimized/other-1254.webp"
+      }
+    ],
+    "originalBytes": 2825158,
+    "optimizedBytes": 263184
+  },
+  {
+    "original": "images/pran pratista.png",
+    "path": "images/optimized/pran pratista-1600.webp",
+    "width": 1600,
+    "height": 900,
+    "variants": [
+      {
+        "width": 480,
+        "path": "images/optimized/pran pratista-480.webp"
+      },
+      {
+        "width": 960,
+        "path": "images/optimized/pran pratista-960.webp"
+      },
+      {
+        "width": 1600,
+        "path": "images/optimized/pran pratista-1600.webp"
+      }
+    ],
+    "originalBytes": 2003280,
+    "optimizedBytes": 103952
+  },
+  {
+    "original": "images/prayerhall.png",
+    "path": "images/optimized/prayerhall-1254.webp",
+    "width": 1254,
+    "height": 1254,
+    "variants": [
+      {
+        "width": 480,
+        "path": "images/optimized/prayerhall-480.webp"
+      },
+      {
+        "width": 960,
+        "path": "images/optimized/prayerhall-960.webp"
+      },
+      {
+        "width": 1254,
+        "path": "images/optimized/prayerhall-1254.webp"
+      }
+    ],
+    "originalBytes": 2825017,
+    "optimizedBytes": 261634
+  },
+  {
+    "original": "images/sandalwood-incense.png",
+    "path": "images/optimized/sandalwood-incense-1448.webp",
+    "width": 1448,
+    "height": 1086,
+    "variants": [
+      {
+        "width": 480,
+        "path": "images/optimized/sandalwood-incense-480.webp"
+      },
+      {
+        "width": 960,
+        "path": "images/optimized/sandalwood-incense-960.webp"
+      },
+      {
+        "width": 1448,
+        "path": "images/optimized/sandalwood-incense-1448.webp"
+      }
+    ],
+    "originalBytes": 2077224,
+    "optimizedBytes": 118090
+  },
+  {
+    "original": "images/satsang.png",
+    "path": "images/optimized/satsang-1254.webp",
+    "width": 1254,
+    "height": 1254,
+    "variants": [
+      {
+        "width": 480,
+        "path": "images/optimized/satsang-480.webp"
+      },
+      {
+        "width": 960,
+        "path": "images/optimized/satsang-960.webp"
+      },
+      {
+        "width": 1254,
+        "path": "images/optimized/satsang-1254.webp"
+      }
+    ],
+    "originalBytes": 2413072,
+    "optimizedBytes": 177258
+  },
+  {
+    "original": "images/seva-bg.png",
+    "path": "images/optimized/seva-bg-1600.webp",
+    "width": 1600,
+    "height": 900,
+    "variants": [
+      {
+        "width": 480,
+        "path": "images/optimized/seva-bg-480.webp"
+      },
+      {
+        "width": 960,
+        "path": "images/optimized/seva-bg-960.webp"
+      },
+      {
+        "width": 1600,
+        "path": "images/optimized/seva-bg-1600.webp"
+      }
+    ],
+    "originalBytes": 1522153,
+    "optimizedBytes": 12386
+  },
+  {
+    "original": "images/seva-partner-bg.png",
+    "path": "images/optimized/seva-partner-bg-1600.webp",
+    "width": 1600,
+    "height": 582,
+    "variants": [
+      {
+        "width": 480,
+        "path": "images/optimized/seva-partner-bg-480.webp"
+      },
+      {
+        "width": 960,
+        "path": "images/optimized/seva-partner-bg-960.webp"
+      },
+      {
+        "width": 1600,
+        "path": "images/optimized/seva-partner-bg-1600.webp"
+      }
+    ],
+    "originalBytes": 1621040,
+    "optimizedBytes": 33632
+  },
+  {
+    "original": "images/spiritual-books.png",
+    "path": "images/optimized/spiritual-books-1448.webp",
+    "width": 1448,
+    "height": 1086,
+    "variants": [
+      {
+        "width": 480,
+        "path": "images/optimized/spiritual-books-480.webp"
+      },
+      {
+        "width": 960,
+        "path": "images/optimized/spiritual-books-960.webp"
+      },
+      {
+        "width": 1448,
+        "path": "images/optimized/spiritual-books-1448.webp"
+      }
+    ],
+    "originalBytes": 2457246,
+    "optimizedBytes": 178562
+  },
+  {
+    "original": "images/store-hero.jpg",
+    "path": "images/optimized/store-hero-1448.webp",
+    "width": 1448,
+    "height": 1086,
+    "variants": [
+      {
+        "width": 480,
+        "path": "images/optimized/store-hero-480.webp"
+      },
+      {
+        "width": 960,
+        "path": "images/optimized/store-hero-960.webp"
+      },
+      {
+        "width": 1448,
+        "path": "images/optimized/store-hero-1448.webp"
+      }
+    ],
+    "originalBytes": 1115173,
+    "optimizedBytes": 121546
+  },
+  {
+    "original": "images/stories-baba.jpg",
+    "path": "images/optimized/stories-baba-1600.webp",
+    "width": 1600,
+    "height": 900,
+    "variants": [
+      {
+        "width": 480,
+        "path": "images/optimized/stories-baba-480.webp"
+      },
+      {
+        "width": 960,
+        "path": "images/optimized/stories-baba-960.webp"
+      },
+      {
+        "width": 1600,
+        "path": "images/optimized/stories-baba-1600.webp"
+      }
+    ],
+    "originalBytes": 283981,
+    "optimizedBytes": 90184
+  },
+  {
+    "original": "images/stories-bg.png",
+    "path": "images/optimized/stories-bg-1600.webp",
+    "width": 1600,
+    "height": 900,
+    "variants": [
+      {
+        "width": 480,
+        "path": "images/optimized/stories-bg-480.webp"
+      },
+      {
+        "width": 960,
+        "path": "images/optimized/stories-bg-960.webp"
+      },
+      {
+        "width": 1600,
+        "path": "images/optimized/stories-bg-1600.webp"
+      }
+    ],
+    "originalBytes": 1166855,
+    "optimizedBytes": 4494
+  },
+  {
+    "original": "images/stories-food.jpg",
+    "path": "images/optimized/stories-food-397.webp",
+    "width": 397,
+    "height": 644,
+    "variants": [
+      {
+        "width": 397,
+        "path": "images/optimized/stories-food-397.webp"
+      }
+    ],
+    "originalBytes": 131889,
+    "optimizedBytes": 32296
+  },
+  {
+    "original": "images/stories-service.jpg",
+    "path": "images/optimized/stories-service-591.webp",
+    "width": 591,
+    "height": 285,
+    "variants": [
+      {
+        "width": 480,
+        "path": "images/optimized/stories-service-480.webp"
+      },
+      {
+        "width": 591,
+        "path": "images/optimized/stories-service-591.webp"
+      }
+    ],
+    "originalBytes": 148701,
+    "optimizedBytes": 44094
+  },
+  {
+    "original": "images/stories-temple.jpg",
+    "path": "images/optimized/stories-temple-784.webp",
+    "width": 784,
+    "height": 363,
+    "variants": [
+      {
+        "width": 480,
+        "path": "images/optimized/stories-temple-480.webp"
+      },
+      {
+        "width": 784,
+        "path": "images/optimized/stories-temple-784.webp"
+      }
+    ],
+    "originalBytes": 216346,
+    "optimizedBytes": 61734
+  },
+  {
+    "original": "images/story-bg-mobile.png",
+    "path": "images/optimized/story-bg-mobile-940.webp",
+    "width": 940,
+    "height": 1672,
+    "variants": [
+      {
+        "width": 480,
+        "path": "images/optimized/story-bg-mobile-480.webp"
+      },
+      {
+        "width": 940,
+        "path": "images/optimized/story-bg-mobile-940.webp"
+      }
+    ],
+    "originalBytes": 1953832,
+    "optimizedBytes": 78352
+  },
+  {
+    "original": "images/story-bg.png",
+    "path": "images/optimized/story-bg-1600.webp",
+    "width": 1600,
+    "height": 900,
+    "variants": [
+      {
+        "width": 480,
+        "path": "images/optimized/story-bg-480.webp"
+      },
+      {
+        "width": 960,
+        "path": "images/optimized/story-bg-960.webp"
+      },
+      {
+        "width": 1600,
+        "path": "images/optimized/story-bg-1600.webp"
+      }
+    ],
+    "originalBytes": 1685240,
+    "optimizedBytes": 44380
+  },
+  {
+    "original": "images/student-volunteer.png",
+    "path": "images/optimized/student-volunteer-1254.webp",
+    "width": 1254,
+    "height": 1254,
+    "variants": [
+      {
+        "width": 480,
+        "path": "images/optimized/student-volunteer-480.webp"
+      },
+      {
+        "width": 960,
+        "path": "images/optimized/student-volunteer-960.webp"
+      },
+      {
+        "width": 1254,
+        "path": "images/optimized/student-volunteer-1254.webp"
+      }
+    ],
+    "originalBytes": 1071136,
+    "optimizedBytes": 90380
+  },
+  {
+    "original": "images/temple-for-baba-mobile view.png",
+    "path": "images/optimized/temple-for-baba-mobile view-883.webp",
+    "width": 883,
+    "height": 1782,
+    "variants": [
+      {
+        "width": 480,
+        "path": "images/optimized/temple-for-baba-mobile view-480.webp"
+      },
+      {
+        "width": 883,
+        "path": "images/optimized/temple-for-baba-mobile view-883.webp"
+      }
+    ],
+    "originalBytes": 2415069,
+    "optimizedBytes": 188598
+  },
+  {
+    "original": "images/temple-for-baba.png",
+    "path": "images/optimized/temple-for-baba-1600.webp",
+    "width": 1600,
+    "height": 900,
+    "variants": [
+      {
+        "width": 480,
+        "path": "images/optimized/temple-for-baba-480.webp"
+      },
+      {
+        "width": 960,
+        "path": "images/optimized/temple-for-baba-960.webp"
+      },
+      {
+        "width": 1600,
+        "path": "images/optimized/temple-for-baba-1600.webp"
+      }
+    ],
+    "originalBytes": 2309621,
+    "optimizedBytes": 151836
+  },
+  {
+    "original": "images/temple-fund-bg.png",
+    "path": "images/optimized/temple-fund-bg-1600.webp",
+    "width": 1600,
+    "height": 900,
+    "variants": [
+      {
+        "width": 480,
+        "path": "images/optimized/temple-fund-bg-480.webp"
+      },
+      {
+        "width": 960,
+        "path": "images/optimized/temple-fund-bg-960.webp"
+      },
+      {
+        "width": 1600,
+        "path": "images/optimized/temple-fund-bg-1600.webp"
+      }
+    ],
+    "originalBytes": 1735224,
+    "optimizedBytes": 49560
+  },
+  {
+    "original": "images/temple-fund-mobile-bg.png",
+    "path": "images/optimized/temple-fund-mobile-bg-941.webp",
+    "width": 941,
+    "height": 1672,
+    "variants": [
+      {
+        "width": 480,
+        "path": "images/optimized/temple-fund-mobile-bg-480.webp"
+      },
+      {
+        "width": 941,
+        "path": "images/optimized/temple-fund-mobile-bg-941.webp"
+      }
+    ],
+    "originalBytes": 1764016,
+    "optimizedBytes": 53678
+  },
+  {
+    "original": "images/temple-project-volunteer.png",
+    "path": "images/optimized/temple-project-volunteer-1254.webp",
+    "width": 1254,
+    "height": 1254,
+    "variants": [
+      {
+        "width": 480,
+        "path": "images/optimized/temple-project-volunteer-480.webp"
+      },
+      {
+        "width": 960,
+        "path": "images/optimized/temple-project-volunteer-960.webp"
+      },
+      {
+        "width": 1254,
+        "path": "images/optimized/temple-project-volunteer-1254.webp"
+      }
+    ],
+    "originalBytes": 1100361,
+    "optimizedBytes": 89556
+  },
+  {
+    "original": "images/testimonials-bg.png",
+    "path": "images/optimized/testimonials-bg-1600.webp",
+    "width": 1600,
+    "height": 900,
+    "variants": [
+      {
+        "width": 480,
+        "path": "images/optimized/testimonials-bg-480.webp"
+      },
+      {
+        "width": 960,
+        "path": "images/optimized/testimonials-bg-960.webp"
+      },
+      {
+        "width": 1600,
+        "path": "images/optimized/testimonials-bg-1600.webp"
+      }
+    ],
+    "originalBytes": 1656612,
+    "optimizedBytes": 36108
+  },
+  {
+    "original": "images/tulsi-mala.png",
+    "path": "images/optimized/tulsi-mala-1448.webp",
+    "width": 1448,
+    "height": 1086,
+    "variants": [
+      {
+        "width": 480,
+        "path": "images/optimized/tulsi-mala-480.webp"
+      },
+      {
+        "width": 960,
+        "path": "images/optimized/tulsi-mala-960.webp"
+      },
+      {
+        "width": 1448,
+        "path": "images/optimized/tulsi-mala-1448.webp"
+      }
+    ],
+    "originalBytes": 2109767,
+    "optimizedBytes": 110590
+  },
+  {
+    "original": "images/update1.png",
+    "path": "images/optimized/update1-1448.webp",
+    "width": 1448,
+    "height": 1086,
+    "variants": [
+      {
+        "width": 480,
+        "path": "images/optimized/update1-480.webp"
+      },
+      {
+        "width": 960,
+        "path": "images/optimized/update1-960.webp"
+      },
+      {
+        "width": 1448,
+        "path": "images/optimized/update1-1448.webp"
+      }
+    ],
+    "originalBytes": 2324506,
+    "optimizedBytes": 173748
+  },
+  {
+    "original": "images/update2.png",
+    "path": "images/optimized/update2-1600.webp",
+    "width": 1600,
+    "height": 900,
+    "variants": [
+      {
+        "width": 480,
+        "path": "images/optimized/update2-480.webp"
+      },
+      {
+        "width": 960,
+        "path": "images/optimized/update2-960.webp"
+      },
+      {
+        "width": 1600,
+        "path": "images/optimized/update2-1600.webp"
+      }
+    ],
+    "originalBytes": 2399386,
+    "optimizedBytes": 180200
+  },
+  {
+    "original": "images/update3.png",
+    "path": "images/optimized/update3-1600.webp",
+    "width": 1600,
+    "height": 900,
+    "variants": [
+      {
+        "width": 480,
+        "path": "images/optimized/update3-480.webp"
+      },
+      {
+        "width": 960,
+        "path": "images/optimized/update3-960.webp"
+      },
+      {
+        "width": 1600,
+        "path": "images/optimized/update3-1600.webp"
+      }
+    ],
+    "originalBytes": 3078781,
+    "optimizedBytes": 275712
+  },
+  {
+    "original": "images/update4.png",
+    "path": "images/optimized/update4-1600.webp",
+    "width": 1600,
+    "height": 900,
+    "variants": [
+      {
+        "width": 480,
+        "path": "images/optimized/update4-480.webp"
+      },
+      {
+        "width": 960,
+        "path": "images/optimized/update4-960.webp"
+      },
+      {
+        "width": 1600,
+        "path": "images/optimized/update4-1600.webp"
+      }
+    ],
+    "originalBytes": 2294939,
+    "optimizedBytes": 115784
+  },
+  {
+    "original": "images/update5.png",
+    "path": "images/optimized/update5-1600.webp",
+    "width": 1600,
+    "height": 900,
+    "variants": [
+      {
+        "width": 480,
+        "path": "images/optimized/update5-480.webp"
+      },
+      {
+        "width": 960,
+        "path": "images/optimized/update5-960.webp"
+      },
+      {
+        "width": 1600,
+        "path": "images/optimized/update5-1600.webp"
+      }
+    ],
+    "originalBytes": 2208347,
+    "optimizedBytes": 124892
+  },
+  {
+    "original": "images/update6.png",
+    "path": "images/optimized/update6-1600.webp",
+    "width": 1600,
+    "height": 900,
+    "variants": [
+      {
+        "width": 480,
+        "path": "images/optimized/update6-480.webp"
+      },
+      {
+        "width": 960,
+        "path": "images/optimized/update6-960.webp"
+      },
+      {
+        "width": 1600,
+        "path": "images/optimized/update6-1600.webp"
+      }
+    ],
+    "originalBytes": 2652416,
+    "optimizedBytes": 239714
+  },
+  {
+    "original": "images/update7.png",
+    "path": "images/optimized/update7-1600.webp",
+    "width": 1600,
+    "height": 900,
+    "variants": [
+      {
+        "width": 480,
+        "path": "images/optimized/update7-480.webp"
+      },
+      {
+        "width": 960,
+        "path": "images/optimized/update7-960.webp"
+      },
+      {
+        "width": 1600,
+        "path": "images/optimized/update7-1600.webp"
+      }
+    ],
+    "originalBytes": 2528049,
+    "optimizedBytes": 196342
+  },
+  {
+    "original": "images/update8.png",
+    "path": "images/optimized/update8-1600.webp",
+    "width": 1600,
+    "height": 900,
+    "variants": [
+      {
+        "width": 480,
+        "path": "images/optimized/update8-480.webp"
+      },
+      {
+        "width": 960,
+        "path": "images/optimized/update8-960.webp"
+      },
+      {
+        "width": 1600,
+        "path": "images/optimized/update8-1600.webp"
+      }
+    ],
+    "originalBytes": 2109044,
+    "optimizedBytes": 118000
+  },
+  {
+    "original": "images/updates-bg.png",
+    "path": "images/optimized/updates-bg-1536.webp",
+    "width": 1536,
+    "height": 1024,
+    "variants": [
+      {
+        "width": 480,
+        "path": "images/optimized/updates-bg-480.webp"
+      },
+      {
+        "width": 960,
+        "path": "images/optimized/updates-bg-960.webp"
+      },
+      {
+        "width": 1536,
+        "path": "images/optimized/updates-bg-1536.webp"
+      }
+    ],
+    "originalBytes": 1471546,
+    "optimizedBytes": 16236
+  },
+  {
+    "original": "images/updates-mobile-bg.png",
+    "path": "images/optimized/updates-mobile-bg-941.webp",
+    "width": 941,
+    "height": 1672,
+    "variants": [
+      {
+        "width": 480,
+        "path": "images/optimized/updates-mobile-bg-480.webp"
+      },
+      {
+        "width": 941,
+        "path": "images/optimized/updates-mobile-bg-941.webp"
+      }
+    ],
+    "originalBytes": 1463351,
+    "optimizedBytes": 20768
+  },
+  {
+    "original": "images/vision.png",
+    "path": "images/optimized/vision-1600.webp",
+    "width": 1600,
+    "height": 900,
+    "variants": [
+      {
+        "width": 480,
+        "path": "images/optimized/vision-480.webp"
+      },
+      {
+        "width": 960,
+        "path": "images/optimized/vision-960.webp"
+      },
+      {
+        "width": 1600,
+        "path": "images/optimized/vision-1600.webp"
+      }
+    ],
+    "originalBytes": 1972643,
+    "optimizedBytes": 77688
+  },
+  {
+    "original": "images/volunteer-bg.png",
+    "path": "images/optimized/volunteer-bg-1600.webp",
+    "width": 1600,
+    "height": 900,
+    "variants": [
+      {
+        "width": 480,
+        "path": "images/optimized/volunteer-bg-480.webp"
+      },
+      {
+        "width": 960,
+        "path": "images/optimized/volunteer-bg-960.webp"
+      },
+      {
+        "width": 1600,
+        "path": "images/optimized/volunteer-bg-1600.webp"
+      }
+    ],
+    "originalBytes": 1695707,
+    "optimizedBytes": 19996
+  },
+  {
+    "original": "images/volunteer_1.png",
+    "path": "images/optimized/volunteer_1-1122.webp",
+    "width": 1122,
+    "height": 1402,
+    "variants": [
+      {
+        "width": 480,
+        "path": "images/optimized/volunteer_1-480.webp"
+      },
+      {
+        "width": 960,
+        "path": "images/optimized/volunteer_1-960.webp"
+      },
+      {
+        "width": 1122,
+        "path": "images/optimized/volunteer_1-1122.webp"
+      }
+    ],
+    "originalBytes": 2079097,
+    "optimizedBytes": 78842
+  },
+  {
+    "original": "images/volunteer_2.png",
+    "path": "images/optimized/volunteer_2-1122.webp",
+    "width": 1122,
+    "height": 1402,
+    "variants": [
+      {
+        "width": 480,
+        "path": "images/optimized/volunteer_2-480.webp"
+      },
+      {
+        "width": 960,
+        "path": "images/optimized/volunteer_2-960.webp"
+      },
+      {
+        "width": 1122,
+        "path": "images/optimized/volunteer_2-1122.webp"
+      }
+    ],
+    "originalBytes": 2128857,
+    "optimizedBytes": 95336
+  },
+  {
+    "original": "images/water.png",
+    "path": "images/optimized/water-1086.webp",
+    "width": 1086,
+    "height": 1448,
+    "variants": [
+      {
+        "width": 480,
+        "path": "images/optimized/water-480.webp"
+      },
+      {
+        "width": 960,
+        "path": "images/optimized/water-960.webp"
+      },
+      {
+        "width": 1086,
+        "path": "images/optimized/water-1086.webp"
+      }
+    ],
+    "originalBytes": 2489668,
+    "optimizedBytes": 182258
+  }
+]

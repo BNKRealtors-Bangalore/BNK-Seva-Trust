@@ -18,3 +18,5 @@
 #bnkPurchaseDialog a{color:#800b23}
 #bnkPurchaseDialog #purchaseMessage{margin:18px 0 0}
 @media(max-width:520px){#bnkPurchaseDialog{padding:22px 18px}#bnkPurchaseDialog .purchase-fields{grid-template-columns:1fr}}
+/* Only a non-personal order ID is saved in sessionStorage. The recovery credential is HttpOnly. */
+.purchase-resume{position:fixed;left:20px;bottom:28px;z-index:8999;border:0;border-radius:999px;padding:13px 20px;background:#800b23;color:white;font:600 14px sans-serif;box-shadow:0 3px 18px #800b2340;cursor:pointer}.purchase-resume[hidden]{display:none}

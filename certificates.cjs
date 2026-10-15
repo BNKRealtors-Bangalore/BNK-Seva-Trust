@@ -15,14 +15,14 @@ function certificateSVG(record) {
   '<text x="800" y="790" font-size="28" textLength="'+Math.min(1200,Math.max(200,String(record.purpose||record.type).length*15))+'" lengthAdjust="spacingAndGlyphs">'+escape(record.purpose||record.type)+'</text>'+
   '<text x="800" y="895" font-size="23" fill="#655449">Certificate: '+escape(record.id)+' | '+escape(date)+'</text><text x="800" y="965" font-size="28" font-style="italic">Love everyone. Serve everyone. Remember God.</text></g></svg>';
 }
-function createCertificateService({database,getSiteContent,getSessionUser,sendJSON,env=process.env,transportFactory}) {
+function createCertificateService({database,getSiteContent,getSessionUser,sendJSON,readJSON,env=process.env,transportFactory,audit=async()=>{}}) {
   const validEmail=value=>typeof value==="string"&&value.length<=254&&/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
   function configured(){return env.CERTIFICATE_EMAIL_ENABLED!=="false"&&Boolean(env.SMTP_HOST&&env.SMTP_USER&&env.SMTP_PASS&&env.SMTP_FROM);}
   let transport;
   function mailer(){
     if(!transport)transport=(transportFactory||require("nodemailer").createTransport)({
       host:env.SMTP_HOST,port:Number(env.SMTP_PORT||465),secure:env.SMTP_SECURE==="true",
-      auth:{user:env.SMTP_USER,pass:env.SMTP_PASS},connectionTimeout:10000,greetingTimeout:10000,socketTimeout:15000
+      auth:{user:env.SMTP_USER,pass:env.SMTP_PASS},connectionTimeout:5000,greetingTimeout:5000,socketTimeout:10000
     });
     return transport;
   }
@@ -35,7 +35,9 @@ function createCertificateService({database,getSiteContent,getSessionUser,sendJS
   }
   async function send(id){
     const content=await getSiteContent(),record=content.records.donations.find(item=>item.id===id);
-    if(!record||record.status!=="Verified"||!validEmail(record.email))return;
+    if(!record||record.status!=="Verified"||!validEmail(record.email)){
+      await database.prepare("UPDATE email_certificate_deliveries SET status='Cancelled',updated_at=? WHERE donation_id=? AND status IN ('Ready','Setup required','Failed')").run(new Date().toISOString(),id);return;
+    }
     await issue(record);
     if(!configured()){
       await database.prepare("UPDATE email_certificate_deliveries SET status='Setup required',updated_at=? WHERE donation_id=? AND status IN ('Ready','Setup required')").run(new Date().toISOString(),id);return;
@@ -55,6 +57,7 @@ function createCertificateService({database,getSiteContent,getSessionUser,sendJS
       const accepted=result.messageId&&result.accepted?.length>0;
       await database.prepare("UPDATE email_certificate_deliveries SET status=?,message_id=?,last_error=?,updated_at=? WHERE donation_id=?")
         .run(accepted?"Submitted to email server":"Check mail provider",result.messageId||null,accepted?null:"Email acceptance is unclear; check the sender mailbox before retrying.",new Date().toISOString(),id);
+      await audit(null,accepted?"certificate.submitted":"certificate.review",id);
     }catch(error){
       const definite=["EAUTH","EENVELOPE","EMESSAGE"].includes(error.code)||Number(error.responseCode)>=400;
       await database.prepare("UPDATE email_certificate_deliveries SET status=?,last_error=?,updated_at=? WHERE donation_id=?")
@@ -63,15 +66,25 @@ function createCertificateService({database,getSiteContent,getSessionUser,sendJS
   }
   async function sync(records,previousRecords=[]){
     const previous=new Map(previousRecords.map(record=>[record.id,record]));
-    const ready=[];
     for(const record of records){
       if(record.status!=="Verified"||!validEmail(record.email))continue;
       if(previous.get(record.id)?.status!=="Verified")await issue(record);
-      const row=await database.prepare("SELECT status FROM email_certificate_deliveries WHERE donation_id=?").get(record.id);
-      if(row&&["Ready","Setup required"].includes(row.status))ready.push(record.id);
+      await database.prepare("UPDATE email_certificate_deliveries SET status='Ready',updated_at=? WHERE donation_id=? AND status='Cancelled'").run(new Date().toISOString(),record.id);
+      if(!configured())await database.prepare("UPDATE email_certificate_deliveries SET status='Setup required' WHERE donation_id=? AND status='Ready'").run(record.id);
     }
-    let next=0;
-    await Promise.all(Array.from({length:Math.min(3,ready.length)},async()=>{while(next<ready.length)await send(ready[next++]);}));
+  }
+  async function recover() {
+    await database.prepare("UPDATE email_certificate_deliveries SET status='Check mail provider',last_error='Worker interrupted. Check the sender mailbox before resolving or retrying.',updated_at=? WHERE status='Sending' AND updated_at<?")
+      .run(new Date().toISOString(),new Date(Date.now()-300000).toISOString());
+  }
+  async function processQueue() {
+    await recover();
+    if(!configured())return {configured:false,processed:0};
+    const rows=await database.prepare("SELECT donation_id FROM email_certificate_deliveries WHERE status IN ('Ready','Setup required') ORDER BY created_at LIMIT 100").all();
+    const started=Date.now();let next=0;
+    await Promise.all(Array.from({length:Math.min(2,rows.length)},async()=>{while(next<rows.length&&Date.now()-started<20000)await send(rows[next++].donation_id)}));
+    const remaining=await database.prepare("SELECT COUNT(*) AS total FROM email_certificate_deliveries WHERE status IN ('Ready','Setup required')").get();
+    return {configured:true,processed:next,hasMore:Number(remaining.total)>0};
   }
   async function handle(request,response,url){
     const download=url.pathname.match(/^\/api\/certificates\/([a-f0-9]{64})$/);
@@ -84,20 +97,38 @@ function createCertificateService({database,getSiteContent,getSessionUser,sendJS
     }
     if(url.pathname==="/api/admin/certificates"&&request.method==="GET"){
       if(!await getSessionUser(request)){sendJSON(response,401,{error:"Login required."});return true;}
-      const rows=await database.prepare("SELECT donation_id,email,status,last_error,created_at,updated_at FROM email_certificate_deliveries ORDER BY created_at DESC LIMIT 1000").all();
+      await recover();
+      const rows=await database.prepare("SELECT donation_id,email,status,last_error,created_at,updated_at FROM email_certificate_deliveries ORDER BY created_at DESC").all();
       const content=await getSiteContent();
       const certificates=rows.map(row=>({...row,name:content.records.donations.find(d=>d.id===row.donation_id)?.name||"Donor"}));
       for(const donor of content.records.donations.filter(d=>d.status==="Verified"&&!rows.some(row=>row.donation_id===d.id)))
         certificates.push({donation_id:donor.id,name:donor.name,email:donor.email||"",status:validEmail(donor.email)?"Not issued":"Invalid email address"});
       sendJSON(response,200,{configured:configured(),certificates});return true;
     }
+    if(url.pathname==="/api/admin/certificates/process"&&request.method==="POST") {
+      if(!await getSessionUser(request,["Admin","Editor"])){sendJSON(response,403,{error:"Admin or Editor role required."});return true;}
+      sendJSON(response,200,await processQueue());return true;
+    }
+    const resolve=url.pathname.match(/^\/api\/admin\/certificates\/([^/]+)\/resolve$/);
+    if(resolve&&request.method==="POST") {
+      const actor=await getSessionUser(request,["Admin"]);
+      if(!actor){sendJSON(response,403,{error:"Admin role required."});return true;}
+      const input=await readJSON(request);
+      if(input.confirmed!==true||!["retry","delivered"].includes(input.resolution)){sendJSON(response,400,{error:"Confirm that the sender mailbox was checked first."});return true;}
+      const result=await database.prepare("UPDATE email_certificate_deliveries SET status=?,last_error=NULL,updated_at=? WHERE donation_id=? AND status='Check mail provider' RETURNING donation_id").get(input.resolution==="retry"?"Ready":"Submitted to email server",new Date().toISOString(),resolve[1]);
+      if(!result){sendJSON(response,409,{error:"Certificate is not awaiting resolution."});return true;}
+      await audit(actor,"certificate.resolve."+input.resolution,resolve[1]);
+      sendJSON(response,200,{ok:true});return true;
+    }
     const retry=url.pathname.match(/^\/api\/admin\/certificates\/([^/]+)\/send$/);
     if(retry&&request.method==="POST"){
-      if(!await getSessionUser(request,["Admin","Editor"])){sendJSON(response,403,{error:"Admin or Editor role required."});return true;}
+      const actor=await getSessionUser(request,["Admin","Editor"]);
+      if(!actor){sendJSON(response,403,{error:"Admin or Editor role required."});return true;}
+      await audit(actor,"certificate.send",retry[1]);
       await send(retry[1]);sendJSON(response,200,{ok:true});return true;
     }
     return false;
   }
-  return{sync,handle,send};
+  return{sync,handle,send,processQueue};
 }
 module.exports={certificateSchema,createCertificateService,certificateSVG};

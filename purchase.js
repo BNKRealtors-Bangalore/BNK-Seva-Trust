@@ -10,6 +10,33 @@
   const money=paise=>"₹"+(paise/100).toLocaleString("en-IN",{minimumFractionDigits:2,maximumFractionDigits:2});
   const escape=value=>String(value??"").replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch]));
   let items=[],order=null,paymentToken=null,returnFocus=null,busy=false;
+  const resumeButton=document.createElement("button");
+  resumeButton.type="button";resumeButton.className="purchase-resume";resumeButton.textContent="Resume payment";
+  document.body.append(resumeButton);
+  const sessionKey="bnk-purchase-session";
+  let savedId=null;try{savedId=sessionStorage.getItem(sessionKey)}catch{}
+  resumeButton.hidden=!savedId;
+  function remember(id){savedId=id;try{if(id)sessionStorage.setItem(sessionKey,id);else sessionStorage.removeItem(sessionKey)}catch{}resumeButton.hidden=!id;}
+  function showPayment(purchase){
+    order=purchase;items=purchase.items.map(({id,quantity})=>({id,quantity}));
+    summary(order.items,order.totalPaise);form.hidden=true;pay.hidden=order.status!=="Awaiting Payment";
+    $("#purchaseAmount").textContent="Amount to pay: "+money(order.totalPaise);
+    $("#purchaseMessage").textContent=order.status==="Awaiting Payment"?"Purchase saved. Complete your UPI payment below.":"Purchase "+order.id+": "+order.status+".";
+  }
+  async function resume(){
+    if(!savedId||busy)return;
+    returnFocus=document.activeElement;setBusy(true);
+    try{
+      const response=await fetch("/api/purchases/"+encodeURIComponent(savedId)+"/session",{credentials:"same-origin",cache:"no-store"});
+      const result=await response.json();
+      if(!response.ok){if(response.status===403||response.status===404)remember(null);throw Error(result.error||"Cannot resume checkout.");}
+      paymentToken=null;showPayment(result.purchase);
+      if(!dialog.open)dialog.showModal();
+      if(order.status!=="Awaiting Payment")remember(null);
+    }catch(error){if(!dialog.open)dialog.showModal();$("#purchaseMessage").textContent=error.message;}
+    finally{setBusy(false)}
+  }
+  resumeButton.addEventListener("click",resume);
   function summary(lines,total) {
     $("#purchaseSummary").innerHTML='<h3>Your items</h3><ul>'+lines.map(item=>'<li><span>'+escape(item.name)+' × '+item.quantity+'</span><strong>'+money(item.lineTotalPaise)+'</strong></li>').join("")+'</ul><div class="purchase-total"><span>Total</span><strong>'+money(total)+'</strong></div>';
   }
@@ -30,6 +57,7 @@
   }
   document.addEventListener("bnk:store-checkout",event=>{
     if(busy)return;
+    if(savedId){resume();return;}
     items=event.detail.items.map(item=>({id:item.id,quantity:item.quantity}));
     order=null;paymentToken=null;form.reset();form.hidden=false;pay.hidden=true;
     $("#purchaseReference").value="";$("#purchaseMessage").textContent="";
@@ -47,6 +75,7 @@
       const fields=Object.fromEntries(new FormData(form));
       const result=await request("/api/purchases",{...fields,items});
       order=result.purchase;paymentToken=result.paymentToken;
+      remember(order.id);
       summary(order.items,order.totalPaise);form.hidden=true;pay.hidden=false;
       $("#purchaseAmount").textContent="Amount to pay: "+money(order.totalPaise);
       $("#purchaseMessage").textContent="Purchase saved. Complete your UPI payment below.";
@@ -60,6 +89,7 @@
     try {
       const result=await request("/api/purchases/"+encodeURIComponent(order.id)+"/payment",{paymentToken,reference:reference.value.trim()});
       pay.hidden=true;$("#purchaseMessage").textContent="Purchase "+result.purchase.id+" recorded. Your payment is pending verification by the Trust.";
+      remember(null);
       document.dispatchEvent(new CustomEvent("bnk:purchase-submitted",{detail:{items:order.items}}));
       $("#purchaseMessage").setAttribute("tabindex","-1");$("#purchaseMessage").focus();
     }catch(error){$("#purchaseMessage").textContent=error.message}

@@ -31,7 +31,7 @@ test("login request limits persist across instances without storing raw IP addre
   }finally{db.close();fs.rmSync(filename,{force:true});}
 });
 test("admin browser persistence excludes private tables and passwords",()=>{
-  const html=fs.readFileSync("admin.html","utf8");assert.ok(html.includes("/api/admin/site-content"));
+  const html=require('./page-source.cjs').pageSource('admin.html');assert.ok(html.includes("/api/admin/site-content"));
   assert.ok(!html.includes("localStorage.setItem(KEY,JSON.stringify(state))"));
   assert.ok(!html.includes("image/svg+xml"));
 });

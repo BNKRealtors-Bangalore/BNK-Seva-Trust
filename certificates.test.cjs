@@ -18,19 +18,21 @@ test("certificate email requires admin verification and avoids duplicate deliver
   }})
   });
   try{
-    await service.sync(records);
+    await service.sync(records);await service.processQueue();
     assert.equal((await database.prepare("SELECT * FROM email_certificate_deliveries").all()).length,0);
     donor.status="Verified";
-    await service.sync(records);
+    await service.sync(records);await service.processQueue();
     let row=await database.prepare("SELECT * FROM email_certificate_deliveries WHERE donation_id=?").get(donor.id);
     assert.equal(row.status,"Setup required");assert.equal(sent.length,0);
     Object.assign(env,{SMTP_HOST:"smtp.gmail.com",SMTP_USER:"Bnksevatrust@gmail.com",SMTP_PASS:"fake-test-password",SMTP_FROM:"BNK Seva Trust <Bnksevatrust@gmail.com>",SMTP_SECURE:"true",PUBLIC_SITE_URL:"https://example.org"});
     await service.sync(records);
+    assert.equal(sent.length,0,"Saving verification queues email without sending inside the save request");
+    await service.processQueue();
     assert.equal(sent.length,1);
     assert.equal(sent[0].to,"donor@example.org");
     assert.equal(sent[0].attachments[0].contentType,"image/svg+xml");
     assert.ok(sent[0].text.includes(row.token));
-    await service.sync(records);await service.send(donor.id);
+    await service.sync(records);await service.processQueue();await service.send(donor.id);
     assert.equal(sent.length,1);
     row=await database.prepare("SELECT * FROM email_certificate_deliveries WHERE donation_id=?").get(donor.id);
     assert.equal(row.status,"Submitted to email server");
@@ -42,15 +44,18 @@ test("certificate email requires admin verification and avoids duplicate deliver
     const adminResponse={};await service.handle({method:"GET"},adminResponse,new URL("https://example.org/api/admin/certificates"));assert.equal(adminResponse.status,401);
     await service.handle({method:"GET",admin:true},adminResponse,new URL("https://example.org/api/admin/certificates"));assert.ok(!JSON.stringify(adminResponse.data).includes(row.token));
     records.push({...donor,id:"no-email",email:""});
-    await service.sync(records);assert.equal(sent.length,1);
+    await service.sync(records);await service.processQueue();assert.equal(sent.length,1);
     providerMode="network";records.push({...donor,id:"ambiguous"});
-    await service.sync(records);
+    await service.sync(records);await service.processQueue();
     assert.equal((await database.prepare("SELECT status FROM email_certificate_deliveries WHERE donation_id='ambiguous'").get()).status,"Check mail provider");
-    const count=sent.length;await service.sync(records);await service.send("ambiguous");assert.equal(sent.length,count);
-    providerMode="rejected";records.push({...donor,id:"rejected"});await service.sync(records);
+    const count=sent.length;await service.sync(records);await service.processQueue();await service.send("ambiguous");assert.equal(sent.length,count);
+    providerMode="rejected";records.push({...donor,id:"rejected"});await service.sync(records);await service.processQueue();
     assert.equal((await database.prepare("SELECT status FROM email_certificate_deliveries WHERE donation_id='rejected'").get()).status,"Failed");
     providerMode="ok";await service.send("rejected");
     assert.equal((await database.prepare("SELECT status FROM email_certificate_deliveries WHERE donation_id='rejected'").get()).status,"Submitted to email server");
+    await database.prepare("UPDATE email_certificate_deliveries SET status='Sending',updated_at=? WHERE donation_id='rejected'").run(new Date(Date.now()-600000).toISOString());
+    const beforeRecovery=sent.length;await service.processQueue();
+    assert.equal((await database.prepare("SELECT status FROM email_certificate_deliveries WHERE donation_id='rejected'").get()).status,"Check mail provider");assert.equal(sent.length,beforeRecovery);
   }finally{database.close();for(const suffix of ["","-wal","-shm"])fs.rmSync(filename+suffix,{force:true});}
 });
 test("QR donation submission does not show a receipt or certificate before verification",()=>{

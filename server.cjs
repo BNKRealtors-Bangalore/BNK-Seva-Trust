@@ -9,6 +9,8 @@ const nodemailer = require("nodemailer");
 const {publicContent,securitySchema,createSecurity,securityHeaders}=require("./security.cjs");
 const { purchaseSchema, createPurchaseService } = require("./purchases.cjs");
 const { certificateSchema, createCertificateService } = require("./certificates.cjs");
+const { createContentStore } = require("./content-store.cjs");
+const { createOperations } = require("./operations.cjs");
 
 const root = __dirname;
 
@@ -217,7 +219,7 @@ const defaultInitiatives = [
     name: "Free Medical Camp",
     location: "Newtown, Kolkata",
     date: "2026-10-15",
-    image: "images/medical-camp-event.jpg",
+    image: "images/optimized/medical-camp-event-1095.webp",
     status: "Active"
   },
   {
@@ -226,7 +228,7 @@ const defaultInitiatives = [
     name: "Food Distribution Drive",
     location: "Siliguri",
     date: "2026-10-22",
-    image: "images/food-distribution-event.jpg",
+    image: "images/optimized/food-distribution-event-822.webp",
     status: "Active"
   },
   {
@@ -235,7 +237,7 @@ const defaultInitiatives = [
     name: "Educational Support Programme",
     location: "Bengaluru",
     date: "2026-11-02",
-    image: "images/education-event.jpg",
+    image: "images/optimized/education-event-822.webp",
     status: "Active"
   }
 ];
@@ -245,7 +247,7 @@ const defaultStories = [
     id: "meal-memory",
     name: "A Meal That Became a Memory",
     quote: "For many, it was just a meal. For him, it was care, kindness and a reminder that he is not forgotten.",
-    image: "images/stories-food.jpg",
+    image: "images/optimized/stories-food-397.webp",
     category: "Beneficiary",
     siteCategory: "food",
     status: "Published",
@@ -267,7 +269,7 @@ const defaultStories = [
     id: "temple-community",
     name: "Building a Temple, Building a Community",
     quote: "A sacred vision bringing people together through faith, compassion and collective seva.",
-    image: "images/stories-temple.jpg",
+    image: "images/optimized/stories-temple-784.webp",
     category: "Community Member",
     siteCategory: "temple",
     status: "Published",
@@ -300,7 +302,7 @@ const defaultStories = [
     id: "babas-grace",
     name: "In Baba's Grace",
     quote: "Reflections on devotion, faith and the spiritual journey.",
-    image: "images/stories-baba.jpg",
+    image: "images/optimized/stories-baba-1600.webp",
     category: "Community Member",
     siteCategory: "spiritual",
     status: "Published",
@@ -333,7 +335,7 @@ const defaultStories = [
     id: "journey-of-service",
     name: "A Journey of Service",
     quote: "The people and values behind an enduring commitment to seva.",
-    image: "images/stories-service.jpg",
+    image: "images/optimized/stories-service-591.webp",
     category: "Volunteer",
     siteCategory: "volunteers",
     status: "Published",
@@ -380,6 +382,7 @@ function cleanText(value, maxLength = 500) {
 function sanitizeSiteRecord(record = {}) {
   const clean = {};
   for (const [key, value] of Object.entries(record)) {
+    if(key==="stock"&&(value===""||value===null||value===undefined)){clean.stock="";continue;}
     if (key === "amount" || key === "price" || key === "stock") {
       const numeric = Number(value);
       clean[key] = Number.isFinite(numeric) && numeric >= 0 ? Math.floor(numeric) : 0;
@@ -396,7 +399,7 @@ function sanitizeSiteContent(input = {}) {
   const records = {};
   for (const key of siteRecordKeys) {
     records[key] = Array.isArray(input.records?.[key])
-      ? input.records[key].slice(0, 200).map(sanitizeSiteRecord)
+      ? input.records[key].map(sanitizeSiteRecord)
       : [];
   }
   records.users=[];
@@ -441,23 +444,13 @@ function sanitizeSiteContent(input = {}) {
 }
 
 async function getSiteContent() {
-  const row = (await database.prepare("SELECT value FROM app_config WHERE key = ?").get("site_content"));
-  if (!row) return defaultSiteContent;
-  try {
-    return sanitizeSiteContent(JSON.parse(row.value));
-  } catch {
-    return defaultSiteContent;
-  }
+  return contentStore.get();
 }
 
-async function saveSiteContent(input) {
-  const content = sanitizeSiteContent(input);
-  (await database.prepare(`
-    INSERT INTO app_config (key, value, updated_at) VALUES ('site_content', ?, ?)
-    ON CONFLICT(key) DO UPDATE SET value = excluded.value, updated_at = excluded.updated_at
-  `).run(JSON.stringify(content), new Date().toISOString()));
-  return content;
+async function saveSiteContent(input, options) {
+  return contentStore.save(input,options);
 }
+const contentStore=createContentStore({database,sanitize:sanitizeSiteContent,defaults:defaultSiteContent});
 
 function todayISODate() {
   return new Date().toISOString().slice(0, 10);
@@ -465,7 +458,7 @@ function todayISODate() {
 
 async function appendPublicSubmission(type, input = {}) {
   return database.transaction(async () => {
-  const content = await getSiteContent();
+  const content = {records:{csr:[],partners:[],volunteers:[],donations:[]}};
   const now = new Date().toISOString();
   let record;
   if (type === "csr") {
@@ -539,7 +532,15 @@ async function appendPublicSubmission(type, input = {}) {
   } else {
     throw new Error("Unsupported submission type.");
   }
-  await saveSiteContent(content);
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(record.email))throw new Error("Enter a valid email address.");
+  if(record.phone&&(!/^\+?[\d\s()-]{7,30}$/.test(record.phone)||record.phone.replace(/\D/g,"").length<7))throw new Error("Enter a valid phone number.");
+  if(type==="donation") {
+    if(!donationCategories.has(record.type))throw new Error("Choose a valid donation category.");
+    record.reference=record.reference.replace(/\s/g,"").toUpperCase();
+    if(!/^[A-Z0-9_-]{6,120}$/.test(record.reference))throw new Error("Enter a valid UPI transaction reference.");
+    if(await database.prepare("SELECT id FROM purchases WHERE payment_reference=?").get(record.reference))throw new Error("This transaction reference is already linked to a purchase.");
+  }
+  await contentStore.append({csr:"csr",partner:"partners",volunteer:"volunteers",donation:"donations"}[type],record);
   return record;
   });
 }
@@ -576,7 +577,7 @@ async function ensureInitialAdminUser() {
     }
     return;
   }
-  if (process.env.VERCEL && !process.env.ADMIN_PASSWORD) throw new Error("Set ADMIN_PASSWORD in Vercel environment variables before first deployment.");
+  if (process.env.VERCEL && (!process.env.ADMIN_PASSWORD||process.env.ADMIN_PASSWORD.length<12||process.env.ADMIN_PASSWORD.length>256)) throw new Error("Set ADMIN_PASSWORD to between 12 and 256 characters before first deployment.");
   const now = new Date().toISOString();
   (await database.prepare(`
     INSERT INTO admin_users (id, name, email, password_hash, role, status, created_at, updated_at)
@@ -598,6 +599,13 @@ function initialize() {
     await database.exec(purchaseSchema);
     await database.exec(certificateSchema);
     await database.exec(securitySchema);
+    await contentStore.initialize();
+    await database.transaction(async()=>{
+      if(await database.prepare("SELECT key FROM app_config WHERE key='purchase_reservations_migrated'").get())return;
+      const orders=await database.prepare("SELECT id,items_json,status,created_at FROM purchases WHERE status IN ('Awaiting Payment','Pending Verification')").all();
+      for(const order of orders)for(const item of JSON.parse(order.items_json))await database.prepare("INSERT OR IGNORE INTO purchase_reservations VALUES(?,?,?,?)").run(order.id,item.id,item.quantity,order.status==="Pending Verification"?"9999-12-31T23:59:59.999Z":new Date(Date.parse(order.created_at)+86400000).toISOString());
+      await database.prepare("INSERT INTO app_config VALUES('purchase_reservations_migrated','true',?)").run(new Date().toISOString());
+    });
     await database.transaction(() => ensureInitialAdminUser());
   })().catch(error => { initialization = null; throw error; });
   return initialization;
@@ -832,7 +840,7 @@ async function handleSaveAdminUsers(request, response) {
       const name = cleanText(user.name, 120);
       const role = ["Admin", "Editor", "Viewer"].includes(user.role) ? user.role : "Viewer";
       const status = ["Active", "Disabled"].includes(user.status) ? user.status : "Active";
-      if (!email || !name) continue;
+      if (!name||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) throw new Error("Enter a valid name and email for each user.");
       const existing = (await database.prepare("SELECT * FROM admin_users WHERE email = ?").get(email));
       if (existing) {
         (await database.prepare("UPDATE admin_users SET name = ?, role = ?, status = ?, updated_at = ? WHERE email = ?")
@@ -843,12 +851,14 @@ async function handleSaveAdminUsers(request, response) {
           await database.prepare("DELETE FROM admin_sessions WHERE user_id = ?").run(existing.id);
         }
       } else {
-        const password = cleanText(user.password, 120) || crypto.randomBytes(10).toString("base64url");
+        if(typeof user.password!=="string"||user.password.length<12||user.password.length>256)throw new Error("Use a password between 12 and 256 characters.");
+        const password = user.password;
         (await database.prepare(`
           INSERT INTO admin_users (id, name, email, password_hash, role, status, created_at, updated_at)
           VALUES (?, ?, ?, ?, ?, ?, ?, ?)
         `).run(crypto.randomUUID(), name, email, hashPassword(password), role, status, now, now));
       }
+      await contentStore.audit(actor,"user.save",email);
     }
     const activeAdmins = (await database.prepare("SELECT COUNT(*) AS total FROM admin_users WHERE role = 'Admin' AND status = 'Active'").get()).total;
     if (!activeAdmins) throw new Error("At least one active Admin user is required.");
@@ -1122,12 +1132,25 @@ function contentType(filePath) {
     ".png": "image/png",
     ".svg": "image/svg+xml",
     ".webp": "image/webp"
+    ,".xml":"application/xml; charset=utf-8",".txt":"text/plain; charset=utf-8"
   })[path.extname(filePath).toLowerCase()] || "application/octet-stream";
 }
 
 const security=createSecurity({database});
-const certificateService=createCertificateService({database,getSiteContent,getSessionUser,sendJSON});
-const purchaseService=createPurchaseService({database,getSiteContent,getPricingConfig,getSessionUser,readJSON,sendJSON});
+const certificateService=createCertificateService({database,getSiteContent,getSessionUser,sendJSON,readJSON,audit:contentStore.audit});
+const operations=createOperations({database,certificateService,sendJSON,getSessionUser,audit:contentStore.audit});
+const purchaseService=createPurchaseService({database,getSiteContent,getPricingConfig,getSessionUser,readJSON,sendJSON,audit:contentStore.audit,isReferenceUsed:async reference=>Boolean(await database.prepare("SELECT record_id FROM donation_references WHERE reference=?").get(reference)),adjustInventory:async items=>{
+  for(const item of items){
+    const stored=await database.prepare("SELECT data FROM site_records WHERE collection='store' AND id=?").get(item.id);
+    if(!stored)continue;
+    const product=JSON.parse(stored.data);
+    if(product.stock===""||product.stock===undefined)continue;
+    if(Number(product.stock)<item.quantity)throw Object.assign(Error("Insufficient stock to verify this purchase."),{statusCode:409});
+    product.stock=Number(product.stock)-item.quantity;
+    await database.prepare("UPDATE site_records SET data=? WHERE collection='store' AND id=?").run(JSON.stringify(product),item.id);
+  }
+  await database.prepare("UPDATE site_content_meta SET version=version+1 WHERE id=1").run();
+}});
 
 async function handleRequest(request, response) {
   const url = new URL(request.url, "http://localhost");
@@ -1135,6 +1158,7 @@ async function handleRequest(request, response) {
     for(const [name,value]of Object.entries(securityHeaders))response.setHeader(name,value);
     await initialize();
     if(!await security.guard(request,response,url))return;
+    if(await operations.handle(request,response,url))return;
     if(await purchaseService.handle(request,response,url)) return;
     if(await certificateService.handle(request,response,url)) return;
     if (url.pathname === "/api/health" && request.method === "GET") {
@@ -1225,22 +1249,48 @@ async function handleRequest(request, response) {
         sendJSON(response, 401, { error: "Admin key required." });
         return;
       }
-      sendJSON(response, 200, await savePricingConfig(await readJSON(request)));
+      const saved=await database.transaction(async()=>{const result=await savePricingConfig(await readJSON(request));await contentStore.audit(await getSessionUser(request),"pricing.save","pricing");return result;});
+      sendJSON(response, 200, saved);
       return;
     }
     if(url.pathname==="/api/admin/site-content"&&request.method==="GET"){
       if(!await getSessionUser(request)){sendJSON(response,401,{error:"Login required."});return;}
       sendJSON(response,200,await getSiteContent());return;
     }
+    const recordRoute=url.pathname.match(/^\/api\/admin\/records\/([a-z]+)(?:\/([A-Za-z0-9_-]+))?$/);
+    if(recordRoute) {
+      const actor=await getSessionUser(request,request.method==="GET"?undefined:["Admin","Editor"]);
+      if(!actor){sendJSON(response,403,{error:"Authorized admin session required."});return;}
+      if(request.method==="GET"&&!recordRoute[2]) {
+        const offset=Math.max(0,Number(url.searchParams.get("offset"))||0),limit=Math.min(200,Math.max(1,Number(url.searchParams.get("limit"))||50));
+        sendJSON(response,200,await contentStore.list(recordRoute[1],{offset:Math.floor(offset),limit:Math.floor(limit)}));return;
+      }
+      if(request.method==="PATCH"&&recordRoute[2]) {
+        const result=await contentStore.patch(recordRoute[1],recordRoute[2],await readJSON(request),actor);
+        await certificateService.sync(result.content.records.donations.filter(d=>d.id===recordRoute[2]),result.previous?[result.previous]:[]);
+        sendJSON(response,200,result.content);return;
+      }
+    }
+    if(url.pathname==="/api/admin/audit"&&request.method==="GET") {
+      if(!await getSessionUser(request,["Admin"])){sendJSON(response,403,{error:"Admin role required."});return;}
+      const offset=Math.max(0,Math.floor(Number(url.searchParams.get("offset"))||0));
+      sendJSON(response,200,{events:await database.prepare("SELECT * FROM admin_audit ORDER BY created_at DESC LIMIT 100 OFFSET ?").all(offset),offset});return;
+    }
     if (url.pathname === "/api/admin/site-content" && request.method === "PUT") {
       if (!await isAuthorizedAdmin(request)) {
         sendJSON(response, 401, { error: "Admin key required." });
         return;
       }
-      const previousContent=await getSiteContent();
-      const savedContent=await saveSiteContent(await readJSON(request));
-      try { await certificateService.sync(savedContent.records.donations,previousContent.records.donations); }
-      catch { savedContent.certificateNotice="Donation changes were saved, but certificate processing needs review in Certificates."; }
+      const input=await readJSON(request);
+      if(!Number.isInteger(input._version)){sendJSON(response,409,{error:"Reload the admin page to obtain the current content version before publishing."});return;}
+      const actor=await getSessionUser(request);
+      const savedContent=await database.transaction(async()=>{
+        const previousContent=await getSiteContent();
+        const saved=await saveSiteContent(input,{expectedVersion:input._version,actor});
+        await certificateService.sync(saved.records.donations,previousContent.records.donations);
+        return saved;
+      });
+      // Email delivery runs in a separate worker request after this save.
       sendJSON(response, 200, savedContent);
       return;
     }
@@ -1283,7 +1333,9 @@ async function handleRequest(request, response) {
       "donation.js",
       "purchase.js",
       "purchase.css"
+      ,"robots.txt","sitemap.xml"
     ].includes(relativePath) ||
+      (relativePath.startsWith(`assets${path.sep}`)&&/\.(?:js|css)$/.test(relativePath)) ||
       (relativePath.startsWith(`stories${path.sep}`) && path.extname(relativePath)===".html") ||
       (["images","payment","uploads"].some(directory=>relativePath.startsWith(directory+path.sep)) && /\.(?:png|jpe?g|webp|svg|gif|ico|avif)$/i.test(relativePath)) ||
       (relativePath.startsWith(`audio${path.sep}`) && /\.(?:mp3|ogg|wav)$/i.test(relativePath));
@@ -1338,4 +1390,5 @@ module.exports = {
   savePricingConfig,
   getSiteContent,
   saveSiteContent
+  ,database,contentStore
 };

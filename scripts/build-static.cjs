@@ -12,8 +12,8 @@ for (const entry of fs.readdirSync(root, { withFileTypes: true })) {
     fs.copyFileSync(path.join(root, entry.name), path.join(output, entry.name));
   }
 }
-for(const filename of ["donation.js","purchase.js"]) fs.copyFileSync(path.join(root,filename),path.join(output,filename));
-for (const directory of ["images", "audio", "payment", "stories"]) {
-  fs.cpSync(path.join(root, directory), path.join(output, directory), {recursive:true,filter:source=>{const entry=fs.statSync(source);return entry.isDirectory()||(/\.(?:html|png|jpe?g|svg|webp|gif|ico|avif|mp3|mp4|webm|woff2?|pdf)$/i.test(source)&&!path.basename(source).startsWith("."));}});
+for(const filename of ["donation.js","purchase.js","robots.txt","sitemap.xml"]) fs.copyFileSync(path.join(root,filename),path.join(output,filename));
+for (const directory of ["images", "audio", "payment", "stories", "assets"]) {
+  fs.cpSync(path.join(root, directory), path.join(output, directory), {recursive:true,filter:source=>{const entry=fs.statSync(source);return entry.isDirectory()||(/\.(?:html|css|js|png|jpe?g|svg|webp|gif|ico|avif|mp3|mp4|webm|woff2?|pdf)$/i.test(source)&&!path.basename(source).startsWith("."));}});
 }
 console.log("Prepared public website assets; backend files, environment files, and databases are excluded.");

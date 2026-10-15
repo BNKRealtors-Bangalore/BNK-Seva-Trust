@@ -51,7 +51,7 @@ test("purchase checkout stores private itemized orders and requires payment veri
       const body={paymentToken,reference:"UPI-TEST"};
       assert.equal((await request("/api/purchases/"+purchase.id+"/payment",body)).data.purchase.status,"Pending Verification");
       assert.equal((await request("/api/purchases/"+purchase.id+"/payment",body)).status,200);
-      assert.equal((await request("/api/purchases/"+purchase.id+"/payment",{paymentToken,reference:"OTHER"})).status,409);
+      assert.equal((await request("/api/purchases/"+purchase.id+"/payment",{paymentToken,reference:"OTHER-REF"})).status,409);
       const another=await request("/api/purchases",buyer);
       assert.equal((await request("/api/purchases/"+another.data.purchase.id+"/payment",{paymentToken:another.data.paymentToken,reference:"UPI-TEST"})).status,409);
     });
