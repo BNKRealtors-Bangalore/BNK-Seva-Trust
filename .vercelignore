@@ -4,3 +4,4 @@
 data
 uploads
 *.test.cjs
+public

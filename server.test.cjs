@@ -9,9 +9,9 @@ const test = require("node:test");
 
 const databasePath = path.join(os.tmpdir(), `bnk-donations-${crypto.randomUUID()}.sqlite`);
 process.env.DATABASE_PATH = databasePath;
-delete process.env.TURSO_DATABASE_URL;
-delete process.env.TURSO_AUTH_TOKEN;
-delete process.env.VERCEL;
+process.env.TURSO_DATABASE_URL = "";
+process.env.TURSO_AUTH_TOKEN = "";
+process.env.VERCEL = "";
 process.env.RAZORPAY_KEY_SECRET = "test-secret";
 const {
   captureDonation,
@@ -128,6 +128,20 @@ test("newsletter subscriptions validate, deduplicate, and stay private to author
   } finally {
     await new Promise(resolve => server.close(resolve));
   }
+});
+
+test("published store items are returned by the public API after authenticated saving", async () => {
+  await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
+  const base='http://127.0.0.1:'+server.address().port;
+  try {
+    const login=await fetch(base+'/api/admin/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:process.env.ADMIN_EMAIL||'bnksevatrust@gmail.com',password:process.env.ADMIN_PASSWORD||process.env.ADMIN_KEY||'admin'})});
+    assert.equal(login.status,200);const cookie=login.headers.get('set-cookie').split(';')[0];
+    const existing=await (await fetch(base+'/api/site-content')).json();
+    existing.records.store.push({id:'camphor-test',name:'Camphor',price:101,status:'Active',image:'images/logo.PNG'});
+    const saved=await fetch(base+'/api/admin/site-content',{method:'PUT',headers:{'Content-Type':'application/json',Cookie:cookie},body:JSON.stringify(existing)});
+    assert.equal(saved.status,200);assert.ok((await saved.json()).records.store.some(item=>item.name==='Camphor'));
+    const published=await (await fetch(base+'/api/site-content')).json();assert.ok(published.records.store.some(item=>item.name==='Camphor'&&item.status==='Active'));
+  } finally {await new Promise(resolve=>server.close(resolve));}
 });
 
 test("payment capture remains idempotent with asynchronous database transactions", async () => {

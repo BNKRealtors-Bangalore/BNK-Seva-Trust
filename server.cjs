@@ -761,8 +761,8 @@ async function handleAdminImageUpload(request, response) {
     if (!extension) throw new Error("Upload a JPG, PNG, WebP or SVG image.");
     if (!file.data.length || file.data.length > 5 * 1024 * 1024) throw new Error("Image must be 5 MB or smaller.");
     const filename = `${Date.now()}-${crypto.randomUUID()}${extension}`;
-    if (process.env.VERCEL || process.env.BLOB_READ_WRITE_TOKEN) {
-      if (!process.env.BLOB_READ_WRITE_TOKEN) throw new Error("Connect a public Vercel Blob store to enable image uploads.");
+    if (process.env.VERCEL || process.env.BLOB_READ_WRITE_TOKEN || process.env.BLOB_STORE_ID) {
+      if (!process.env.BLOB_READ_WRITE_TOKEN && !(process.env.BLOB_STORE_ID && process.env.VERCEL_OIDC_TOKEN)) throw new Error("Connect a public Vercel Blob store to this project and redeploy to enable image uploads.");
       const { put } = require("@vercel/blob");
       const blob = await put('uploads/' + filename, file.data, { access: "public", contentType: file.contentType });
       sendJSON(response, 200, { url: blob.url });
