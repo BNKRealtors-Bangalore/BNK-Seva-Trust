@@ -72,6 +72,10 @@ database.exec(`
     created_at TEXT NOT NULL,
     updated_at TEXT NOT NULL
   );
+  CREATE TABLE IF NOT EXISTS newsletter_subscribers (
+    email TEXT PRIMARY KEY COLLATE NOCASE,
+    subscribed_at TEXT NOT NULL
+  );
   CREATE TABLE IF NOT EXISTS admin_sessions (
     token_hash TEXT PRIMARY KEY,
     user_id TEXT NOT NULL REFERENCES admin_users(id) ON DELETE CASCADE,
@@ -561,7 +565,14 @@ function publicAdminUser(row) {
 
 function ensureInitialAdminUser() {
   const count = database.prepare("SELECT COUNT(*) AS total FROM admin_users").get().total;
-  if (count) return;
+  if (count) {
+    // Upgrade the original placeholder account without changing its password or role.
+    if (!process.env.ADMIN_EMAIL) {
+      database.prepare("UPDATE admin_users SET email = ?, updated_at = ? WHERE email = 'admin@bnk.local' AND NOT EXISTS (SELECT 1 FROM admin_users WHERE email = ?)")
+        .run("bnksevatrust@gmail.com", new Date().toISOString(), "bnksevatrust@gmail.com");
+    }
+    return;
+  }
   const now = new Date().toISOString();
   database.prepare(`
     INSERT INTO admin_users (id, name, email, password_hash, role, status, created_at, updated_at)
@@ -569,7 +580,7 @@ function ensureInitialAdminUser() {
   `).run(
     crypto.randomUUID(),
     process.env.ADMIN_NAME || "BNK Admin",
-    (process.env.ADMIN_EMAIL || "admin@bnk.local").toLowerCase(),
+    (process.env.ADMIN_EMAIL || "Bnksevatrust@gmail.com").toLowerCase(),
     hashPassword(process.env.ADMIN_PASSWORD || process.env.ADMIN_KEY || "admin"),
     now,
     now
@@ -1085,6 +1096,26 @@ function contentType(filePath) {
 async function handleRequest(request, response) {
   const url = new URL(request.url, "http://localhost");
   try {
+    if (url.pathname === "/api/newsletter/subscribe" && request.method === "POST") {
+      const input = await readJSON(request);
+      const email = typeof input?.email === "string" ? input.email.trim().toLowerCase() : "";
+      if (email.length > 254 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        sendJSON(response, 400, { error: "Enter a valid email address." });
+        return;
+      }
+      database.prepare("INSERT INTO newsletter_subscribers (email, subscribed_at) VALUES (?, ?) ON CONFLICT(email) DO NOTHING")
+        .run(email, new Date().toISOString());
+      sendJSON(response, 200, { ok: true, message: "Thank you for subscribing to BNK Seva updates." });
+      return;
+    }
+    if (url.pathname === "/api/admin/newsletter" && request.method === "GET") {
+      if (!getSessionUser(request, ["Admin", "Editor"])) {
+        sendJSON(response, 403, { error: "Admin or Editor role required." });
+        return;
+      }
+      sendJSON(response, 200, { subscribers: database.prepare("SELECT email, subscribed_at AS subscribedAt FROM newsletter_subscribers ORDER BY subscribed_at DESC").all() });
+      return;
+    }
     if (url.pathname === "/api/payment-config" && request.method === "GET") {
       sendJSON(response, 200, {
         configured: Boolean(keyId && keySecret),
@@ -1193,6 +1224,9 @@ async function handleRequest(request, response) {
       "statutory-information.html",
       "admin.html",
       "donation.css",
+      "navbar-logo.css",
+      "teachings.html",
+      "support-story.html",
       "donation.js"
     ].includes(relativePath) ||
       relativePath.startsWith(`stories${path.sep}`) ||

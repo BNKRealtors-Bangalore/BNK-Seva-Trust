@@ -11,6 +11,7 @@ const databasePath = path.join(os.tmpdir(), `bnk-donations-${crypto.randomUUID()
 process.env.DATABASE_PATH = databasePath;
 process.env.RAZORPAY_KEY_SECRET = "test-secret";
 const {
+  server,
   closeDatabase,
   getPricingConfig,
   getSiteContent,
@@ -94,6 +95,32 @@ test("saves admin site content and includes verified offline temple donations in
   assert.equal(saved.records.store[0].price, 501);
   assert.equal(getSiteContent().milestones[1].status, "In Progress");
   assert.equal(templeFundSummary().raisedAmount, 1200);
+});
+
+test("newsletter subscriptions validate, deduplicate, and stay private to authorized admins", async () => {
+  await new Promise(resolve => server.listen(0, "127.0.0.1", resolve));
+  const base = 'http://127.0.0.1:' + server.address().port;
+  const post = (route, body) => fetch(base + route, {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(body)});
+  try {
+    assert.equal((await post('/api/newsletter/subscribe', {email: 'invalid'})).status, 400);
+    assert.equal((await post('/api/newsletter/subscribe', {email: ' Subscriber@Example.org '})).status, 200);
+    assert.equal((await post('/api/newsletter/subscribe', {email: 'subscriber@example.org'})).status, 200);
+    assert.equal((await fetch(base + '/api/admin/newsletter')).status, 403);
+    const login = await post('/api/admin/login', {email: process.env.ADMIN_EMAIL || 'bnksevatrust@gmail.com', password: process.env.ADMIN_PASSWORD || process.env.ADMIN_KEY || 'admin'});
+    assert.equal(login.status, 200);
+    const cookie = login.headers.get('set-cookie').split(';')[0];
+    const res = await fetch(base + '/api/admin/newsletter', {headers: {Cookie: cookie}});
+    assert.equal(res.status, 200);
+    const data = await res.json();
+    assert.equal(data.subscribers.length, 1);
+    assert.equal(data.subscribers[0].email, 'subscriber@example.org');
+    assert.ok(data.subscribers[0].subscribedAt);
+    const publicContent = await (await fetch(base + '/api/site-content')).json();
+    assert.ok(!JSON.stringify(publicContent).includes('subscriber@example.org'));
+    for (const route of ['/navbar-logo.css', '/teachings.html', '/support-story.html']) assert.equal((await fetch(base + route)).status, 200);
+  } finally {
+    await new Promise(resolve => server.close(resolve));
+  }
 });
 
 test.after(() => {

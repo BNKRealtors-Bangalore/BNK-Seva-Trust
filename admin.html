@@ -43,7 +43,7 @@
   <form class="auth-card" id="loginForm">
     <h1>Admin Login</h1>
     <p class="muted">Sign in to manage BNK Seva Trust website content.</p>
-    <label class="field">Email<input id="loginEmail" type="email" autocomplete="username" required value="admin@bnk.local"></label>
+    <label class="field">Email<input id="loginEmail" type="email" autocomplete="username" required value="Bnksevatrust@gmail.com"></label>
     <label class="field">Password<input id="loginPassword" type="password" autocomplete="current-password" required></label>
     <p class="auth-error" id="loginError" role="alert"></p>
     <button class="btn primary" type="submit" style="width:100%">Sign in</button>
@@ -69,6 +69,10 @@
 </div>
 <section id="manager" class="section-panel" hidden><header class="section-header" hidden><h2 id="managerTitle"></h2><p id="managerDesc"></p></header><div class="card"><div class="toolbar"><div style="display:flex;gap:9px;flex:1;flex-wrap:wrap"><input id="search" type="search" placeholder="Search records" aria-label="Search records" style="max-width:350px"><span class="chip" id="recordCount">0 records</span></div><button class="btn primary" id="addRecord">+ Add Record</button></div><div class="table-wrap"><table><thead id="managerHead"></thead><tbody id="managerBody"></tbody></table></div></div></section>
 <section id="temple" class="section-panel" hidden><header class="section-header"><h2>Temple Project</h2><p>Track stages and configure the recorded temple funding goal.</p></header><div class="notice">Only <strong>Vision</strong> is initially marked Completed. Change a stage only when its status has been verified.</div><div class="card" style="margin-bottom:14px"><div class="card-heading"><h2>Project Financial Goal</h2></div><div class="form-grid"><label class="field">Goal in ₹<input type="number" min="0" step="1" id="templeGoal"></label><label class="field">Fundraising note<input id="templeNote" placeholder="Optional progress note"></label></div><div style="margin-top:14px"><button class="btn primary" id="saveTemple">Save Goal</button></div></div><div class="card"><div class="card-heading"><h2>Temple Project Journey</h2><small>9 milestones</small></div><div class="milestones" id="milestoneEditor"></div><p class="muted">Stage statuses are saved locally and reflected on this admin dashboard.</p></div></section>
+<section id="newsletter" class="section-panel" hidden>
+  <header class="section-header"><h2>Email Subscribers</h2><p>Subscribers to BNK Seva updates. Contact: <a href="mailto:Bnksevatrust@gmail.com">Bnksevatrust@gmail.com</a></p></header>
+  <div class="card"><button class="btn" type="button" id="refreshSubscribers">Refresh subscribers</button><p id="subscriberStatus" role="status"></p><div class="table-wrap"><table><thead><tr><th>Email</th><th>Subscribed at</th></tr></thead><tbody id="subscriberRows"></tbody></table></div></div>
+</section>
 <section id="settings" class="section-panel" hidden>
 <header class="section-header"><h2>Website Settings</h2><p>Manage the contribution amounts displayed throughout the BNK Seva Trust website.</p></header>
 <div class="card pricing-access">
@@ -109,6 +113,7 @@ const schemas={
  beneficiaries:{title:'Beneficiaries',desc:'Manage consent-based beneficiary information responsibly.',fields:[['name','Beneficiary Name','text',true],['category','Seva Supported','text',true],['date','Date','date',false],['notes','Notes','textarea',false]]},
  users:{title:'Users & Roles',desc:'Manage backend admin users and enforced roles.',fields:[['name','User Name','text',true],['email','Email','email',true],['password','New Password','password',false],['role','Role','select',true,['Admin','Editor','Viewer']],['status','Status','select',true,['Active','Disabled']]]}
 };
+menus.push(['newsletter','@','Email Subscribers']);
 menus.splice(3,0,['updates','↗','Temple Updates']);
 schemas.updates={title:'Temple Updates',desc:'Publish updates shown in the Follow the Journey section.',fields:[['name','Update Title','text',true],['category','Category','select',true,['Featured Update','Construction Updates','Site Updates','Architectural Updates','Seva Activities','Events','Volunteer Activities','Temple Milestones']],['status','Status','select',true,['Published','Draft']],['description','Description','textarea',false],['image','Image URL / Path','text',false]]};
 
@@ -134,9 +139,15 @@ async function loadAdminUsers(showToast=true){try{const res=await authFetch('/ap
 async function saveAdminUsers(){try{const res=await authFetch('/api/admin/users',{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({users:state.records.users})});const data=await res.json().catch(()=>({}));if(!res.ok)throw Error(data.error||'Could not save users');state.records.users=(data.users||[]).map(u=>({...u,password:''}));if(page==='users')renderManager();toast('Saved admin users')}catch(err){toast(err.message)}}
 el('loginForm').addEventListener('submit',async e=>{e.preventDefault();el('loginError').textContent='';try{const res=await fetch('/api/admin/login',{method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:el('loginEmail').value,password:el('loginPassword').value})});const data=await res.json().catch(()=>({}));if(!res.ok)throw Error(data.error||'Login failed');setSessionUser(data.user);el('loginPassword').value='';loadSiteContent(true);toast('Signed in')}catch(err){el('loginError').textContent=err.message}});
 el('logoutButton').addEventListener('click',async()=>{await fetch('/api/admin/logout',{method:'POST',credentials:'same-origin'});setSessionUser(null);toast('Signed out')});
+async function loadSubscribers(){
+  el('subscriberRows').replaceChildren();el('subscriberStatus').textContent='Loading subscribers?';
+  try{const res=await authFetch('/api/admin/newsletter',{cache:'no-store'});const data=await res.json();if(!res.ok)throw Error(data.error||'Could not load subscribers');el('subscriberStatus').textContent=data.subscribers.length+' subscribers';el('subscriberRows').innerHTML=data.subscribers.map(row=>'<tr><td>'+esc(row.email)+'</td><td>'+esc(new Date(row.subscribedAt).toLocaleString())+'</td></tr>').join('');}
+  catch(err){el('subscriberStatus').textContent=err.message;}
+}
+el('refreshSubscribers').addEventListener('click',loadSubscribers);
 const nav=el('nav');nav.innerHTML=menus.map(([id,icon,label])=>`<button type="button" data-section="${id}"><span class="symbol">${icon}</span>${label}</button>`).join('');
 let page='dashboard',editing=null;
-function go(id){page=id;for(const node of document.querySelectorAll('.section-panel'))node.hidden=true;el(schemas[id]?'manager':id).hidden=false;nav.querySelectorAll('button').forEach(b=>b.classList.toggle('active',b.dataset.section===id));let label=menus.find(x=>x[0]===id)?.[2]||'Dashboard';el('topTitle').textContent=id==='dashboard'?'Welcome, Admin':label;el('topSubtitle').textContent=id==='dashboard'?'Together in Seva, Building a Better Tomorrow':'BNK Seva Trust · Administration';if(id==='users')loadAdminUsers(false);if(schemas[id])renderManager();if(id==='dashboard')renderDashboard();if(id==='temple')renderTemple();if(id==='settings')renderPricingSettings();el('sidebar').classList.remove('open');el('overlay').classList.remove('show');window.scrollTo({top:0,behavior:'instant'})}
+function go(id){page=id;if(id==='newsletter')loadSubscribers();for(const node of document.querySelectorAll('.section-panel'))node.hidden=true;el(schemas[id]?'manager':id).hidden=false;nav.querySelectorAll('button').forEach(b=>b.classList.toggle('active',b.dataset.section===id));let label=menus.find(x=>x[0]===id)?.[2]||'Dashboard';el('topTitle').textContent=id==='dashboard'?'Welcome, Admin':label;el('topSubtitle').textContent=id==='dashboard'?'Together in Seva, Building a Better Tomorrow':'BNK Seva Trust · Administration';if(id==='users')loadAdminUsers(false);if(schemas[id])renderManager();if(id==='dashboard')renderDashboard();if(id==='temple')renderTemple();if(id==='settings')renderPricingSettings();el('sidebar').classList.remove('open');el('overlay').classList.remove('show');window.scrollTo({top:0,behavior:'instant'})}
 nav.addEventListener('click',e=>{const b=e.target.closest('[data-section]');if(b)go(b.dataset.section)});document.addEventListener('click',e=>{const b=e.target.closest('[data-go]');if(b)go(b.dataset.go)});
 el('menuBtn').onclick=()=>{el('sidebar').classList.add('open');el('overlay').classList.add('show')};el('overlay').onclick=()=>{el('sidebar').classList.remove('open');el('overlay').classList.remove('show')};if(el('profileBtn'))el('profileBtn').onclick=()=>toast('Admin profile · local preview only');el('loadContent').onclick=()=>loadSiteContent(true);el('publishContent').onclick=publishSiteContent;
 function verified(){return state.records.donations.filter(r=>r.status==='Verified')}

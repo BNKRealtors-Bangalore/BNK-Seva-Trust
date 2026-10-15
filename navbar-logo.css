@@ -1,0 +1,48 @@
+/* Match the homepage navbar logo and its surrounding layout. */
+.site-header .nav-shell {
+  position: relative;
+  width: min(100% - 40px, 1540px);
+  max-width: none;
+  min-height: 86px;
+  padding: 0;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 30px;
+}
+.site-header .brand {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+}
+.site-header .brand-mark {
+  width: 110px;
+  height: 90px;
+  flex: none;
+  display: grid;
+  place-items: center;
+}
+.site-header .brand-mark img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+@media (max-width: 1250px) {
+  .site-header .nav-shell { width: min(100% - 32px, 1540px); gap: 20px; }
+}
+@media (max-width: 1000px) {
+  .site-header .nav-shell { min-height: 76px; }
+}
+@media (max-width: 720px) {
+  .site-header .nav-shell { width: calc(100% - 24px); min-height: 72px; gap: 10px; }
+  .site-header .brand-mark { width: 85px; height: 76px; flex: 0 0 85px; }
+  .site-header .brand { min-width: 0; gap: 8px; }
+}
+@media (max-width: 360px) {
+  .site-header .nav-shell { width: calc(100% - 20px); gap: 8px; }
+  .site-header .brand-mark { width: 75px; height: 68px; flex-basis: 75px; }
+  .site-header .brand { gap: 7px; }
+}
